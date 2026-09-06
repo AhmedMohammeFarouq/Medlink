@@ -1,8 +1,13 @@
+import { errorResponse } from '../utils/apiResponse.js';
+
 const errorMiddleware = (err, req, res, next) => {
     console.error(err);
 
-    res.status(err.statusCode || 500).json({
-        success: false,
+    const statusCode = err.statusCode || 500;
+
+    return errorResponse({
+        res,
+        statusCode,
         message: err.message || 'Internal Server Error',
     });
 };
