@@ -9,8 +9,11 @@ const env = {
     mongoUri: process.env.MONGO_URI,
 
     jwt: {
-        secret: process.env.JWT_SECRET,
-        expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+        accessSecret: process.env.JWT_ACCESS_SECRET,
+        accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",
+
+        refreshSecret: process.env.JWT_REFRESH_SECRET,
+        refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
     },
 
     clientUrl: process.env.CLIENT_URL || 'http://localhost:4200',
