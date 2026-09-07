@@ -99,7 +99,7 @@ export const resetPasswordController = async (req, res, next) => {
 };
 export const verifyEmailController = async (req, res, next) => {
     try {
-        await authService.verifyEmail(
+        const result = await authService.verifyEmail(
             req.body.email,
             req.body.code
         );
@@ -108,7 +108,24 @@ export const verifyEmailController = async (req, res, next) => {
             res,
             statusCode: 200,
             message: "Email verified successfully",
-            data: null,
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const resendVerificationController = async (req, res, next) => {
+    try {
+        const result = await authService.resendVerification(
+            req.body.email
+        );
+
+        return successResponse({
+            res,
+            statusCode: 200,
+            message: "Verification code sent successfully",
+            data: result,
         });
     } catch (error) {
         next(error);

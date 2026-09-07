@@ -1,5 +1,12 @@
 import User from "../users/user.model.js";
 import { hashPassword, comparePassword } from "../../utils/hashPassword.js";
+import { generateResetToken } from "../../utils/generateResetToken.js";
+import { hashToken } from "../../utils/hashToken.js";
+import { generateVerificationCode } from "../../utils/generateVerificationCode.js";
+import { sendVerificationEmail } from "../../services/email.service.js";
+import { sendWelcomeEmail } from "../../services/email.service.js";
+import { getExpirationDate } from "../../utils/date.utils.js";
+import env from "../../config/env.js";
 import {
     createSession,
     findSessionByRefreshToken,
@@ -8,17 +15,12 @@ import {
     revokeSession,
     revokeAllUserSessions,
 } from "../sessions/sessions.service.js";
-import { getExpirationDate } from "../../utils/date.utils.js";
-import env from "../../config/env.js";
+
 import {
     generateAccessToken,
     generateRefreshToken,
     verifyRefreshToken
 } from "../../utils/token.utils.js";
-
-import { generateResetToken } from "../../utils/generateResetToken.js";
-import { hashToken } from "../../utils/hashToken.js";
-import { generateVerificationCode } from "../../utils/generateVerificationCode.js";
 
 
 export const register = async (data) => {
@@ -67,35 +69,22 @@ export const register = async (data) => {
         gender,
         dateOfBirth,
     });
-    // 4. Generate access and refresh tokens and verification code
     const verificationCode = await generateEmailVerificationCode(user._id);
-    // 5. Generate access and refresh tokens
-    const tokenPayload = {
-        userId: user._id,
-        role: user.role,
-    };
 
-    const accessToken = generateAccessToken(tokenPayload);
 
-    const refreshToken = generateRefreshToken(tokenPayload);
-    // 6. Create session
-    await createSession({
-        userId: user._id,
-        refreshToken,
-        expiresAt: getExpirationDate(env.jwt.refreshExpiresIn),
+    // 5. Send verification email
+    await sendVerificationEmail({
+        to: user.email,
+        firstName: user.firstName,
+        verificationCode,
     });
-    // 7. Remove sensitive data
+
+
     const userResponse = user.toObject();
     delete userResponse.passwordHash;
 
-    // 8. Return user and tokens
     return {
         user: userResponse,
-        tokens: {
-            accessToken,
-            refreshToken,
-        },
-        verificationCode,
     };
 };
 
@@ -131,6 +120,13 @@ export const login = async (data) => {
 
     if (user.status === "SUSPENDED") {
         const error = new Error("Account is suspended");
+        error.statusCode = 403;
+        throw error;
+    }
+
+
+    if (user.status === "PENDING") {
+        const error = new Error("Email verification required");
         error.statusCode = 403;
         throw error;
     }
@@ -243,9 +239,6 @@ export const logout = async (refreshToken) => {
 
     return true;
 };
-
-
-
 export const forgotPassword = async (email) => {
     const normalizedEmail = email.toLowerCase().trim();
 
@@ -275,7 +268,6 @@ export const forgotPassword = async (email) => {
         resetToken,
     };
 };
-
 export const resetPassword = async (resetToken, newPassword) => {
     const tokenHash = hashToken(resetToken);
 
@@ -326,6 +318,46 @@ export const generateEmailVerificationCode = async (userId) => {
     return code;
 };
 
+export const resendVerification = async (email) => {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await User.findOne({
+        email: normalizedEmail,
+    });
+
+    if (!user) {
+        const error = new Error("User not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (user.isEmailVerified) {
+        const error = new Error("Email is already verified");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (user.status !== "PENDING") {
+        const error = new Error("Verification is not available for this account");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const verificationCode = await generateEmailVerificationCode(
+        user._id
+    );
+
+    await sendVerificationEmail({
+        to: user.email,
+        firstName: user.firstName,
+        verificationCode,
+    });
+
+    return {
+        message: "Verification code sent successfully",
+    };
+};
+
 export const verifyEmail = async (email, code) => {
     const normalizedEmail = email.toLowerCase().trim();
 
@@ -365,13 +397,56 @@ export const verifyEmail = async (email, code) => {
         throw error;
     }
 
-    await User.findByIdAndUpdate(user._id, {
-        isEmailVerified: true,
-        isVerified: true,
-        status: "ACTIVE",
-        emailVerificationCodeHash: null,
-        emailVerificationCodeExpiresAt: null,
+    // Activate user after successful verification
+    const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        {
+            isEmailVerified: true,
+            isVerified: true,
+            status: "ACTIVE",
+            emailVerificationCodeHash: null,
+            emailVerificationCodeExpiresAt: null,
+        },
+        { new: true }
+    );
+
+    // Generate authentication tokens
+    const tokenPayload = {
+        userId: updatedUser._id,
+        role: updatedUser.role,
+    };
+
+    const accessToken = generateAccessToken(tokenPayload);
+    const refreshToken = generateRefreshToken(tokenPayload);
+
+    // Create session for the new refresh token
+    await createSession({
+        userId: updatedUser._id,
+        refreshToken,
+        expiresAt: getExpirationDate(env.jwt.refreshExpiresIn),
     });
 
-    return true;
+    // Send welcome email
+    try {
+        await sendWelcomeEmail({
+            to: updatedUser.email,
+            firstName: updatedUser.firstName,
+        });
+    } catch (error) {
+        console.error("Failed to send welcome email:", error);
+    }
+
+    const userResponse = updatedUser.toObject();
+
+    delete userResponse.passwordHash;
+    delete userResponse.emailVerificationCodeHash;
+    delete userResponse.emailVerificationCodeExpiresAt;
+
+    return {
+        user: userResponse,
+        tokens: {
+            accessToken,
+            refreshToken,
+        },
+    };
 };

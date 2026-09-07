@@ -246,3 +246,27 @@ export const verifyEmailValidation = (data) => {
 
     return errors;
 };
+export const resendVerificationValidation = (data) => {
+    const errors = [];
+
+    if (
+        typeof data.email !== "string" ||
+        !data.email.trim()
+    ) {
+        errors.push("Email is required");
+    } else {
+        const email = data.email.trim();
+
+        if (email.length > 254) {
+            errors.push("Email must not exceed 254 characters");
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            errors.push("Please provide a valid email");
+        }
+    }
+
+    return errors;
+};

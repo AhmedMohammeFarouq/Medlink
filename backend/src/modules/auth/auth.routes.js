@@ -43,4 +43,9 @@ router.post(
     validationMiddleware(authValidation.verifyEmailValidation),
     authController.verifyEmailController
 );
+router.post(
+    "/resend-verification",
+    validationMiddleware(authValidation.resendVerificationValidation),
+    authController.resendVerificationController
+);
 export default router;
