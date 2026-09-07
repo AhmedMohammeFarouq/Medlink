@@ -27,4 +27,20 @@ router.post(
     authController.logoutController
 );
 
+router.post(
+    "/forgot-password",
+    validationMiddleware(authValidation.forgotPasswordValidation),
+    authController.forgotPasswordController
+);
+router.post(
+    "/reset-password",
+    validationMiddleware(authValidation.resetPasswordValidation),
+    authController.resetPasswordController
+);
+
+router.post(
+    "/verify-email",
+    validationMiddleware(authValidation.verifyEmailValidation),
+    authController.verifyEmailController
+);
 export default router;

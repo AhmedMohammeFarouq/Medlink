@@ -135,7 +135,28 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: null,
         },
+        passwordResetTokenHash: {
+            type: String,
+            default: null,
+            select: false,
+        },
 
+        passwordResetExpiresAt: {
+            type: Date,
+            default: null,
+            select: false,
+        },
+        emailVerificationCodeHash: {
+            type: String,
+            default: null,
+            select: false,
+        },
+
+        emailVerificationCodeExpiresAt: {
+            type: Date,
+            default: null,
+            select: false,
+        },
         deletedAt: {
             type: Date,
             default: null,

@@ -60,3 +60,57 @@ export const logoutController = async (req, res, next) => {
         next(error);
     }
 };
+
+export const forgotPasswordController = async (req, res, next) => {
+    try {
+        const result = await authService.forgotPassword(
+            req.body.email
+        );
+
+        return successResponse({
+            res,
+            statusCode: 200,
+            message: result.message,
+            data: {
+                resetToken: result.resetToken,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const resetPasswordController = async (req, res, next) => {
+    try {
+        await authService.resetPassword(
+            req.body.resetToken,
+            req.body.newPassword
+        );
+
+        return successResponse({
+            res,
+            statusCode: 200,
+            message: "Password reset successfully",
+            data: null,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+export const verifyEmailController = async (req, res, next) => {
+    try {
+        await authService.verifyEmail(
+            req.body.email,
+            req.body.code
+        );
+
+        return successResponse({
+            res,
+            statusCode: 200,
+            message: "Email verified successfully",
+            data: null,
+        });
+    } catch (error) {
+        next(error);
+    }
+};

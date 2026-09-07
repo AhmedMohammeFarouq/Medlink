@@ -166,3 +166,83 @@ export const logoutValidation = (data) => {
 
     return errors;
 };
+
+export const forgotPasswordValidation = (data) => {
+    const errors = [];
+
+    if (
+        typeof data.email !== "string" ||
+        !data.email.trim()
+    ) {
+        errors.push("Email is required");
+    } else {
+        const email = data.email.trim();
+
+        if (email.length > 254) {
+            errors.push("Email must not exceed 254 characters");
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            errors.push("Please provide a valid email");
+        }
+    }
+
+    return errors;
+};
+
+export const resetPasswordValidation = (data) => {
+    const errors = [];
+
+    if (
+        typeof data.resetToken !== "string" ||
+        !data.resetToken.trim()
+    ) {
+        errors.push("Reset token is required");
+    }
+
+    if (
+        typeof data.newPassword !== "string" ||
+        !data.newPassword
+    ) {
+        errors.push("New password is required");
+    } else if (data.newPassword.length < 8) {
+        errors.push("New password must be at least 8 characters");
+    }
+
+    return errors;
+};
+export const verifyEmailValidation = (data) => {
+    const errors = [];
+
+    if (
+        typeof data.email !== "string" ||
+        !data.email.trim()
+    ) {
+        errors.push("Email is required");
+    } else {
+        const email = data.email.trim();
+
+        if (email.length > 254) {
+            errors.push("Email must not exceed 254 characters");
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            errors.push("Please provide a valid email");
+        }
+    }
+
+    if (
+        typeof data.code !== "string" ||
+        !data.code.trim()
+    ) {
+        errors.push("Verification code is required");
+    } else if (!/^\d{6}$/.test(data.code.trim())) {
+        errors.push("Verification code must be exactly 6 digits");
+    }
+
+    return errors;
+};

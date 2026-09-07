@@ -40,6 +40,18 @@ export const revokeSession = async (sessionId) => {
     return session;
 };
 
+export const revokeAllUserSessions = async (userId) => {
+    return Session.updateMany(
+        {
+            user: userId,
+            revokedAt: null,
+        },
+        {
+            revokedAt: new Date(),
+        }
+    );
+};
+
 export const rotateSession = async ({
     sessionId,
     userId,
@@ -58,6 +70,8 @@ export const rotateSession = async ({
         expiresAt,
     });
 };
+
+
 
 export const validateSession = (session) => {
     if (!session) {
@@ -80,3 +94,4 @@ export const validateSession = (session) => {
 
     return true;
 };
+

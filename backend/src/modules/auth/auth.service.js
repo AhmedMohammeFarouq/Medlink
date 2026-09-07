@@ -6,6 +6,7 @@ import {
     validateSession,
     rotateSession,
     revokeSession,
+    revokeAllUserSessions,
 } from "../sessions/sessions.service.js";
 import { getExpirationDate } from "../../utils/date.utils.js";
 import env from "../../config/env.js";
@@ -14,6 +15,11 @@ import {
     generateRefreshToken,
     verifyRefreshToken
 } from "../../utils/token.utils.js";
+
+import { generateResetToken } from "../../utils/generateResetToken.js";
+import { hashToken } from "../../utils/hashToken.js";
+import { generateVerificationCode } from "../../utils/generateVerificationCode.js";
+
 
 export const register = async (data) => {
     const {
@@ -61,7 +67,9 @@ export const register = async (data) => {
         gender,
         dateOfBirth,
     });
-    // 4. Generate access and refresh tokens
+    // 4. Generate access and refresh tokens and verification code
+    const verificationCode = await generateEmailVerificationCode(user._id);
+    // 5. Generate access and refresh tokens
     const tokenPayload = {
         userId: user._id,
         role: user.role,
@@ -70,23 +78,24 @@ export const register = async (data) => {
     const accessToken = generateAccessToken(tokenPayload);
 
     const refreshToken = generateRefreshToken(tokenPayload);
-    // 5. Create session
+    // 6. Create session
     await createSession({
         userId: user._id,
         refreshToken,
         expiresAt: getExpirationDate(env.jwt.refreshExpiresIn),
     });
-    // 6. Remove sensitive data
+    // 7. Remove sensitive data
     const userResponse = user.toObject();
     delete userResponse.passwordHash;
 
-    // 6. Return user and tokens
+    // 8. Return user and tokens
     return {
         user: userResponse,
         tokens: {
             accessToken,
             refreshToken,
         },
+        verificationCode,
     };
 };
 
@@ -231,6 +240,138 @@ export const logout = async (refreshToken) => {
     validateSession(session);
 
     await revokeSession(session._id);
+
+    return true;
+};
+
+
+
+export const forgotPassword = async (email) => {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await User.findOne({
+        email: normalizedEmail,
+    });
+
+    // Do not reveal whether the email exists
+    if (!user) {
+        return {
+            message: "If the email exists, a password reset link will be sent",
+        };
+    }
+
+    const resetToken = generateResetToken();
+    const resetTokenHash = hashToken(resetToken);
+
+    const resetTokenExpiresAt = getExpirationDate("15m");
+
+    await User.findByIdAndUpdate(user._id, {
+        passwordResetTokenHash: resetTokenHash,
+        passwordResetExpiresAt: resetTokenExpiresAt,
+    });
+
+    return {
+        message: "If the email exists, a password reset link will be sent",
+        resetToken,
+    };
+};
+
+export const resetPassword = async (resetToken, newPassword) => {
+    const tokenHash = hashToken(resetToken);
+
+    const user = await User
+        .findOne({
+            passwordResetTokenHash: tokenHash,
+        })
+        .select("+passwordResetTokenHash +passwordResetExpiresAt");
+
+    if (!user) {
+        const error = new Error("Invalid or expired reset token");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (
+        !user.passwordResetExpiresAt ||
+        user.passwordResetExpiresAt <= new Date()
+    ) {
+        const error = new Error("Invalid or expired reset token");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const passwordHash = await hashPassword(newPassword);
+
+    await User.findByIdAndUpdate(user._id, {
+        passwordHash,
+        passwordChangedAt: new Date(),
+        passwordResetTokenHash: null,
+        passwordResetExpiresAt: null,
+    });
+
+    await revokeAllUserSessions(user._id);
+
+    return true;
+};
+export const generateEmailVerificationCode = async (userId) => {
+    const code = generateVerificationCode();
+    const codeHash = hashToken(code);
+    const codeExpiresAt = getExpirationDate("10m");
+
+    await User.findByIdAndUpdate(userId, {
+        emailVerificationCodeHash: codeHash,
+        emailVerificationCodeExpiresAt: codeExpiresAt,
+    });
+
+    return code;
+};
+
+export const verifyEmail = async (email, code) => {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await User
+        .findOne({ email: normalizedEmail })
+        .select(
+            "+emailVerificationCodeHash +emailVerificationCodeExpiresAt"
+        );
+
+    if (!user) {
+        const error = new Error("Invalid or expired verification code");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (user.isEmailVerified) {
+        const error = new Error("Email is already verified");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (
+        !user.emailVerificationCodeHash ||
+        !user.emailVerificationCodeExpiresAt ||
+        user.emailVerificationCodeExpiresAt <= new Date()
+    ) {
+        const error = new Error("Invalid or expired verification code");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const codeHash = hashToken(code);
+
+    if (codeHash !== user.emailVerificationCodeHash) {
+        const error = new Error("Invalid or expired verification code");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    await User.findByIdAndUpdate(user._id, {
+        isEmailVerified: true,
+        isVerified: true,
+        status: "ACTIVE",
+        emailVerificationCodeHash: null,
+        emailVerificationCodeExpiresAt: null,
+    });
 
     return true;
 };
