@@ -88,7 +88,7 @@ export const register = async (data) => {
     };
 };
 
-export const login = async (data) => {
+export const login = async (data, deviceData = {}) => {
     const { email, password } = data;
 
     const user = await User
@@ -101,12 +101,37 @@ export const login = async (data) => {
         throw error;
     }
 
+    if (
+        user.accountLockedUntil &&
+        user.accountLockedUntil > new Date()
+    ) {
+        const error = new Error("Account temporarily locked");
+        error.statusCode = 403;
+        throw error;
+    }
+
     const isPasswordCorrect = await comparePassword(
         password,
         user.passwordHash
     );
 
     if (!isPasswordCorrect) {
+        user.failedLoginAttempts += 1;
+
+        if (user.failedLoginAttempts >= 5) {
+            user.accountLockedUntil = new Date(
+                Date.now() + 15 * 60 * 1000
+            );
+        }
+
+        await user.save();
+
+        if (user.failedLoginAttempts >= 5) {
+            const error = new Error("Account temporarily locked");
+            error.statusCode = 403;
+            throw error;
+        }
+
         const error = new Error("Invalid email or password");
         error.statusCode = 401;
         throw error;
@@ -131,6 +156,12 @@ export const login = async (data) => {
         throw error;
     }
 
+    user.failedLoginAttempts = 0;
+    user.accountLockedUntil = null;
+    user.lastLoginAt = new Date();
+
+    await user.save();
+
     const tokenPayload = {
         userId: user._id,
         role: user.role,
@@ -144,13 +175,10 @@ export const login = async (data) => {
         userId: user._id,
         refreshToken,
         expiresAt: getExpirationDate(env.jwt.refreshExpiresIn),
+        deviceInfo: deviceData.deviceInfo,
+        ipAddress: deviceData.ipAddress,
+        userAgent: deviceData.userAgent,
     });
-    await User.findByIdAndUpdate(
-        user._id,
-        {
-            lastLoginAt: new Date(),
-        }
-    );
     const userResponse = user.toObject();
 
     delete userResponse.passwordHash;

@@ -27,6 +27,23 @@ const sessionSchema = new mongoose.Schema(
             type: Date,
             default: null,
         },
+        deviceInfo: {
+            type: String,
+            trim: true,
+            maxlength: 500,
+        },
+
+        ipAddress: {
+            type: String,
+            trim: true,
+            maxlength: 45,
+        },
+
+        userAgent: {
+            type: String,
+            trim: true,
+            maxlength: 1000,
+        },
     },
     {
         timestamps: true,

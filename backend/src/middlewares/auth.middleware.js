@@ -1,6 +1,7 @@
 import { verifyAccessToken } from "../utils/token.utils.js";
+import User from "../modules/users/user.model.js";
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
@@ -20,9 +21,39 @@ const authMiddleware = (req, res, next) => {
 
         const decoded = verifyAccessToken(token);
 
-        req.user = decoded;
+        const user = await User.findById(decoded.userId);
+
+        if (!user) {
+            const error = new Error("User not found");
+            error.statusCode = 401;
+            throw error;
+        }
+
+        if (user.status === "DELETED") {
+            const error = new Error("Account has been deleted");
+            error.statusCode = 403;
+            throw error;
+        }
+
+        if (user.status === "SUSPENDED") {
+            const error = new Error("Account is suspended");
+            error.statusCode = 403;
+            throw error;
+        }
+
+        if (user.status !== "ACTIVE") {
+            const error = new Error("Account is not active");
+            error.statusCode = 403;
+            throw error;
+        }
+
+        req.user = {
+            userId: user._id,
+            role: user.role,
+        };
 
         next();
+
     } catch (error) {
         if (
             error.name === "JsonWebTokenError" ||

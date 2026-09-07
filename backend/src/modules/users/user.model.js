@@ -157,10 +157,20 @@ const userSchema = new mongoose.Schema(
             default: null,
             select: false,
         },
+        failedLoginAttempts: {
+            type: Number,
+            default: 0,
+        },
+
+        accountLockedUntil: {
+            type: Date,
+            default: null,
+        },
         deletedAt: {
             type: Date,
             default: null,
         },
+
     },
     {
         timestamps: true,

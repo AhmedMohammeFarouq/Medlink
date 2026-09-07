@@ -17,8 +17,11 @@ export const register = async (req, res, next) => {
 };
 export const loginController = async (req, res, next) => {
     try {
-        const result = await authService.login(req.body);
-
+        const result = await authService.login(req.body, {
+            deviceInfo: req.headers["sec-ch-ua-platform"] || "Unknown",
+            ipAddress: req.ip,
+            userAgent: req.get("user-agent") || "Unknown",
+        });
         return successResponse({
             res,
             statusCode: 200,
