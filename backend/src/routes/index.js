@@ -9,7 +9,7 @@ const router = Router();
 
 router.use("/v1/auth", authRouter);
 router.use("/v1/users", userRoutes);
-router.use('/admin', adminRoutes);
-router.use('/reviews', reviewRoutes);
-router.use('/audit', auditRoutes);
+router.use('/v1/admin', adminRoutes);
+router.use('/v1/reviews', reviewRoutes);
+router.use('/v1/audit', auditRoutes);
 export default router;
