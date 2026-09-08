@@ -1,89 +1,73 @@
 import mongoose from "mongoose";
+import { message_type } from "./chat.types.js";
 
-const messageSchema = new mongoose.Schema(
-    {
-        chatId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Chat",
-            required: true,
-        },
-
-        senderId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
-
-        receiverId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            default: null,
-        },
-
-        content: {
-            type: String,
-            trim: true,
-            default: null,
-        },
-
-        type: {
-            type: String,
-            enum: [
-                "TEXT",
-                "IMAGE",
-                "FILE",
-                "SYSTEM",
-            ],
-            default: "TEXT",
-        },
-
-        attachment: {
-            fileName: {
-                type: String,
-                default: null,
-            },
-
-            fileUrl: {
-                type: String,
-                default: null,
-            },
-
-            mimeType: {
-                type: String,
-                default: null,
-            },
-
-            fileSize: {
-                type: Number,
-                default: null,
-            },
-        },
-
-        isRead: {
-            type: Boolean,
-            default: false,
-        },
-
-        readAt: {
-            type: Date,
-            default: null,
-        },
-
-        isDeleted: {
-            type: Boolean,
-            default: false,
-        },
-
-        deletedAt: {
-            type: Date,
-            default: null,
-        },
+const attachmentSchema=mongoose.Schema({
+    url:{
+        type:String,
+        required:[true,"attachment url is required"]
     },
-    {
-        timestamps: true,
+    fileName:{
+        type:String,
+        default:null
+    },
+    mimeType:{
+        type:String,
+        default:null
+    },
+    sizeInBytes:{
+        type:Number,
+        default:null
     }
+},{_id:false});
+
+
+
+
+const messageSchema=mongoose.Schema({
+    roomId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"ChatRoom",
+    },
+    senderId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
+    },
+    messageType:{
+        type:String,
+        enum:Object.values(message_type),
+        default:message_type.TEXT
+    },
+    content:{
+        type:String,
+        default:"",
+        trim:true
+    },
+    attachments:{
+        type:[attachmentSchema],
+        default:[]
+    },
+    readAt:{
+        type:Date,
+        default:null
+    }
+},
+{
+    timestamps:{createdAt:true,updatedAt:false}
+}
 );
 
-const Message = mongoose.model("Message", messageSchema);
 
-export default Message;
+messageSchema.index({
+    roomId:1,createdAt:1
+});
+
+
+messageSchema.methods.markAsRead=function(){
+    if(!this.readAt){
+    this.readAt=new Date();
+    }
+    return this;
+};
+
+
+export default mongoose.model("Message",messageSchema);

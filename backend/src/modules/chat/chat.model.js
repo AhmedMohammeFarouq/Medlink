@@ -1,70 +1,69 @@
 import mongoose from "mongoose";
+import { chat_room_status } from "./chat.types.js";
 
-const chatSchema = new mongoose.Schema(
-    {
-        participants: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-                required: true,
-            },
-        ],
-
-        patientId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Patient",
-            default: null,
-        },
-
-        doctorId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Doctor",
-            default: null,
-        },
-
-        clinicId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Clinic",
-            default: null,
-        },
-
-        type: {
-            type: String,
-            enum: [
-                "PATIENT_DOCTOR",
-                "PATIENT_CLINIC",
-                "DOCTOR_CLINIC",
-                "GROUP",
-            ],
-            default: "PATIENT_DOCTOR",
-        },
-
-        lastMessageId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Message",
-            default: null,
-        },
-
-        lastMessageAt: {
-            type: Date,
-            default: null,
-        },
-
-        status: {
-            type: String,
-            enum: [
-                "ACTIVE",
-                "ARCHIVED",
-                "BLOCKED",
-            ],
-            default: "ACTIVE",
-        },
+const chatRoomSchema= mongoose.Schema({
+    patientId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"user",
+        required:[true,"patient is required"],
+        index:true
     },
-    {
-        timestamps: true,
+    doctorId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"user",
+        required:[true,"doctor is required"],
+        index:true
+    },
+    appointmentId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Appointment",
+        default:null,
+        index:true
+    },
+
+    status:{
+        type:String,
+        enum:Object.values(chat_room_status),
+        default:chat_room_status.ACTIVE,
+        index:true
+    },
+    expiresAt: {
+        type: Date,
+        default: null,
+    },
+
+},
+{
+    timestamps:true
+});
+
+chatRoomSchema.index({
+    doctorId:1,patientId:1,appointmentId:1
+},
+{
+    unique:true,
+    partialFilterExpression:{
+        status:chat_room_status.ACTIVE
     }
-);
+});
 
-const Chat = mongoose.model("Chat", chatSchema);
 
-export default Chat;
+chatRoomSchema.methods.isActive=function(){
+    if(this.status===chat_room_status.ACTIVE){
+        return true;
+    }
+    return false;
+};
+
+chatRoomSchema.methods.hasParticipant=function(userId){
+    if(!userId){
+        return false;
+    }
+    if(this.patientId.equals(userId) || this.doctorId.equals(userId)){
+        return true;
+    }
+    return false;
+};
+
+
+export default mongoose.model("ChatRoom",chatRoomSchema);
