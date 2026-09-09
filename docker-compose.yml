@@ -1,0 +1,23 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: medlink-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: medlink_admin
+      MONGO_INITDB_ROOT_PASSWORD: medlink_password
+      MONGO_INITDB_DATABASE: medlink_db
+    volumes:
+      - medlink_mongo_data:/data/db
+    networks:
+      - medlink-network
+
+volumes:
+  medlink_mongo_data:
+    driver: local
+
+networks:
+  medlink-network:
+    driver: bridge
