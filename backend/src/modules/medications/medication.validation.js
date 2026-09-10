@@ -1,8 +1,10 @@
-export const createMedicationValidation = (data) => {
+export const createMedicationValidation = (req, res, next) => {
+    const data = req.body || {};
     const errors = [];
 
-    // patientId
-    if (!data.patientId || typeof data.patientId !== "string" || !data.patientId.trim()) {
+    // patientId / patient
+    const patientId = data.patientId || data.patient;
+    if (!patientId || typeof patientId !== "string" || !patientId.trim()) {
         errors.push("Patient ID is required");
     }
 
@@ -21,15 +23,33 @@ export const createMedicationValidation = (data) => {
         errors.push("Frequency is required");
     }
 
-    return errors;
+    if (errors.length > 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors,
+        });
+    }
+
+    next();
 };
 
-export const medicationIdValidation = (data) => {
+export const medicationIdValidation = (req, res, next) => {
+    // يفحص الـ id من الـ params أو الـ body
+    const id = req.params.id || req.body.id;
     const errors = [];
 
-    if (!data.id || typeof data.id !== "string" || !data.id.trim()) {
+    if (!id || typeof id !== "string" || !id.trim()) {
         errors.push("Medication ID is required");
     }
 
-    return errors;
+    if (errors.length > 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors,
+        });
+    }
+
+    next();
 };

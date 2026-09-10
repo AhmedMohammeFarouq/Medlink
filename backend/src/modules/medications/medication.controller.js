@@ -42,13 +42,12 @@ export class MedicationController {
 
   static async deleteMedication  (req, res, next) {
   try {
-    const result = await medicationService.deleteMedication(req.params.id);
+    const result = await MedicationService.deleteMedication(req.params.id);
 
-    return successResponse({
-      res,
-      statusCode: 200,
+    return res.
+      status(200).json({success: true,
       message: "Medication deleted successfully",
-      data: result,
+      data: result
     });
   } catch (error) {
     next(error);

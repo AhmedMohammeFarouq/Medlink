@@ -18,13 +18,6 @@ export class MedicationService {
   }
 
   static async deleteMedication(id) {
-  const medication = await Medication.findById(id);
-
-  if (!medication) {
-    const error = new Error("Medication not found");
-    error.statusCode = 404;
-    throw error;
-  }
   return await Medication.findByIdAndDelete(id);
 };
 }

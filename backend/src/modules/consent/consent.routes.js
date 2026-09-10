@@ -45,13 +45,6 @@ router.get(
 );
 
 router.patch(
-  "/:id/approve",
-  roleMiddleware(ROLES.PATIENT, ROLES.SYSTEM_ADMIN),
-  consentIdValidation,
-  ConsentController.approve,
-);
-
-router.patch(
   "/:id/revoke",
   roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN),
   consentIdValidation,
