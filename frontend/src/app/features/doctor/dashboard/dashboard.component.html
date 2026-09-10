@@ -1,0 +1,96 @@
+<div class="doctor-dashboard">
+  <!-- Role-Based Page Header (Doctor Theme) -->
+  <app-page-header 
+    [title]="'dash.welcome_doctor' | translate" 
+    [subtitle]="'dash.doctor_desc' | translate"
+    icon="stethoscope"
+    role="doctor"
+    badge="portal.doctor">
+    <span class="badge badge-success px-3 py-2 text-sm">
+      <app-icon name="user-check" [size]="14"></app-icon>
+      <span>Licensed Practitioner</span>
+    </span>
+  </app-page-header>
+
+  <!-- Quick Actions Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <a routerLink="/doctor/appointments" class="card action-card">
+      <div class="action-icon-wrap primary">
+        <app-icon name="calendar" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.appointments' | translate }}</h4>
+      <p class="action-desc">Manage today's consultation queue</p>
+    </a>
+
+    <a routerLink="/doctor/patients" class="card action-card">
+      <div class="action-icon-wrap secondary">
+        <app-icon name="users" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.patients' | translate }}</h4>
+      <p class="action-desc">Access clinical records & histories</p>
+    </a>
+
+    <a routerLink="/doctor/encounters" class="card action-card">
+      <div class="action-icon-wrap accent">
+        <app-icon name="file-text" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.encounters' | translate }}</h4>
+      <p class="action-desc">Document patient clinical visits</p>
+    </a>
+
+    <a routerLink="/doctor/prescriptions" class="card action-card">
+      <div class="action-icon-wrap info">
+        <app-icon name="pill" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.prescriptions' | translate }}</h4>
+      <p class="action-desc">Issue and sign digital prescriptions</p>
+    </a>
+  </div>
+
+  <!-- Profile & Security Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="card">
+      <div class="card-header flex justify-between items-center mb-4">
+        <h4 class="text-lg font-bold">Doctor Profile Info</h4>
+        <a routerLink="/doctor/profile" class="btn btn-outline btn-sm">Edit Profile</a>
+      </div>
+      <div class="account-info-grid text-sm">
+        <div class="info-row">
+          <span class="text-muted">Physician Name:</span>
+          <strong>Dr. {{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</strong>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">Email:</span>
+          <strong>{{ currentUser()?.email }}</strong>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">Phone:</span>
+          <strong>{{ currentUser()?.phone || 'Not provided' }}</strong>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">System Role:</span>
+          <span class="badge badge-primary">{{ currentUser()?.role }}</span>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">Account Status:</span>
+          <span class="badge badge-success">{{ currentUser()?.status || 'ACTIVE' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header flex justify-between items-center mb-4">
+        <h4 class="text-lg font-bold">{{ 'menu.settings' | translate }}</h4>
+        <a routerLink="/doctor/settings" class="btn btn-outline btn-sm">Manage Devices</a>
+      </div>
+      <p class="text-sm text-muted mb-4">
+        Multi-device login tracking with automatic JWT refresh rotation.
+      </p>
+      <div class="security-badge flex items-center gap-2 text-sm text-success">
+        <app-icon name="shield-check" [size]="18"></app-icon>
+        <span>Doctor Account Authenticated</span>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,98 @@
+<div class="patient-dashboard">
+  <!-- Role-Based Page Header -->
+  <app-page-header 
+    [title]="'dash.welcome' | translate" 
+    [subtitle]="'dash.patient_desc' | translate"
+    icon="heart-pulse"
+    role="patient"
+    badge="portal.patient">
+    <span class="badge badge-success px-3 py-2 text-sm">
+      <app-icon name="check-circle" [size]="14"></app-icon>
+      <span>Account Active</span>
+    </span>
+  </app-page-header>
+
+  <!-- Quick Actions Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <a routerLink="/patient/doctors" class="card action-card">
+      <div class="action-icon-wrap primary">
+        <app-icon name="search" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.find_doctors' | translate }}</h4>
+      <p class="action-desc">Search certified specialists & clinics</p>
+    </a>
+
+    <a routerLink="/patient/appointments" class="card action-card">
+      <div class="action-icon-wrap secondary">
+        <app-icon name="calendar" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.appointments' | translate }}</h4>
+      <p class="action-desc">Schedule, view, or reschedule slots</p>
+    </a>
+
+    <a routerLink="/patient/prescriptions" class="card action-card">
+      <div class="action-icon-wrap accent">
+        <app-icon name="pill" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.prescriptions' | translate }}</h4>
+      <p class="action-desc">View active medication regimens</p>
+    </a>
+
+    <a routerLink="/patient/documents" class="card action-card">
+      <div class="action-icon-wrap info">
+        <app-icon name="file-text" [size]="22"></app-icon>
+      </div>
+      <h4 class="action-title">{{ 'menu.documents' | translate }}</h4>
+      <p class="action-desc">Securely upload reports & imaging</p>
+    </a>
+  </div>
+
+  <!-- Profile & Security Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="card">
+      <div class="card-header flex justify-between items-center mb-4">
+        <h4 class="text-lg font-bold">Health Account Info</h4>
+        <a routerLink="/patient/profile" class="btn btn-outline btn-sm">Edit Profile</a>
+      </div>
+      <div class="account-info-grid text-sm">
+        <div class="info-row">
+          <span class="text-muted">Full Name:</span>
+          <strong>{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</strong>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">Email:</span>
+          <strong>{{ currentUser()?.email }}</strong>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">Phone:</span>
+          <strong>{{ currentUser()?.phone || 'Not provided' }}</strong>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">Verification Status:</span>
+          <span class="badge" [class.badge-success]="currentUser()?.isEmailVerified" [class.badge-warning]="!currentUser()?.isEmailVerified">
+            {{ currentUser()?.isEmailVerified ? 'Verified' : 'Pending' }}
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="text-muted">Joined On:</span>
+          <strong>{{ currentUser()?.createdAt | dateFormat }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header flex justify-between items-center mb-4">
+        <h4 class="text-lg font-bold">{{ 'menu.settings' | translate }}</h4>
+        <a routerLink="/patient/settings" class="btn btn-outline btn-sm">Manage Devices</a>
+      </div>
+      <p class="text-sm text-muted mb-4">
+        Your account is protected by JWT access rotation and device session tracking.
+      </p>
+      <div class="security-badge flex items-center gap-2 text-sm text-success">
+        <app-icon name="shield-check" [size]="18"></app-icon>
+        <span>Secure Active Session Active</span>
+      </div>
+    </div>
+  </div>
+</div>
+

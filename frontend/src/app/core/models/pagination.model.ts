@@ -1,0 +1,9 @@
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: string;
+  status?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}

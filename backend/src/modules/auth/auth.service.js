@@ -72,12 +72,23 @@ export const register = async (data) => {
     const verificationCode = await generateEmailVerificationCode(user._id);
 
 
-    // 5. Send verification email
-    await sendVerificationEmail({
-        to: user.email,
-        firstName: user.firstName,
-        verificationCode,
-    });
+    // // 5. Send verification email
+    // await sendVerificationEmail({
+    //     to: user.email,
+    //     firstName: user.firstName,
+    //     verificationCode,
+    // });
+
+
+    try {
+        await sendVerificationEmail({
+            to: user.email,
+            firstName: user.firstName,
+            verificationCode,
+        });
+    } catch (emailError) {
+        console.error("Failed to send verification email:", emailError);
+    }
 
 
     const userResponse = user.toObject();

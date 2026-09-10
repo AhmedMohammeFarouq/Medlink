@@ -1,0 +1,169 @@
+<div class="doctor-profile-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Doctor Profile & Clinical Credentials</h2>
+      <p class="text-muted text-sm">Practitioner identity, verification status, and credentials</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline btn-sm" (click)="isPasswordModalOpen = true">
+        <span class="material-symbols-outlined">lock</span>
+        <span>Change Password</span>
+      </button>
+      <button class="btn btn-primary btn-sm" (click)="openEditModal()">
+        <span class="material-symbols-outlined">edit</span>
+        <span>Edit Profile</span>
+      </button>
+    </div>
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <span class="material-symbols-outlined">error</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading doctor profile from server...</p>
+    </div>
+  } @else if (user) {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="card avatar-card text-center">
+        <div class="profile-avatar-wrap">
+          @if (user.profileImage) {
+            <img [src]="user.profileImage" alt="Avatar" class="avatar-img" />
+          } @else {
+            <div class="avatar-placeholder">{{ user.firstName.charAt(0) }}</div>
+          }
+        </div>
+        <h3 class="text-xl font-bold mt-4">Dr. {{ user.firstName }} {{ user.lastName }}</h3>
+        <span class="badge badge-primary mt-1">{{ user.role }}</span>
+
+        <div class="account-status-list mt-6 text-left">
+          <div class="status-item">
+            <span class="text-xs text-muted">Clinical Status:</span>
+            <span class="badge badge-success">{{ user.status }}</span>
+          </div>
+          <div class="status-item">
+            <span class="text-xs text-muted">Syndicate Verified:</span>
+            <span class="badge" [class.badge-success]="user.isVerified" [class.badge-warning]="!user.isVerified">
+              {{ user.isVerified ? 'VERIFIED' : 'PENDING REVIEW' }}
+            </span>
+          </div>
+          <div class="status-item">
+            <span class="text-xs text-muted">Joined:</span>
+            <span class="text-xs font-semibold">{{ user.createdAt | dateFormat }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card details-card md:grid-cols-2" style="grid-column: span 2;">
+        <h4 class="text-lg font-bold mb-4">Doctor Contact & Identity Details</h4>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label class="detail-label">First Name</label>
+            <span class="detail-val">{{ user.firstName }}</span>
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">Last Name</label>
+            <span class="detail-val">{{ user.lastName }}</span>
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">Email Address</label>
+            <span class="detail-val">{{ user.email }}</span>
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">Phone</label>
+            <span class="detail-val">{{ user.phone || 'Not provided' }}</span>
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">Gender</label>
+            <span class="detail-val">{{ user.gender || 'Not specified' }}</span>
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">Date of Birth</label>
+            <span class="detail-val">{{ user.dateOfBirth ? (user.dateOfBirth | dateFormat) : 'Not specified' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Edit Profile Modal -->
+  <app-modal [isOpen]="isEditModalOpen" title="Edit Doctor Profile" (close)="isEditModalOpen = false">
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-control" formControlName="firstName" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-control" formControlName="lastName" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone (Egyptian)</label>
+        <input type="tel" class="form-control" formControlName="phone" />
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select class="form-control" formControlName="gender">
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" formControlName="dateOfBirth" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Profile Image (Cloudinary)</label>
+        <input type="file" accept="image/*" class="form-control" (change)="onFileSelected($event)" />
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" class="btn btn-outline" (click)="isEditModalOpen = false">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </form>
+  </app-modal>
+
+  <!-- Password Modal -->
+  <app-modal [isOpen]="isPasswordModalOpen" title="Change Password" (close)="isPasswordModalOpen = false">
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <div class="form-group">
+        <label class="form-label">Current Password</label>
+        <input type="password" class="form-control" formControlName="currentPassword" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">New Password (Min 8 characters)</label>
+        <input type="password" class="form-control" formControlName="newPassword" />
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" class="btn btn-outline" (click)="isPasswordModalOpen = false">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          {{ isSaving ? 'Updating...' : 'Update Password' }}
+        </button>
+      </div>
+    </form>
+  </app-modal>
+</div>

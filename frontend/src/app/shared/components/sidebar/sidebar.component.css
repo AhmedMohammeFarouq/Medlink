@@ -1,0 +1,235 @@
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 37, 64, 0.55);
+  z-index: 1000;
+  transition: opacity var(--transition-base);
+}
+
+.sidebar-aside {
+  width: 260px;
+  background: #FFFFFF;
+  border-inline-end: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  inset-inline-start: 0;
+  z-index: 1001;
+  flex-shrink: 0;
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-xl);
+}
+
+:host-context(body.is-rtl) .sidebar-aside {
+  transform: translateX(100%);
+}
+
+.sidebar-aside.is-open {
+  transform: translateX(0);
+}
+
+@media (min-width: 1024px) {
+  .sidebar-backdrop {
+    display: none;
+  }
+
+  .sidebar-aside {
+    position: sticky;
+    transform: none !important;
+    box-shadow: none;
+    z-index: 50;
+  }
+}
+
+.sidebar-header {
+  padding: 1.25rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.portal-tag {
+  font-size: 0.625rem;
+  padding: 0.125rem 0.45rem;
+  align-self: flex-start;
+}
+
+.sidebar-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-close-btn:hover {
+  background: var(--bg-muted);
+  color: var(--text-main);
+}
+
+@media (min-width: 1024px) {
+  .sidebar-close-btn {
+    display: none;
+  }
+}
+
+.sidebar-nav {
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-link:hover {
+  background: var(--bg-muted);
+  color: var(--navy-900);
+}
+
+.sidebar-link.active {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.sidebar-link.active ::ng-deep .nav-icon {
+  stroke: var(--primary);
+}
+
+.nav-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-badge {
+  font-size: 0.6875rem;
+  padding: 0.15rem 0.4rem;
+}
+
+.sidebar-footer {
+  padding: 1rem 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #FFFFFF;
+}
+
+.sidebar-lang-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-lang-btn:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--border-focus);
+}
+
+.user-profile-widget {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-muted);
+}
+
+.user-avatar-initials {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  background: var(--navy-900);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.user-meta-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.user-display-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.user-role-tag {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--danger);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.logout-btn:hover {
+  background: var(--danger-bg);
+}

@@ -1,0 +1,9 @@
+<div class="message-wrap" [class.is-me]="isMe">
+  <div class="bubble">
+    @if (!isMe && message.senderName) {
+      <span class="sender-name">{{ message.senderName }}</span>
+    }
+    <p class="content">{{ message.content }}</p>
+    <span class="time">{{ message.createdAt | dateFormat:true }}</span>
+  </div>
+</div>

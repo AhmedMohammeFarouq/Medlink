@@ -1,0 +1,37 @@
+<div class="card doctor-card">
+  <div class="doctor-avatar-wrap">
+    <span class="material-symbols-outlined doctor-icon">stethoscope</span>
+  </div>
+
+  <div class="doctor-content">
+    <div class="doctor-header">
+      <h3 class="doctor-name">{{ doctorName }}</h3>
+      <span class="badge badge-primary">{{ doctor.professionalInfo.specialty }}</span>
+    </div>
+
+    @if (doctor.professionalInfo.medicalDegree) {
+      <p class="doctor-degree">{{ doctor.professionalInfo.medicalDegree }}</p>
+    }
+
+    @if (doctor.professionalInfo.yearsOfExperience) {
+      <p class="doctor-exp">
+        <span class="material-symbols-outlined icon">work_history</span>
+        <span>{{ doctor.professionalInfo.yearsOfExperience }} Years Experience</span>
+      </p>
+    }
+
+    @if (doctor.rating) {
+      <div class="doctor-rating">
+        <app-rating-stars [rating]="doctor.rating"></app-rating-stars>
+        @if (doctor.reviewsCount) {
+          <span class="reviews-count">({{ doctor.reviewsCount }} reviews)</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="doctor-footer">
+    <button class="btn btn-outline btn-sm" (click)="viewProfile.emit(doctor)">Profile</button>
+    <button class="btn btn-primary btn-sm" (click)="book.emit(doctor)">Book Appointment</button>
+  </div>
+</div>

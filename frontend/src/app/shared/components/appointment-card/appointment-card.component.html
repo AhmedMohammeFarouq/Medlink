@@ -1,0 +1,39 @@
+<div class="card appointment-card">
+  <div class="appointment-header">
+    <div class="appointment-date-badge">
+      <span class="material-symbols-outlined icon">calendar_month</span>
+      <span class="date-text">{{ appointment.scheduledAt | dateFormat:true }}</span>
+    </div>
+    <span class="badge" [ngClass]="getStatusClass(appointment.status)">
+      {{ appointment.status | statusLabel }}
+    </span>
+  </div>
+
+  <div class="appointment-body">
+    <div class="info-row">
+      <span class="material-symbols-outlined info-icon">medical_services</span>
+      <span class="info-text"><strong>Type:</strong> {{ appointment.type | statusLabel }}</span>
+    </div>
+
+    @if (appointment.reason) {
+      <div class="info-row">
+        <span class="material-symbols-outlined info-icon">notes</span>
+        <span class="info-text">{{ appointment.reason }}</span>
+      </div>
+    }
+  </div>
+
+  @if (showActions) {
+    <div class="appointment-footer">
+      <button class="btn btn-outline btn-sm" (click)="viewDetails.emit(appointment)">
+        <span>Details</span>
+      </button>
+
+      @if (appointment.status === 'PENDING' || appointment.status === 'CONFIRMED') {
+        <button class="btn btn-outline btn-sm text-danger" (click)="cancel.emit(appointment)">
+          <span>Cancel</span>
+        </button>
+      }
+    </div>
+  }
+</div>

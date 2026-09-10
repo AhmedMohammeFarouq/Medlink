@@ -1,0 +1,11 @@
+export const PERMISSIONS = {
+  USER_READ: 'USER_READ',
+  USER_UPDATE: 'USER_UPDATE',
+  USER_DELETE: 'USER_DELETE',
+  USER_MANAGE: 'USER_MANAGE',
+
+  SESSION_READ: 'SESSION_READ',
+  SESSION_REVOKE: 'SESSION_REVOKE'
+} as const;
+
+export type AppPermission = typeof PERMISSIONS[keyof typeof PERMISSIONS];

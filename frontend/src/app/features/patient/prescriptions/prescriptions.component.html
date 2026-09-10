@@ -1,0 +1,38 @@
+<div class="rx-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">E-Prescriptions</h2>
+      <p class="text-muted text-sm">Active medical treatments, instructions, and pharmacy dispensing details</p>
+    </div>
+  </div>
+
+  @if (isBackendModulePending) {
+    <div class="alert alert-info mb-6">
+      <span class="material-symbols-outlined">info</span>
+      <div>
+        <strong>Prescriptions Service Active</strong>
+        <p class="text-xs mt-1">
+          Connected to <code>/api/v1/prescriptions</code>. Official digital prescriptions will populate once the prescriptions module is enabled.
+        </p>
+      </div>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading prescriptions...</p>
+    </div>
+  } @else if (prescriptions.length === 0) {
+    <app-empty-state
+      icon="prescriptions"
+      title="No Active Prescriptions"
+      description="You currently have no prescribed medication regimens on file.">
+    </app-empty-state>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (rx of prescriptions; track rx._id) {
+        <app-prescription-card [prescription]="rx" (print)="onPrint($event)"></app-prescription-card>
+      }
+    </div>
+  }
+</div>

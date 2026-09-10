@@ -1,0 +1,68 @@
+<div class="doctor-patients-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Assigned Patient Roster</h2>
+      <p class="text-muted text-sm">Active clinical patients, universal health IDs, and medical histories</p>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <app-search-bar
+      placeholder="Search patient by name or Universal Health ID..."
+      [value]="searchQuery"
+      (search)="onSearch($event)">
+    </app-search-bar>
+  </div>
+
+  @if (isBackendModulePending) {
+    <div class="alert alert-info mb-6">
+      <span class="material-symbols-outlined">info</span>
+      <div>
+        <strong>Patient Clinical Service Active</strong>
+        <p class="text-xs mt-1">
+          Connected to <code>/api/v1/patients</code>. Patient charts and biometric records will populate when the patients route is activated in the backend router.
+        </p>
+      </div>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading patient roster...</p>
+    </div>
+  } @else if (filteredPatients.length === 0) {
+    <app-empty-state
+      icon="groups"
+      title="No Patients in Clinical Roster"
+      description="You currently have no patient records assigned to your medical practice.">
+    </app-empty-state>
+  } @else {
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Health ID</th>
+            <th>Blood Type</th>
+            <th>Registered</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of filteredPatients; track p._id) {
+            <tr>
+              <td>
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary">person</span>
+                  <strong>Patient Chart</strong>
+                </div>
+              </td>
+              <td><span class="badge badge-primary font-mono">{{ p.healthId || 'N/A' }}</span></td>
+              <td><span class="badge badge-secondary">{{ p.bloodType }}</span></td>
+              <td>{{ p.createdAt | dateFormat }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

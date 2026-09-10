@@ -1,0 +1,96 @@
+<div class="settings-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Security & Active Devices</h2>
+      <p class="text-muted text-sm">Manage browser sessions and devices currently logged into your MEDLINK account</p>
+    </div>
+    @if (sessions.length > 1) {
+      <button class="btn btn-outline text-danger btn-sm" (click)="revokeAll()">
+        <span class="material-symbols-outlined">power_settings_new</span>
+        <span>Revoke All Other Sessions</span>
+      </button>
+    }
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <span class="material-symbols-outlined">error</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <div class="card">
+    <div class="card-header flex justify-between items-center mb-4">
+      <h4 class="text-lg font-bold">Logged-in Devices ({{ sessions.length }})</h4>
+      <button class="btn btn-outline btn-sm" (click)="loadSessions()">
+        <span class="material-symbols-outlined">refresh</span>
+        <span>Refresh</span>
+      </button>
+    </div>
+
+    @if (isLoading) {
+      <div class="py-8 text-center text-muted">
+        Loading active device sessions...
+      </div>
+    } @else if (sessions.length === 0) {
+      <div class="py-8 text-center text-muted">
+        No active sessions found.
+      </div>
+    } @else {
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Device / Platform</th>
+              <th>IP Address</th>
+              <th>Last Active</th>
+              <th>Created</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of sessions; track s._id) {
+              <tr>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">devices</span>
+                    <strong>{{ s.deviceInfo || 'Browser Session' }}</strong>
+                  </div>
+                  @if (s.userAgent) {
+                    <div class="text-xs text-muted mt-1 truncate max-w-xs">{{ s.userAgent }}</div>
+                  }
+                </td>
+                <td class="font-mono text-xs">{{ s.ipAddress || '—' }}</td>
+                <td>{{ s.lastUsedAt | dateFormat:true }}</td>
+                <td>{{ s.createdAt | dateFormat }}</td>
+                <td>
+                  <button class="btn btn-outline btn-sm text-danger" (click)="revokeSession(s)">
+                    <span class="material-symbols-outlined">link_off</span>
+                    <span>Revoke</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  <app-confirm-dialog
+    [isOpen]="isConfirmOpen"
+    [title]="confirmTitle"
+    [message]="confirmMessage"
+    confirmText="Revoke Session"
+    [isDanger]="true"
+    (confirm)="onConfirm()"
+    (cancel)="isConfirmOpen = false">
+  </app-confirm-dialog>
+</div>

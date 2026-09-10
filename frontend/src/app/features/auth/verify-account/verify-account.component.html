@@ -1,0 +1,90 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="card auth-card">
+      <div class="auth-header text-center">
+        <div class="flex justify-center mb-4">
+          <app-logo size="md" link="/"></app-logo>
+        </div>
+        <h2 class="auth-title">{{ 'auth.verify_title' | translate }}</h2>
+        <p class="auth-subtitle">{{ 'auth.verify_subtitle' | translate }}</p>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger mb-4">
+          <app-icon name="alert-circle" [size]="18"></app-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success mb-4">
+          <app-icon name="check-circle" [size]="18"></app-icon>
+          <span>{{ successMessage }}</span>
+        </div>
+      }
+
+      <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="verify-email">{{ 'auth.email' | translate }}</label>
+          <input 
+            id="verify-email"
+            type="email" 
+            class="form-control" 
+            placeholder="name@example.com"
+            formControlName="email"
+            [class.is-invalid]="verifyForm.get('email')?.invalid && verifyForm.get('email')?.touched"
+          />
+          @if (verifyForm.get('email')?.invalid && verifyForm.get('email')?.touched) {
+            <span class="form-error">Please provide a valid email</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="verify-code">{{ 'auth.code' | translate }}</label>
+          <input 
+            id="verify-code"
+            type="text" 
+            class="form-control code-input font-mono" 
+            placeholder="123456"
+            maxlength="6"
+            formControlName="code"
+            [class.is-invalid]="verifyForm.get('code')?.invalid && verifyForm.get('code')?.touched"
+          />
+          @if (verifyForm.get('code')?.invalid && verifyForm.get('code')?.touched) {
+            <span class="form-error">Code must be exactly 6 digits</span>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full py-3" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner-sm"></span>
+            <span>Verifying Code...</span>
+          } @else {
+            <app-icon name="check" [size]="18"></app-icon>
+            <span>{{ 'auth.verify_btn' | translate }}</span>
+          }
+        </button>
+
+        <div class="resend-wrap text-center mt-4">
+          <button type="button" class="btn btn-outline btn-sm w-full" (click)="resendCode()" [disabled]="isResending">
+            @if (isResending) {
+              <span class="spinner-sm"></span>
+              <span>Resending Code...</span>
+            } @else {
+              <app-icon name="refresh" [size]="16"></app-icon>
+              <span>{{ 'auth.resend_btn' | translate }}</span>
+            }
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-footer text-center mt-6">
+        <p class="text-sm text-muted">
+          {{ 'auth.already_have_account' | translate }} 
+          <a routerLink="/login" class="font-semibold text-primary ms-1">{{ 'auth.signin_btn' | translate }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+

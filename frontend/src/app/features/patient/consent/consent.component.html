@@ -1,0 +1,42 @@
+<div class="consent-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Health Data Consent</h2>
+      <p class="text-muted text-sm">Control which physicians and clinics have permission to inspect your medical records</p>
+    </div>
+  </div>
+
+  @if (isBackendModulePending) {
+    <div class="alert alert-info mb-6">
+      <span class="material-symbols-outlined">info</span>
+      <div>
+        <strong>Consent Security Service Configured</strong>
+        <p class="text-xs mt-1">
+          Connected to <code>/api/v1/consent</code>. Access authorization requests will appear here when the consent backend route is active.
+        </p>
+      </div>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading consent permissions...</p>
+    </div>
+  } @else if (consents.length === 0) {
+    <app-empty-state
+      icon="security"
+      title="No Active Consent Requests"
+      description="No medical practitioners are currently requesting permission to access your clinical profile.">
+    </app-empty-state>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (c of consents; track c._id) {
+        <app-consent-card
+          [consent]="c"
+          (grant)="grantConsent($event)"
+          (revoke)="revokeConsent($event)">
+        </app-consent-card>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,140 @@
+<div class="auth-page">
+  <div class="auth-container register-container">
+    <div class="card auth-card register-card">
+      <div class="auth-header text-center">
+        <div class="flex justify-center mb-4">
+          <app-logo size="md" link="/"></app-logo>
+        </div>
+        <h2 class="auth-title">{{ 'auth.register_title' | translate }}</h2>
+        <p class="auth-subtitle">{{ 'auth.register_subtitle' | translate }}</p>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger mb-4">
+          <app-icon name="alert-circle" [size]="18"></app-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label" for="reg-fname">{{ 'auth.fname' | translate }} *</label>
+            <input 
+              id="reg-fname"
+              type="text" 
+              class="form-control" 
+              placeholder="John"
+              formControlName="firstName"
+              [class.is-invalid]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+            />
+            @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
+              <span class="form-error">First name required (2-50 chars)</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-lname">{{ 'auth.lname' | translate }} *</label>
+            <input 
+              id="reg-lname"
+              type="text" 
+              class="form-control" 
+              placeholder="Doe"
+              formControlName="lastName"
+              [class.is-invalid]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+            />
+            @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
+              <span class="form-error">Last name required (2-50 chars)</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">{{ 'auth.email' | translate }} *</label>
+          <input 
+            id="reg-email"
+            type="email" 
+            class="form-control" 
+            placeholder="name@example.com"
+            formControlName="email"
+            [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          />
+          @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <span class="form-error">Please provide a valid email address</span>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label" for="reg-phone">{{ 'auth.phone' | translate }}</label>
+            <input 
+              id="reg-phone"
+              type="tel" 
+              class="form-control" 
+              placeholder="01012345678"
+              formControlName="phone"
+              [class.is-invalid]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched"
+            />
+            @if (registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched) {
+              <span class="form-error">Must be 01[0125]xxxxxxxx</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-gender">{{ 'auth.gender' | translate }}</label>
+            <select id="reg-gender" class="form-control" formControlName="gender">
+              <option value="MALE">{{ 'auth.gender_male' | translate }}</option>
+              <option value="FEMALE">{{ 'auth.gender_female' | translate }}</option>
+              <option value="OTHER">{{ 'auth.gender_other' | translate }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label" for="reg-dob">{{ 'auth.dob' | translate }}</label>
+            <input 
+              id="reg-dob"
+              type="date" 
+              class="form-control" 
+              formControlName="dateOfBirth"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-pass">{{ 'auth.password' | translate }} *</label>
+            <input 
+              id="reg-pass"
+              type="password" 
+              class="form-control" 
+              placeholder="Min 8 characters"
+              formControlName="password"
+              [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            />
+            @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+              <span class="form-error">Password must be at least 8 characters</span>
+            }
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full py-3 mt-3" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner-sm"></span>
+            <span>{{ 'auth.creating_account' | translate }}</span>
+          } @else {
+            <app-icon name="user-plus" [size]="18" [flipOnRtl]="true"></app-icon>
+            <span>{{ 'auth.register_btn' | translate }}</span>
+          }
+        </button>
+      </form>
+
+      <div class="auth-footer text-center mt-6">
+        <p class="text-sm text-muted">
+          {{ 'auth.already_have_account' | translate }} 
+          <a routerLink="/login" class="font-semibold text-primary ms-1">{{ 'auth.signin_btn' | translate }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+

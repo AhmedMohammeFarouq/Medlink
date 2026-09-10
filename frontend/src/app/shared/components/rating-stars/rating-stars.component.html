@@ -1,0 +1,8 @@
+<div class="rating-stars">
+  @for (star of stars; track star) {
+    <span class="material-symbols-outlined star-icon" [class.filled]="star <= rating">
+      {{ star <= rating ? 'star' : 'star_outline' }}
+    </span>
+  }
+  <span class="rating-value">{{ rating.toFixed(1) }}</span>
+</div>

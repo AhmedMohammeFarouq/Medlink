@@ -1,0 +1,19 @@
+<div class="card notif-card" [class.unread]="!notification.isRead">
+  <div class="notif-icon-wrap">
+    <span class="material-symbols-outlined notif-icon">notifications</span>
+  </div>
+
+  <div class="notif-content">
+    <div class="notif-header">
+      <h4 class="notif-title">{{ notification.title }}</h4>
+      <span class="notif-time">{{ notification.createdAt | dateFormat:true }}</span>
+    </div>
+    <p class="notif-message">{{ notification.message }}</p>
+  </div>
+
+  @if (!notification.isRead) {
+    <button class="btn btn-outline btn-sm" (click)="markRead.emit(notification)">
+      <span class="material-symbols-outlined">done</span>
+    </button>
+  }
+</div>

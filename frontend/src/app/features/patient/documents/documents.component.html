@@ -1,0 +1,96 @@
+<div class="documents-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Medical Documents</h2>
+      <p class="text-muted text-sm">Secure storage for lab analyses, pathology, and diagnostic imaging files</p>
+    </div>
+    <button class="btn btn-primary" (click)="isUploadModalOpen = true">
+      <span class="material-symbols-outlined">upload</span>
+      <span>Upload Document</span>
+    </button>
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <span class="material-symbols-outlined">error</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  @if (isBackendModulePending) {
+    <div class="alert alert-info mb-6">
+      <span class="material-symbols-outlined">info</span>
+      <div>
+        <strong>Cloud Storage Module Ready</strong>
+        <p class="text-xs mt-1">
+          Configured for Cloudinary multipart uploads via <code>/api/v1/documents</code>. Files will upload to the cloud repository when the documents route is activated.
+        </p>
+      </div>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading documents...</p>
+    </div>
+  } @else if (documents.length === 0) {
+    <app-empty-state
+      icon="upload_file"
+      title="No Documents Uploaded"
+      description="You have not uploaded any lab reports, diagnostic scans, or clinical summaries yet."
+      actionText="Upload First Document"
+      (action)="isUploadModalOpen = true">
+    </app-empty-state>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (doc of documents; track doc._id) {
+        <app-document-card [document]="doc" (delete)="onDelete($event)"></app-document-card>
+      }
+    </div>
+  }
+
+  <!-- Upload Modal -->
+  <app-modal [isOpen]="isUploadModalOpen" title="Upload Clinical Document" (close)="isUploadModalOpen = false">
+    <form [formGroup]="uploadForm" (ngSubmit)="submitUpload()">
+      <div class="form-group">
+        <label class="form-label">Document Title</label>
+        <input type="text" class="form-control" placeholder="e.g. Complete Blood Count (CBC) Report" formControlName="title" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-control" formControlName="type">
+          <option value="LAB_REPORT">Lab Report</option>
+          <option value="IMAGING">Diagnostic Imaging (X-Ray, MRI, CT)</option>
+          <option value="DISCHARGE_SUMMARY">Discharge Summary</option>
+          <option value="INSURANCE">Insurance Document</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Select File (PDF, JPEG, PNG)</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Clinical Notes (Optional)</label>
+        <textarea class="form-control" rows="2" placeholder="Relevant observations or doctor notes" formControlName="notes"></textarea>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" class="btn btn-outline" (click)="isUploadModalOpen = false">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isUploading || !selectedFile">
+          {{ isUploading ? 'Uploading...' : 'Upload File' }}
+        </button>
+      </div>
+    </form>
+  </app-modal>
+</div>

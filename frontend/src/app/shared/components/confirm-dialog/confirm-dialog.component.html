@@ -1,0 +1,20 @@
+@if (isOpen) {
+  <div class="confirm-backdrop" (click)="cancel.emit()">
+    <div class="confirm-dialog" (click)="$event.stopPropagation()">
+      <div class="confirm-icon-wrap" [class.danger]="isDanger">
+        <span class="material-symbols-outlined confirm-icon">{{ isDanger ? 'warning' : 'help_outline' }}</span>
+      </div>
+      <h3 class="confirm-title">{{ title }}</h3>
+      <p class="confirm-message">{{ message }}</p>
+      
+      <div class="confirm-actions">
+        <button type="button" class="btn btn-outline flex-1" (click)="cancel.emit()">
+          {{ cancelText }}
+        </button>
+        <button type="button" class="btn flex-1" [class.btn-danger]="isDanger" [class.btn-primary]="!isDanger" (click)="confirm.emit()">
+          {{ confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

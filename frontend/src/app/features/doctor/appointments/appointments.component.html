@@ -1,0 +1,55 @@
+<div class="doctor-appointments-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Doctor Consultation Schedule</h2>
+      <p class="text-muted text-sm">Review, confirm, or amend patient consultation bookings</p>
+    </div>
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <span class="material-symbols-outlined">error</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  @if (isBackendModulePending) {
+    <div class="alert alert-info mb-6">
+      <span class="material-symbols-outlined">info</span>
+      <div>
+        <strong>Doctor Appointments Queue Active</strong>
+        <p class="text-xs mt-1">
+          Connected to <code>/api/v1/appointments</code>. Live patient booking requests will stream here once the appointments route is enabled.
+        </p>
+      </div>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading appointments queue...</p>
+    </div>
+  } @else if (appointments.length === 0) {
+    <app-empty-state
+      icon="calendar_month"
+      title="No Appointments in Queue"
+      description="You have no patient consultations waiting for confirmation.">
+    </app-empty-state>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (appt of appointments; track appt._id) {
+        <app-appointment-card
+          [appointment]="appt"
+          (cancel)="cancelAppointment($event)">
+        </app-appointment-card>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,85 @@
+.rx-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.rx-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.rx-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--secondary);
+}
+
+.rx-badge .icon {
+  font-size: 1.25rem;
+}
+
+.rx-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rx-meta {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.rx-diag {
+  font-size: 0.875rem;
+}
+
+.rx-meds-list {
+  background: var(--bg-muted);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meds-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.med-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.med-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.med-dose {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.med-duration {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.rx-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
