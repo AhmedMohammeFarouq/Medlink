@@ -1,0 +1,28 @@
+@if (meta && meta.totalPages > 1) {
+  <div class="pagination">
+    <div class="pagination-info">
+      Showing page {{ meta.page }} of {{ meta.totalPages }} ({{ meta.total }} total)
+    </div>
+    <div class="pagination-controls">
+      <button 
+        type="button" 
+        class="btn btn-outline btn-sm" 
+        [disabled]="meta.page <= 1"
+        (click)="onPrev()">
+        <span class="material-symbols-outlined">chevron_left</span>
+        <span>Previous</span>
+      </button>
+
+      <span class="page-badge">{{ meta.page }}</span>
+
+      <button 
+        type="button" 
+        class="btn btn-outline btn-sm" 
+        [disabled]="meta.page >= meta.totalPages"
+        (click)="onNext()">
+        <span>Next</span>
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+  </div>
+}

@@ -6,6 +6,7 @@ import http from "http";
 import {Server}from "socket.io";
 import {setServer}from "./modules/notifications/notification.service.js"
 import {registerChatSocket}from "./modules/chat/chat.socket.js"
+import { setIoForCloseChat } from "./modules/chat/chat.service.js";
 
 const app = express();
 const port = env.port;
@@ -18,6 +19,8 @@ const io = new Server(httpServer,{
     }
 });
 
+
+setIoForCloseChat(io);
 setServer(io);
 registerChatSocket(io)
 

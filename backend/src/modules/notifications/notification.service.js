@@ -78,9 +78,18 @@ export const markAllAsRead=async(userId)=>{
         notificationStatus:notification_status.UNREAD
     };
 
+    const unreadNotifications=await Notification.find(query).select("_id");
 
-    const notifications=await Notification.updateMany(query,
-        {$set:{notificationStatus:notification_status.READ,readAt: new Date()
-    }});
-    return notifications;
+    if(unreadNotifications.length===0){
+        return [];
+    }
+
+    const unreadNotificationIds=unreadNotifications.map((n)=>n._id);
+
+    await Notification.updateMany(
+        {_id:{$in:unreadNotificationIds}},
+        {$set:{notificationStatus:notification_status.READ,readAt: new Date()}}
+    );
+
+    return unreadNotificationIds;
 }

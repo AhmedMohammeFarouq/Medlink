@@ -2,11 +2,18 @@ import mongoose from "mongoose";
 
 const documentSchema = new mongoose.Schema(
     {
-        patientId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Patient",
-            default: null,
-        },
+         patientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Patient",
+      required: true,
+    },
+    uploadedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    title: { type: String, required: true },
+    fileUrl: { type: String, required: true },
 
         doctorId: {
             type: mongoose.Schema.Types.ObjectId,

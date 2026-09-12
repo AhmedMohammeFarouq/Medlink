@@ -1,6 +1,6 @@
 import express from "express";
 import * as notificationController from "./notification.controller.js";
-import authMiddleware  from "../../middlewares/auth.middleware.js";
+import authMiddleware from "../../middlewares/auth.middleware.js";
 
 const router = express.Router();
 router.use(authMiddleware);

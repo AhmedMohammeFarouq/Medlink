@@ -4,7 +4,7 @@ import * as notificationService from "./notification.service.js";
 export const listMyNotifications=async(req,res)=>{
     try{
         const unreadOnly = req.query.unreadOnly === "true";
-        const userId=req.user.id
+        const userId=req.user.userId
         const notifications=await notificationService.getNotificationForUser(userId,unreadOnly);
 
         res.status(200).json({
@@ -23,7 +23,7 @@ export const listMyNotifications=async(req,res)=>{
 export const markAsRead= async (req,res)=>{
     try{
         const notificationId=req.params.notificationId;
-        const userId=req.user.id;
+        const userId=req.user.userId;
         const notification=await notificationService.markAsRead(notificationId,userId);
         res.status(200).json({
             success:true,
@@ -40,7 +40,7 @@ export const markAsRead= async (req,res)=>{
 
 export const markAllAsRead=async (req,res)=>{
     try{
-        const userId=req.user.id;
+        const userId=req.user.userId;
         const notifications=await notificationService.markAllAsRead(userId);
         res.status(200).json({
             success:true,

@@ -1,9 +1,22 @@
+
 import { Router } from 'express';
 import notificationRoutes from "../modules/notifications/notification.routes.js" ;
 import chatRoutes from "../modules/chat/chat.routes.js"
+import authRouter from "../modules/auth/auth.routes.js";
+import userRoutes from "../modules/users/user.routes.js";
+import documentRoutes from "../modules/documents/document.routes.js";
+// import adminRoutes from '../modules/admin/admin.routes.js';
+// import reviewRoutes from '../modules/reviews/review.routes.js';
+// import auditRoutes from '../modules/audit/audit.routes.js';
 
 const router = Router();
-router.use("/notifications",notificationRoutes);
-router.use("/chat",chatRoutes);
+router.use("/v1/notifications",notificationRoutes);
+router.use("/v1/chat",chatRoutes);
 
+router.use("/v1/auth", authRouter);
+router.use("/v1/users", userRoutes);
+router.use("/v1/documents", documentRoutes);
+// router.use('/v1/admin', adminRoutes);
+// router.use('/v1/reviews', reviewRoutes);
+// router.use('/v1/audit', auditRoutes);
 export default router;

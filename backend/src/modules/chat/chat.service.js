@@ -1,12 +1,15 @@
 import Message from "./message.model.js";
 import ChatRoom from "./chat.model.js";
-import { chat_room_status } from "./chat.types.js";
+import { chat_room_status,chat_socket_event } from "./chat.types.js";
 import * as notificationService from "../notifications/notification.service.js";
 import { notification_type } from "../notifications/notification.types.js";
 
 
 
-
+let io = null;
+    function setIoForCloseChat(socketServer) {
+    io = socketServer;
+}
 
 
 class ChatError extends Error{
@@ -82,12 +85,12 @@ async function getRoomByIdForUser(roomId,userId){
 
 
 
-async function closeRoom(roomId,userId){
-    const room = await getRoomByIdForUser(roomId,userId);
-    room.status=chat_room_status.CLOSED;
-    await room.save();
-    return room;
-}
+// async function closeRoom(roomId,userId){
+//     const room = await getRoomByIdForUser(roomId,userId);
+//     room.status=chat_room_status.CLOSED;
+//     await room.save();
+//     return room;
+// }
 
 async function getMessages(roomId,userId){
     await getRoomByIdForUser(roomId,userId);
@@ -102,7 +105,7 @@ async function sendMessage({roomId,senderId,messageType,content,attachments}){
     const room =await ChatRoom.findById(roomId);
     assertParticipant(room,senderId);
 
-    if(room.status!==chat_room_status.ACTIVE){
+    if(!room.isActive()){
         throw new ChatError("room is closed or expired",400);
     }
 
@@ -162,8 +165,21 @@ async function markMessagesAsRead(roomId,userId){
     return unreadMessagesIds
 }
 
+async function closeRoom(roomId,userId){
+    const room = await getRoomByIdForUser(roomId,userId);
+    room.status=chat_room_status.CLOSED;
+    await room.save();
+
+    if (io) {
+        io.to(`chatRoom:${room._id}`).emit(chat_socket_event.ROOM_CLOSED, { roomId: room._id });
+    }
+
+    return room;
+}
+
 
 export {
+    setIoForCloseChat,
     findOrCreateChatRoom,
     getAllRoomsForUser,
     getRoomByIdForUser,

@@ -4,13 +4,13 @@ import { chat_room_status } from "./chat.types.js";
 const chatRoomSchema= mongoose.Schema({
     patientId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"user",
+        ref:"User",
         required:[true,"patient is required"],
         index:true
     },
     doctorId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"user",
+        ref:"User",
         required:[true,"doctor is required"],
         index:true
     },
