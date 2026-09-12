@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 
 import authRouter from "../modules/auth/auth.routes.js";
@@ -19,7 +20,13 @@ import encounterRouter from "../modules/encounters/encounter.routes.js";
 // import reviewRoutes from "../modules/reviews/review.routes.js";
 // import auditRoutes from "../modules/audit/audit.routes.js";
 
+import notificationRoutes from "../modules/notifications/notification.routes.js" ;
+import chatRoutes from "../modules/chat/chat.routes.js"
+
+
 const router = Router();
+router.use("/notifications",notificationRoutes);
+router.use("/chat",chatRoutes);
 
 router.use("/v1/auth", authRouter);
 router.use("/v1/users", userRoutes);
