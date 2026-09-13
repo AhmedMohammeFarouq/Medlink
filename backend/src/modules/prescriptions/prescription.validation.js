@@ -17,11 +17,7 @@ export const createPrescriptionValidation = (body) => {
         errors.push("Invalid doctor ID");
     }
 
-    if (!body.createdBy) {
-        errors.push("Created by is required");
-    } else if (!isValidObjectId(body.createdBy)) {
-        errors.push("Invalid created by ID");
-    }
+
 
     if (!body.medications || !Array.isArray(body.medications)) {
         errors.push("Medications must be an array");

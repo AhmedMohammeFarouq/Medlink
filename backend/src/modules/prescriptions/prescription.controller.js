@@ -40,7 +40,10 @@ const getPrescriptionById = async (req, res, next) => {
 const createPrescription = async (req, res, next) => {
     try {
         const prescription =
-            await prescriptionService.createPrescription(req.body);
+            await prescriptionService.createPrescription({
+                ...req.body,
+                createdBy: req.user.userId,
+            });
 
         return res.status(201).json({
             success: true,
@@ -50,7 +53,6 @@ const createPrescription = async (req, res, next) => {
         next(error);
     }
 };
-
 const updatePrescription = async (req, res, next) => {
     try {
         const prescription =
