@@ -26,5 +26,24 @@ export const uploadImage = (fileBuffer, folder) => {
         uploadStream.end(fileBuffer);
     });
 };
+export const uploadDocument = (fileBuffer, folder) => {
+    return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            {
+                folder,
+                resource_type: "raw",
+            },
+            (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+
+                resolve(result);
+            }
+        );
+
+        uploadStream.end(fileBuffer);
+    });
+};
 
 export default cloudinary;

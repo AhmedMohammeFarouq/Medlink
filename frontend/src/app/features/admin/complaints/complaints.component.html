@@ -1,0 +1,18 @@
+<div class="complaints-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Complaints & Grievances</h2>
+      <p class="text-muted text-sm">Dispute resolution and service grievance management queue</p>
+    </div>
+  </div>
+
+  <div class="card">
+    @if (complaints.length === 0) {
+      <app-empty-state
+        icon="report"
+        title="No Active Grievances"
+        description="There are currently no patient or provider complaints filed in the system.">
+      </app-empty-state>
+    }
+  </div>
+</div>

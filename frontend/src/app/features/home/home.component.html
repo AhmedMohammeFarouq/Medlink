@@ -1,0 +1,451 @@
+<div class="marketing-page">
+  <!-- =========================================================================
+       1. HERO SECTION
+       ========================================================================= -->
+  <section class="hero-section">
+    <div class="hero-mesh-bg">
+      <div class="glow-orb orb-primary"></div>
+      <div class="glow-orb orb-secondary"></div>
+      <div class="hero-grid-pattern"></div>
+    </div>
+
+    <div class="container hero-container">
+      <!-- Left Column: Copy & Actions -->
+      <div class="hero-content">
+        <div class="hero-trust-badge">
+          <app-icon name="shield-check" [size]="15" customClass="text-primary"></app-icon>
+          <span>{{ 'hero.badge' | translate }}</span>
+        </div>
+
+        <h1 class="hero-headline">
+          {{ 'hero.title_part1' | translate }}
+          <span class="gradient-text">{{ 'hero.title_part2' | translate }}</span>
+        </h1>
+
+        <p class="hero-subtext">
+          {{ 'hero.desc' | translate }}
+        </p>
+
+        <div class="hero-cta-group">
+          <a [routerLink]="startLink" class="btn btn-primary btn-lg shadow-hero">
+            <span>{{ isAuthenticated() ? ('nav.dashboard' | translate) : ('hero.cta_patient' | translate) }}</span>
+            <app-icon name="arrow-right" [size]="18" [flipOnRtl]="true"></app-icon>
+          </a>
+          <a routerLink="/patient/doctors" class="btn btn-outline btn-lg">
+            <app-icon name="search" [size]="18"></app-icon>
+            <span>{{ 'hero.cta_doctors' | translate }}</span>
+          </a>
+        </div>
+
+        <!-- Trust micro-indicators -->
+        <div class="hero-micro-trust">
+          <div class="micro-item">
+            <app-icon name="check-circle" [size]="16" customClass="text-success"></app-icon>
+            <span>Syndicate Verified</span>
+          </div>
+          <div class="micro-separator"></div>
+          <div class="micro-item">
+            <app-icon name="lock" [size]="16" customClass="text-primary"></app-icon>
+            <span>HIPAA Standards</span>
+          </div>
+          <div class="micro-separator"></div>
+          <div class="micro-item">
+            <app-icon name="pill" [size]="16" customClass="text-secondary"></app-icon>
+            <span>Digital E-Rx</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Layered Healthcare SaaS Composition -->
+      <div class="hero-visual-col">
+        <div class="visual-stack">
+          <!-- Main Glassmorphic Active Consultation Card -->
+          <div class="card visual-main-card">
+            <div class="visual-card-header">
+              <div class="card-status-indicator">
+                <span class="pulse-dot"></span>
+                <span class="status-label">ACTIVE CLINICAL NODE</span>
+              </div>
+              <span class="badge badge-success">
+                <app-icon name="shield-check" [size]="12"></app-icon>
+                <span>VERIFIED</span>
+              </span>
+            </div>
+
+            <div class="doctor-profile-hero">
+              <div class="doctor-avatar-circle">
+                <app-icon name="stethoscope" [size]="28" color="#0066CC"></app-icon>
+              </div>
+              <div class="doctor-meta">
+                <h4 class="doctor-name">Dr. Sarah Mansour</h4>
+                <p class="doctor-specialty">{{ 'hero.doctor_preview_specialty' | translate }}</p>
+                <div class="rating-badge">
+                  <app-icon name="star" [size]="14" color="#F59E0B"></app-icon>
+                  <span class="rating-score">4.98</span>
+                  <span class="rating-count">(450+ verified consultations)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="telemetry-bar">
+              <div class="telemetry-stat">
+                <span class="telem-label">Next Slot</span>
+                <span class="telem-val text-primary">Today 4:30 PM</span>
+              </div>
+              <div class="telem-divider"></div>
+              <div class="telemetry-stat">
+                <span class="telem-label">Consultation</span>
+                <span class="telem-val">Clinic & Online</span>
+              </div>
+              <div class="telem-divider"></div>
+              <div class="telemetry-stat">
+                <span class="telem-label">Sync Status</span>
+                <span class="telem-val text-success">Real-time</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Badge 1: Instant Slot Confirmation -->
+          <div class="floating-pill-card pill-top-right">
+            <div class="pill-icon-box bg-blue">
+              <app-icon name="calendar" [size]="18" color="#0066CC"></app-icon>
+            </div>
+            <div>
+              <div class="pill-title">{{ 'hero.stat_fast_booking' | translate }}</div>
+              <div class="pill-sub">Automated queue management</div>
+            </div>
+          </div>
+
+          <!-- Floating Badge 2: AES-256 Encrypted EHR -->
+          <div class="floating-pill-card pill-bottom-left">
+            <div class="pill-icon-box bg-teal">
+              <app-icon name="shield" [size]="18" color="#00A389"></app-icon>
+            </div>
+            <div>
+              <div class="pill-title">{{ 'hero.stat_encryption' | translate }}</div>
+              <div class="pill-sub">Zero patient data leakage</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       2. INSTITUTIONAL CLINICAL STANDARDS BAR
+       ========================================================================= -->
+  <section class="standards-bar-section">
+    <div class="container">
+      <div class="standards-grid">
+        <div class="standard-item">
+          <div class="standard-icon-wrap">
+            <app-icon name="user-check" [size]="24" color="#0066CC"></app-icon>
+          </div>
+          <div class="standard-text">
+            <h4 class="standard-title">{{ 'trust.standard1_title' | translate }}</h4>
+            <p class="standard-desc">{{ 'trust.standard1_desc' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="standard-item">
+          <div class="standard-icon-wrap">
+            <app-icon name="lock" [size]="24" color="#00A389"></app-icon>
+          </div>
+          <div class="standard-text">
+            <h4 class="standard-title">{{ 'trust.standard2_title' | translate }}</h4>
+            <p class="standard-desc">{{ 'trust.standard2_desc' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="standard-item">
+          <div class="standard-icon-wrap">
+            <app-icon name="activity" [size]="24" color="#0066CC"></app-icon>
+          </div>
+          <div class="standard-text">
+            <h4 class="standard-title">{{ 'trust.standard3_title' | translate }}</h4>
+            <p class="standard-desc">{{ 'trust.standard3_desc' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="standard-item">
+          <div class="standard-icon-wrap">
+            <app-icon name="pill" [size]="24" color="#00A389"></app-icon>
+          </div>
+          <div class="standard-text">
+            <h4 class="standard-title">{{ 'trust.standard4_title' | translate }}</h4>
+            <p class="standard-desc">{{ 'trust.standard4_desc' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       3. CORE PLATFORM CAPABILITIES
+       ========================================================================= -->
+  <section class="capabilities-section py-20" id="capabilities">
+    <div class="container">
+      <div class="section-header-center">
+        <span class="badge badge-primary">{{ 'caps.badge' | translate }}</span>
+        <h2 class="h1-title">{{ 'caps.title' | translate }}</h2>
+        <p class="body-lead">{{ 'caps.subtitle' | translate }}</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <!-- Capability 1 -->
+        <div class="card card-hoverable capability-card">
+          <div class="cap-icon-box bg-blue">
+            <app-icon name="calendar" [size]="24" color="#0066CC"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'caps.sched_title' | translate }}</h3>
+          <p class="body-text">{{ 'caps.sched_desc' | translate }}</p>
+          <div class="cap-footer">
+            <span class="cap-tag">Real-Time Sync</span>
+          </div>
+        </div>
+
+        <!-- Capability 2 -->
+        <div class="card card-hoverable capability-card">
+          <div class="cap-icon-box bg-teal">
+            <app-icon name="pill" [size]="24" color="#00A389"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'caps.rx_title' | translate }}</h3>
+          <p class="body-text">{{ 'caps.rx_desc' | translate }}</p>
+          <div class="cap-footer">
+            <span class="cap-tag">Tamper-Proof Barcode</span>
+          </div>
+        </div>
+
+        <!-- Capability 3 -->
+        <div class="card card-hoverable capability-card">
+          <div class="cap-icon-box bg-blue">
+            <app-icon name="folder" [size]="24" color="#0066CC"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'caps.ehr_title' | translate }}</h3>
+          <p class="body-text">{{ 'caps.ehr_desc' | translate }}</p>
+          <div class="cap-footer">
+            <span class="cap-tag">AES-256 Storage</span>
+          </div>
+        </div>
+
+        <!-- Capability 4 -->
+        <div class="card card-hoverable capability-card">
+          <div class="cap-icon-box bg-teal">
+            <app-icon name="file-text" [size]="24" color="#00A389"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'caps.soap_title' | translate }}</h3>
+          <p class="body-text">{{ 'caps.soap_desc' | translate }}</p>
+          <div class="cap-footer">
+            <span class="cap-tag">Clinical Standard</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       4. PATIENT EXPERIENCE JOURNEY
+       ========================================================================= -->
+  <section class="journey-section py-20" id="patient-experience">
+    <div class="container">
+      <div class="section-header-center">
+        <span class="badge badge-secondary">{{ 'patient_exp.badge' | translate }}</span>
+        <h2 class="h1-title">{{ 'patient_exp.title' | translate }}</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <!-- Step 1 -->
+        <div class="journey-step-card">
+          <div class="step-badge-number">01</div>
+          <div class="step-icon-wrap">
+            <app-icon name="search" [size]="26" color="#0066CC"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'patient_exp.step1_title' | translate }}</h3>
+          <p class="body-text">{{ 'patient_exp.step1_desc' | translate }}</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="journey-step-card">
+          <div class="step-badge-number">02</div>
+          <div class="step-icon-wrap">
+            <app-icon name="clock" [size]="26" color="#00A389"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'patient_exp.step2_title' | translate }}</h3>
+          <p class="body-text">{{ 'patient_exp.step2_desc' | translate }}</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="journey-step-card">
+          <div class="step-badge-number">03</div>
+          <div class="step-icon-wrap">
+            <app-icon name="heart-pulse" [size]="26" color="#0066CC"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'patient_exp.step3_title' | translate }}</h3>
+          <p class="body-text">{{ 'patient_exp.step3_desc' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <a [routerLink]="startLink" class="btn btn-primary btn-lg">
+          <span>{{ 'hero.cta_patient' | translate }}</span>
+          <app-icon name="arrow-right" [size]="18" [flipOnRtl]="true"></app-icon>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       5. CLINICIAN SUITE (DOCTOR EXPERIENCE)
+       ========================================================================= -->
+  <section class="doctor-suite-section py-20" id="doctor-suite">
+    <div class="container">
+      <div class="doctor-suite-box">
+        <div class="suite-content">
+          <span class="badge badge-primary">{{ 'doctor_exp.badge' | translate }}</span>
+          <h2 class="h1-title mt-4">{{ 'doctor_exp.title' | translate }}</h2>
+          <p class="body-lead mt-3">
+            Designed in consultation with practicing medical specialists to eliminate administrative friction and elevate patient encounter quality.
+          </p>
+
+          <div class="suite-features-list mt-8">
+            <div class="suite-feat-row">
+              <div class="feat-icon-bullet">
+                <app-icon name="users" [size]="20" color="#0066CC"></app-icon>
+              </div>
+              <div>
+                <h4 class="font-bold text-main">{{ 'doctor_exp.feat1_title' | translate }}</h4>
+                <p class="body-text text-sm">{{ 'doctor_exp.feat1_desc' | translate }}</p>
+              </div>
+            </div>
+
+            <div class="suite-feat-row">
+              <div class="feat-icon-bullet">
+                <app-icon name="calendar" [size]="20" color="#0066CC"></app-icon>
+              </div>
+              <div>
+                <h4 class="font-bold text-main">{{ 'doctor_exp.feat2_title' | translate }}</h4>
+                <p class="body-text text-sm">{{ 'doctor_exp.feat2_desc' | translate }}</p>
+              </div>
+            </div>
+
+            <div class="suite-feat-row">
+              <div class="feat-icon-bullet">
+                <app-icon name="pill" [size]="20" color="#0066CC"></app-icon>
+              </div>
+              <div>
+                <h4 class="font-bold text-main">{{ 'doctor_exp.feat3_title' | translate }}</h4>
+                <p class="body-text text-sm">{{ 'doctor_exp.feat3_desc' | translate }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <a [routerLink]="doctorLink" class="btn btn-secondary btn-lg">
+              <span>{{ 'hero.cta_doctor_login' | translate }}</span>
+              <app-icon name="arrow-right" [size]="18" [flipOnRtl]="true"></app-icon>
+            </a>
+          </div>
+        </div>
+
+        <div class="suite-preview-graphic">
+          <div class="card suite-card-mockup">
+            <div class="mockup-bar">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+              <span class="mockup-title">MEDLINK CLINICAL COCKPIT</span>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-encounter-item">
+                <div class="flex justify-between items-center">
+                  <strong>Encounter: Routine Cardiology Checkup</strong>
+                  <span class="badge badge-success">Completed</span>
+                </div>
+                <p class="text-xs text-muted mt-1">Patient: Ahmed Farouq • BP 120/80 • HR 72 bpm</p>
+                <div class="mockup-rx-badge mt-2">
+                  <app-icon name="pill" [size]="14"></app-icon>
+                  <span>E-Rx Issued: Bisoprolol 5mg (Signed)</span>
+                </div>
+              </div>
+
+              <div class="mockup-encounter-item mt-3">
+                <div class="flex justify-between items-center">
+                  <strong>Encounter: Follow-up Consultation</strong>
+                  <span class="badge badge-primary">In Queue</span>
+                </div>
+                <p class="text-xs text-muted mt-1">Patient: Mariam Ali • Scheduled 5:00 PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       6. ENTERPRISE SECURITY & PRIVACY BLUEPRINT
+       ========================================================================= -->
+  <section class="security-section py-20" id="security">
+    <div class="container">
+      <div class="section-header-center">
+        <span class="badge badge-neutral">
+          <app-icon name="lock" [size]="14"></app-icon>
+          <span>{{ 'sec.badge' | translate }}</span>
+        </span>
+        <h2 class="h1-title">{{ 'sec.title' | translate }}</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div class="card sec-card">
+          <div class="sec-icon-circle bg-blue">
+            <app-icon name="shield-check" [size]="24" color="#0066CC"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'sec.point1_title' | translate }}</h3>
+          <p class="body-text">{{ 'sec.point1_desc' | translate }}</p>
+        </div>
+
+        <div class="card sec-card">
+          <div class="sec-icon-circle bg-teal">
+            <app-icon name="settings" [size]="24" color="#00A389"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'sec.point2_title' | translate }}</h3>
+          <p class="body-text">{{ 'sec.point2_desc' | translate }}</p>
+        </div>
+
+        <div class="card sec-card">
+          <div class="sec-icon-circle bg-blue">
+            <app-icon name="file-text" [size]="24" color="#0066CC"></app-icon>
+          </div>
+          <h3 class="h3-title">{{ 'sec.point3_title' | translate }}</h3>
+          <p class="body-text">{{ 'sec.point3_desc' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       7. HIGH-CONVERSION CTA BANNER
+       ========================================================================= -->
+  <section class="final-cta-section">
+    <div class="container">
+      <div class="cta-banner-card">
+        <div class="cta-glow-backdrop"></div>
+        <div class="cta-card-content">
+          <h2 class="cta-headline">{{ 'cta.title' | translate }}</h2>
+          <p class="cta-subtitle">{{ 'cta.subtitle' | translate }}</p>
+
+          <div class="cta-btn-row">
+            <a [routerLink]="startLink" class="btn btn-primary btn-lg shadow-hero">
+              <span>{{ 'cta.btn_patient' | translate }}</span>
+              <app-icon name="arrow-right" [size]="18" [flipOnRtl]="true"></app-icon>
+            </a>
+            <a [routerLink]="doctorLink" class="btn btn-outline btn-lg">
+              <app-icon name="stethoscope" [size]="18"></app-icon>
+              <span>{{ 'cta.btn_doctor' | translate }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
