@@ -1,14 +1,17 @@
-import Doctor from "../../models/Doctor.js";
-import User from "../user/user.model.js";
+import Doctor from "../doctors/doctor.model.js";
+import User from "../users/user.model.js";
 import Appointment from "../appointments/appointment.model.js";
 import MedicalRecord from "../medical-records/medicalRecord.model.js";
 import { VERIFICATION_STATUS } from "./admin.types.js";
-import { AuditService } from "../audit/services/audit.service.js";
+import { AuditService } from "../audit/audit.services.js";
 
 export class ApiError extends Error {
   constructor(statusCode, message) {
     super(message);
     this.statusCode = statusCode;
+    this.status = statusCode; // compatibility with existing error middleware
+    this.isOperational = true; // distinguishes expected errors from system errors
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
