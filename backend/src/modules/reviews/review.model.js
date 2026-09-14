@@ -1,108 +1,45 @@
 import mongoose from "mongoose";
+import { REVIEW_STATUS } from "./review.types.js";
 
 const reviewSchema = new mongoose.Schema(
-    {
-        patientId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Patient",
-            required: true,
-        },
-
-        doctorId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Doctor",
-            default: null,
-        },
-
-        clinicId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Clinic",
-            default: null,
-        },
-
-        appointmentId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Appointment",
-            default: null,
-        },
-
-        rating: {
-            type: Number,
-            required: true,
-            min: 1,
-            max: 5,
-        },
-
-        title: {
-            type: String,
-            trim: true,
-            maxlength: 150,
-        },
-
-        comment: {
-            type: String,
-            trim: true,
-            maxlength: 1000,
-        },
-
-        status: {
-            type: String,
-            enum: [
-                "PENDING",
-                "PUBLISHED",
-                "HIDDEN",
-                "REJECTED",
-            ],
-            default: "PENDING",
-        },
-
-        isAnonymous: {
-            type: Boolean,
-            default: false,
-        },
-
-        response: {
-            text: {
-                type: String,
-                trim: true,
-                maxlength: 1000,
-                default: null,
-            },
-
-            respondedBy: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-                default: null,
-            },
-
-            respondedAt: {
-                type: Date,
-                default: null,
-            },
-        },
-
-        moderatedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            default: null,
-        },
-
-        moderatedAt: {
-            type: Date,
-            default: null,
-        },
-
-        moderationReason: {
-            type: String,
-            trim: true,
-            default: null,
-        },
+  {
+    patientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    {
-        timestamps: true,
-    }
+    doctorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctor",
+      required: true,
+    },
+    appointmentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Appointment",
+      required: true,
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      required: true,
+    },
+    comment: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    status: {
+      type: String,
+      enum: Object.values(REVIEW_STATUS),
+      default: REVIEW_STATUS.ACTIVE,
+    },
+  },
+  {
+    timestamps: true,
+  },
 );
 
-const Review = mongoose.model("Review", reviewSchema);
+reviewSchema.index({ appointmentId: 1, patientId: 1 }, { unique: true });
 
-export default Review;
+export default mongoose.model("Review", reviewSchema);

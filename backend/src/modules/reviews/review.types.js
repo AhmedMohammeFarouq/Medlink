@@ -1,0 +1,5 @@
+export const REVIEW_STATUS = {
+  ACTIVE: "ACTIVE",
+  HIDDEN: "HIDDEN",
+  DELETED: "DELETED",
+};
