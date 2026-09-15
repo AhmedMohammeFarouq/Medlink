@@ -16,7 +16,7 @@
   </header>
 
   <app-sidebar 
-    [items]="navItems" 
+    [items]="navItems()" 
     portalTitle="portal.doctor" 
     [isOpen]="isSidebarOpen()" 
     (closeSidebar)="closeSidebar()">

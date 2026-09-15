@@ -25,6 +25,13 @@
         <button class="btn btn-primary w-full mt-6" (click)="bookAppointment()">
           <span>Book Consultation</span>
         </button>
+        <button class="btn btn-outline w-full mt-3" (click)="messageDoctor()" [disabled]="isStartingChat">
+          <span class="material-symbols-outlined">chat</span>
+          <span>{{ isStartingChat ? 'Opening chat...' : 'Message' }}</span>
+        </button>
+        @if (errorMessage) {
+          <p class="text-xs text-danger mt-2">{{ errorMessage }}</p>
+        }
       </div>
 
       <div class="card md:grid-cols-2" style="grid-column: span 2;">
