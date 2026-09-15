@@ -1,0 +1,60 @@
+.document-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.document-icon-wrap {
+  position: relative;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doc-icon {
+  font-size: 1.75rem;
+  color: var(--primary);
+}
+
+.doc-ext {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 0.625rem;
+  padding: 0.125rem 0.25rem;
+}
+
+.document-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.document-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.document-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.document-notes {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.document-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

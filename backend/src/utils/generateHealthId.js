@@ -5,4 +5,3 @@ export const generateHealthId = () => {
 
     return `ML-${randomPart}`;
 };
-//add comment 

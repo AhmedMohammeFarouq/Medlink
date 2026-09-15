@@ -1,0 +1,32 @@
+<div class="portal-layout">
+  <!-- Mobile Top Bar Header -->
+  <header class="portal-mobile-bar">
+    <button type="button" class="portal-mobile-toggle" (click)="toggleSidebar()" aria-label="Open navigation drawer">
+      <app-icon name="menu" [size]="20"></app-icon>
+    </button>
+    <app-logo size="sm" link="/patient/dashboard"></app-logo>
+    <div class="portal-mobile-actions">
+      <button type="button" class="portal-mobile-lang-btn" (click)="toggleLanguage()" aria-label="Toggle language">
+        <app-icon name="globe" [size]="16"></app-icon>
+      </button>
+      <a routerLink="/patient/profile" class="portal-mobile-avatar">
+        {{ currentUser()?.firstName?.charAt(0) || 'P' }}
+      </a>
+    </div>
+  </header>
+
+  <!-- Sidebar Component -->
+  <app-sidebar 
+    [items]="navItems" 
+    portalTitle="portal.patient" 
+    [isOpen]="isSidebarOpen()" 
+    (closeSidebar)="closeSidebar()">
+  </app-sidebar>
+
+  <!-- Main Content Area -->
+  <main class="portal-content">
+    <div class="portal-body">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

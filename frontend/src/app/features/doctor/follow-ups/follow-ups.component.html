@@ -1,0 +1,46 @@
+<div class="follow-ups-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Patient Follow-up Tracker</h2>
+      <p class="text-muted text-sm">Post-consultation follow-up scheduling, chronic condition monitoring, and reminders</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Health ID</th>
+            <th>Clinical Reason</th>
+            <th>Timeline</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (f of followUps; track f.healthId) {
+            <tr>
+              <td><strong>{{ f.name }}</strong></td>
+              <td><span class="badge badge-primary font-mono">{{ f.healthId }}</span></td>
+              <td>{{ f.reason }}</td>
+              <td>{{ f.due }}</td>
+              <td>
+                <span class="badge" [class.badge-primary]="f.status === 'Scheduled'" [class.badge-warning]="f.status !== 'Scheduled'">
+                  {{ f.status }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-outline btn-sm">
+                  <span class="material-symbols-outlined">send</span>
+                  <span>Notify Patient</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

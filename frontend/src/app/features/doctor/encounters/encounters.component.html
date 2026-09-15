@@ -1,0 +1,112 @@
+<div class="encounters-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Clinical Encounters & SOAP Notes</h2>
+      <p class="text-muted text-sm">Subjective, Objective, Assessment, and Plan documentation for patient visits</p>
+    </div>
+    <button class="btn btn-primary" (click)="isCreateModalOpen = true">
+      <span class="material-symbols-outlined">add</span>
+      <span>New SOAP Encounter</span>
+    </button>
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <span class="material-symbols-outlined">error</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  @if (isBackendModulePending) {
+    <div class="alert alert-info mb-6">
+      <span class="material-symbols-outlined">info</span>
+      <div>
+        <strong>Clinical Notes Service Active</strong>
+        <p class="text-xs mt-1">
+          Configured for <code>/api/v1/encounters</code>. Electronic clinical visits and SOAP note records will sync when the encounters backend route is enabled.
+        </p>
+      </div>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading encounters...</p>
+    </div>
+  } @else if (encounters.length === 0) {
+    <app-empty-state
+      icon="clinical_notes"
+      title="No Recorded Encounters"
+      description="You have not documented any SOAP clinical notes for patient visits."
+      actionText="Document New Encounter"
+      (action)="isCreateModalOpen = true">
+    </app-empty-state>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (enc of encounters; track enc._id) {
+        <div class="card">
+          <div class="flex justify-between items-center mb-2">
+            <span class="badge badge-primary">{{ enc.status }}</span>
+            <span class="text-xs text-muted">{{ enc.date | dateFormat:true }}</span>
+          </div>
+          <h4 class="font-bold text-base mb-1">{{ enc.chiefComplaint }}</h4>
+          @if (enc.assessment) {
+            <p class="text-sm text-muted mb-2"><strong>Assessment:</strong> {{ enc.assessment }}</p>
+          }
+          @if (enc.plan) {
+            <p class="text-sm text-muted"><strong>Plan:</strong> {{ enc.plan }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- New Encounter Modal -->
+  <app-modal [isOpen]="isCreateModalOpen" title="Document Clinical Encounter (SOAP)" (close)="isCreateModalOpen = false">
+    <form [formGroup]="encounterForm" (ngSubmit)="createEncounter()">
+      <div class="form-group">
+        <label class="form-label">Patient ID</label>
+        <input type="text" class="form-control" placeholder="Patient ID or Health ID" formControlName="patientId" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Chief Complaint</label>
+        <input type="text" class="form-control" placeholder="e.g. Acute chest discomfort, palpitations" formControlName="chiefComplaint" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Subjective (Patient Narrative)</label>
+        <textarea class="form-control" rows="2" placeholder="Symptoms history, duration, aggravating factors" formControlName="subjective"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Objective (Physical Exam / Vitals)</label>
+        <textarea class="form-control" rows="2" placeholder="BP: 120/80, HR: 72, physical findings" formControlName="objective"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Assessment (Diagnosis)</label>
+        <textarea class="form-control" rows="2" placeholder="Clinical diagnosis or diagnostic impression" formControlName="assessment"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Plan (Treatment / Interventions)</label>
+        <textarea class="form-control" rows="2" placeholder="Medication, diagnostic orders, lifestyle instructions" formControlName="plan"></textarea>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" class="btn btn-outline" (click)="isCreateModalOpen = false">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          {{ isSaving ? 'Saving...' : 'Sign & Document Note' }}
+        </button>
+      </div>
+    </form>
+  </app-modal>
+</div>
