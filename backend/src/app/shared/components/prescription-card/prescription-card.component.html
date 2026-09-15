@@ -1,0 +1,42 @@
+<div class="card rx-card">
+  <div class="rx-header">
+    <div class="rx-badge">
+      <span class="material-symbols-outlined icon">prescriptions</span>
+      <span class="font-mono text-sm font-semibold">{{ prescription.prescriptionCode || 'RX-MEDLINK' }}</span>
+    </div>
+    <span class="badge badge-success">{{ prescription.status }}</span>
+  </div>
+
+  <div class="rx-body">
+    <div class="rx-meta">
+      <span class="text-xs text-muted">Issued on {{ prescription.issueDate | dateFormat }}</span>
+      @if (prescription.doctorName) {
+        <span class="text-xs text-muted">by Dr. {{ prescription.doctorName }}</span>
+      }
+    </div>
+
+    @if (prescription.diagnosis) {
+      <p class="rx-diag"><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
+    }
+
+    <div class="rx-meds-list">
+      <h5 class="meds-title">Medications ({{ prescription.medications.length }})</h5>
+      @for (med of prescription.medications; track med.medicationName) {
+        <div class="med-item">
+          <div class="med-main">
+            <strong>{{ med.medicationName }}</strong>
+            <span class="med-dose">{{ med.dosage }} &bull; {{ med.frequency }}</span>
+          </div>
+          <span class="med-duration">{{ med.duration }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="rx-footer">
+    <button class="btn btn-outline btn-sm" (click)="print.emit(prescription)">
+      <span class="material-symbols-outlined">print</span>
+      <span>Print / Download</span>
+    </button>
+  </div>
+</div>

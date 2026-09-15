@@ -1,0 +1,28 @@
+<div class="card record-card">
+  <div class="record-header">
+    <div class="record-category">
+      <span class="material-symbols-outlined icon">folder_shared</span>
+      <span class="badge badge-primary">{{ record.category | statusLabel }}</span>
+    </div>
+    <span class="record-date">{{ record.recordDate | dateFormat }}</span>
+  </div>
+
+  <h4 class="record-title">{{ record.title }}</h4>
+
+  @if (record.summary) {
+    <p class="record-summary">{{ record.summary }}</p>
+  }
+
+  @if (record.diagnosis) {
+    <div class="record-diag">
+      <strong>Diagnosis:</strong> {{ record.diagnosis }}
+    </div>
+  }
+
+  <div class="record-footer">
+    <button class="btn btn-outline btn-sm" (click)="view.emit(record)">
+      <span>View Record</span>
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </button>
+  </div>
+</div>
