@@ -16,8 +16,7 @@ export class AppointmentCardComponent {
   @Input() showActions: boolean = true;
   @Output() cancel = new EventEmitter<Appointment>();
   @Output() viewDetails = new EventEmitter<Appointment>();
-@Output() confirm = new EventEmitter<Appointment>();
-@Output() reschedule = new EventEmitter<Appointment>();
+
   getStatusClass(status: string): string {
     switch (status) {
       case 'CONFIRMED': return 'badge-success';

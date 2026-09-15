@@ -25,23 +25,14 @@
 
   @if (showActions) {
     <div class="appointment-footer">
-      @if (appointment.status === 'PENDING') {
-  <button
-    class="btn btn-outline btn-sm"
-    (click)="confirm.emit(appointment)">
-    <span>Confirm</span>
-  </button>
-}
+      <button class="btn btn-outline btn-sm" (click)="viewDetails.emit(appointment)">
+        <span>Details</span>
+      </button>
 
       @if (appointment.status === 'PENDING' || appointment.status === 'CONFIRMED') {
         <button class="btn btn-outline btn-sm text-danger" (click)="cancel.emit(appointment)">
           <span>Cancel</span>
         </button>
-        <button
-  class="btn btn-outline btn-sm"
-  (click)="reschedule.emit(appointment)">
-  <span>Reschedule</span>
-</button>
       }
     </div>
   }

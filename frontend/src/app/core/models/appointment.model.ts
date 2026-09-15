@@ -13,15 +13,12 @@ export interface Appointment {
   status: AppointmentStatus;
   reason?: string;
   notes?: string;
-  cancellation?: AppointmentCancellation;
+  cancellationReason?: string;
+  cancelledAt?: string | Date;
   createdAt?: string;
   updatedAt?: string;
 }
-export interface AppointmentCancellation {
-  cancelledBy?: string | null;
-  cancelledAt?: string | Date | null;
-  reason?: string | null;
-}
+
 export interface BookAppointmentDto {
   doctorId: string;
   clinicId?: string;

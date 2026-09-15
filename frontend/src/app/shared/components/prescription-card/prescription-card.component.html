@@ -34,22 +34,9 @@
   </div>
 
   <div class="rx-footer">
-    @if (prescription.status === 'ACTIVE') {
- <button
-  class="btn btn-outline btn-sm complete-btn"
-  (click)="complete.emit(prescription)"
->
-    <span class="material-symbols-outlined">check_circle</span>
-    Mark as Completed
-  </button>
-}
-    <button class="btn btn-outline btn-sm" (click)="edit.emit(prescription)">
-  <span class="material-symbols-outlined">edit</span>
-  <span>Edit</span>
-</button>
     <button class="btn btn-outline btn-sm" (click)="print.emit(prescription)">
       <span class="material-symbols-outlined">print</span>
-      <span>Print</span>
+      <span>Print / Download</span>
     </button>
   </div>
 </div>

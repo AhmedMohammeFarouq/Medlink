@@ -41,11 +41,11 @@ const prescriptionSchema = new mongoose.Schema(
 
         medications: [
             {
-medicationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Medication",
-    default: null,
-},
+                medicationId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Medication",
+                    required: true,
+                },
 
                 medicationName: {
                     type: String,
@@ -89,10 +89,12 @@ medicationId: {
             },
         ],
 
-       diagnosis: {
-    type: String,
-    trim: true,
-},
+        diagnosis: [
+            {
+                type: String,
+                trim: true,
+            },
+        ],
 
         notes: {
             type: String,
@@ -112,11 +114,11 @@ medicationId: {
         status: {
             type: String,
             enum: [
-    "ACTIVE",
-    "COMPLETED",
-    "DISCONTINUED",
-    "EXPIRED",
-],
+                "ACTIVE",
+                "COMPLETED",
+                "EXPIRED",
+                "CANCELLED",
+            ],
             default: "ACTIVE",
         },
 

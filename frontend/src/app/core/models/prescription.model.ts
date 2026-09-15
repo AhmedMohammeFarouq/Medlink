@@ -21,7 +21,7 @@ export interface Prescription {
   medications: PrescribedMedication[];
   notes?: string;
   issueDate: string | Date;
-  status: 'ACTIVE' | 'DISCONTINUED' | 'EXPIRED' | 'COMPLETED';
+  status: 'ACTIVE' | 'DISCONTINUED' | 'EXPIRED';
   createdAt?: string;
   updatedAt?: string;
 }

@@ -36,14 +36,4 @@ export class AppointmentService {
   confirmAppointment(id: string): Observable<ApiResponse<Appointment>> {
     return this.http.patch<ApiResponse<Appointment>>(`${this.baseUrl}${API_ENDPOINTS.appointments.confirm(id)}`, {});
   }
-  rescheduleAppointment(
-  id: string,
-  scheduledAt: string
-): Observable<ApiResponse<Appointment>> {
-  return this.http.patch<ApiResponse<Appointment>>(
-    `${this.baseUrl}${API_ENDPOINTS.appointments.reschedule(id)}`,
-    { scheduledAt }
-  );
 }
-}
-
