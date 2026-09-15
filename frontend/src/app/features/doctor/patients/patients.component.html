@@ -45,6 +45,7 @@
             <th>Health ID</th>
             <th>Blood Type</th>
             <th>Registered</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +60,15 @@
               <td><span class="badge badge-primary font-mono">{{ p.healthId || 'N/A' }}</span></td>
               <td><span class="badge badge-secondary">{{ p.bloodType }}</span></td>
               <td>{{ p.createdAt | dateFormat }}</td>
+              <td>
+                <button
+                  class="btn btn-outline btn-sm"
+                  (click)="messagePatient(p)"
+                  [disabled]="startingChatForPatientId === p._id">
+                  <span class="material-symbols-outlined">chat</span>
+                  <span>{{ startingChatForPatientId === p._id ? 'Opening...' : 'Message' }}</span>
+                </button>
+              </td>
             </tr>
           }
         </tbody>

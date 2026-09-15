@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ChatService } from '../../../core/services/chat.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ChatRoom } from '../../../core/models/chat.model';
@@ -18,6 +19,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 export class PatientChatComponent implements OnInit, OnDestroy {
   private chatService = inject(ChatService);
   private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
 
   currentUser = this.authService.currentUser;
   rooms: ChatRoom[] = [];
@@ -84,8 +86,24 @@ export class PatientChatComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.isLoading = false;
         this.rooms = res.data || [];
-        if (this.rooms.length > 0) {
-          this.selectRoom(this.rooms[0]);
+
+        // A "Message" button elsewhere in the app (doctor-details, for
+        // example) can send the user here with ?roomId=... after creating
+        // or reusing a room - so that room should open directly instead of
+        // defaulting to whatever happens to be first in the list.
+        const requestedRoomId = this.route.snapshot.queryParamMap.get('roomId');
+        let roomToOpen: ChatRoom | null = null;
+
+        if (requestedRoomId) {
+          roomToOpen = this.rooms.find((room) => room._id === requestedRoomId) || null;
+        }
+
+        if (!roomToOpen && this.rooms.length > 0) {
+          roomToOpen = this.rooms[0];
+        }
+
+        if (roomToOpen) {
+          this.selectRoom(roomToOpen);
         }
       },
       error: (err) => {

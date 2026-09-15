@@ -17,7 +17,7 @@
 
   <!-- Sidebar Component -->
   <app-sidebar 
-    [items]="navItems" 
+    [items]="navItems()" 
     portalTitle="portal.patient" 
     [isOpen]="isSidebarOpen()" 
     (closeSidebar)="closeSidebar()">
