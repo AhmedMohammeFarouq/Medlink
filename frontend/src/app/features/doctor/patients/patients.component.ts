@@ -5,7 +5,7 @@ import { Patient } from '../../../core/models/patient.model';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-doctor-patients',
   standalone: true,
@@ -15,6 +15,7 @@ import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
 })
 export class DoctorPatientsComponent implements OnInit {
   private patientService = inject(PatientService);
+  private router = inject(Router);
 
   patients: Patient[] = [];
   filteredPatients: Patient[] = [];
@@ -28,7 +29,7 @@ export class DoctorPatientsComponent implements OnInit {
 
   loadPatients(): void {
     this.isLoading = true;
-    this.patientService.getPatients().subscribe({
+    this.patientService.getPatient().subscribe({
       next: (res) => {
         this.isLoading = false;
         this.patients = res.data || [];
@@ -47,9 +48,13 @@ export class DoctorPatientsComponent implements OnInit {
       this.filteredPatients = this.patients;
       return;
     }
-    this.filteredPatients = this.patients.filter(p => 
+    this.filteredPatients = this.patients.filter(p =>
       p.healthId?.toLowerCase().includes(this.searchQuery) ||
       (typeof p.userId === 'object' && (p.userId as any).firstName?.toLowerCase().includes(this.searchQuery))
     );
   }
+  viewEncounters(patientId: string): void {
+    this.router.navigate(['/doctor/patients', patientId, 'encounters']);
+  }
+
 }

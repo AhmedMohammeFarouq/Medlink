@@ -29,6 +29,10 @@ export const getEncountersByPatient = async (patientId) => {
     return Encounter.find({ patientId }).sort({ createdAt: -1 });
 };
 
+export const getEncountersByDoctor = async (doctorId) => {
+    return Encounter.find({ doctorId }).sort({ createdAt: -1 });
+};
+
 export const updateEncounter = async (encounterId, updateData) => {
     const encounter = await Encounter.findByIdAndUpdate(encounterId, updateData, {
         new: true,
