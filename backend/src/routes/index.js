@@ -19,8 +19,8 @@ import chatRoutes from "../modules/chat/chat.routes.js";
 
 const router = Router();
 
-router.use("/notifications", notificationRoutes);
-router.use("/chat", chatRoutes);
+router.use("/v1/notifications", notificationRoutes);
+router.use("/v1/chat", chatRoutes);
 
 router.use("/v1/auth", authRouter);
 router.use("/v1/users", userRoutes);
