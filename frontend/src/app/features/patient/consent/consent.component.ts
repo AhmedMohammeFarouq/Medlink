@@ -25,9 +25,28 @@ export class PatientConsentComponent implements OnInit {
     this.loadConsents();
   }
 
+  private getCurrentPatientId(): string | null {
+    const token = localStorage.getItem('medlink_access_token');
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.userId || null;
+    } catch {
+      return null;
+    }
+  }
+
   loadConsents(): void {
+    const patientId = this.getCurrentPatientId();
+
+    if (!patientId) {
+      this.isLoading = false;
+      this.isBackendModulePending = true;
+      return;
+    }
+
     this.isLoading = true;
-    this.consentService.getConsents().subscribe({
+    this.consentService.getConsents(patientId).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.consents = res.data || [];
@@ -58,4 +77,13 @@ export class PatientConsentComponent implements OnInit {
       error: (err) => this.errorMessage = err.message
     });
   }
+  rejectConsent(req: ConsentRequest): void {
+  this.consentService.rejectConsent(req._id).subscribe({
+    next: () => {
+      this.successMessage = 'Request rejected.';
+      this.loadConsents();
+    },
+    error: (err) => this.errorMessage = err.message
+  });
+}
 }

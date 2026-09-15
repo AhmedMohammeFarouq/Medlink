@@ -13,5 +13,6 @@ import { DateFormatPipe } from '../../pipes/date-format.pipe';
 export class ConsentCardComponent {
   @Input({ required: true }) consent!: ConsentRequest;
   @Output() grant = new EventEmitter<ConsentRequest>();
+  @Output() reject = new EventEmitter<ConsentRequest>();
   @Output() revoke = new EventEmitter<ConsentRequest>();
 }

@@ -50,9 +50,19 @@
     </app-empty-state>
   } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (rx of prescriptions; track rx._id) {
-        <app-prescription-card [prescription]="rx"></app-prescription-card>
-      }
+     @for (rx of prescriptions; track rx._id) {
+  <div class="rx-card-wrapper">
+    <app-prescription-card [prescription]="rx" (print)="onPrint($event)"></app-prescription-card>
+    @if (rx.status === 'ACTIVE') {
+      <button class="btn btn-outline btn-sm text-danger mt-2" (click)="onDiscontinue(rx)">
+        <span class="material-symbols-outlined">block</span>
+        <span>Discontinue</span>
+      </button>
+    } @else {
+      <span class="badge badge-neutral mt-2">{{ rx.status }}</span>
+    }
+  </div>
+}
     </div>
   }
 
@@ -60,14 +70,22 @@
   <app-modal [isOpen]="isCreateModalOpen" title="New E-Prescription" (close)="isCreateModalOpen = false">
     <form [formGroup]="rxForm" (ngSubmit)="issuePrescription()">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="form-group">
-          <label class="form-label">Patient Health ID</label>
-          <input type="text" class="form-control" placeholder="e.g. MV-2026-9A73K21" formControlName="patientId" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Patient Full Name</label>
-          <input type="text" class="form-control" placeholder="Patient Name" formControlName="patientName" />
-        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="form-group">
+  <label class="form-label">Patient Phone Number</label>
+  <input type="text" class="form-control" placeholder="e.g. 01201199560" formControlName="patientPhone" />
+  @if (patientLookupStatus === 'searching') {
+    <p class="text-xs text-muted mt-1">Searching...</p>
+  }
+  @if (patientLookupStatus === 'found') {
+    <p class="text-xs mt-1" style="color: green;">✓ {{ foundPatientName }}</p>
+  }
+  @if (patientLookupStatus === 'not_found') {
+    <p class="text-xs mt-1" style="color: red;">✗ No patient found with this number</p>
+  }
+</div>
+</div>
       </div>
 
       <div class="form-group">

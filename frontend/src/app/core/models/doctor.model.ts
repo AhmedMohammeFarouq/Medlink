@@ -27,3 +27,55 @@ export interface Doctor {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// request-consent.types.ts
+// ملف مستقل خاص بفيتشر "الدكتور يطلب consent" فقط
+// متعمدين إننا منلمسش core/models/consent.model.ts عشان في ناس شغالة عليه
+
+export type ConsentType =
+  | 'MEDICAL_RECORD_ACCESS'
+  | 'DOCUMENT_ACCESS'
+  | 'PRESCRIPTION_ACCESS'
+  | 'CHAT_ACCESS'
+  | 'FULL_ACCESS'
+  | 'OTHER';
+
+export type ConsentScope =
+  | 'MEDICAL_RECORDS'
+  | 'DOCUMENTS'
+  | 'PRESCRIPTIONS'
+  | 'APPOINTMENTS'
+  | 'ENCOUNTERS'
+  | 'PROFILE'
+  | 'CHAT';
+
+export const CONSENT_TYPES: ConsentType[] = [
+  'MEDICAL_RECORD_ACCESS', 'DOCUMENT_ACCESS', 'PRESCRIPTION_ACCESS',
+  'CHAT_ACCESS', 'FULL_ACCESS', 'OTHER',
+];
+
+export const CONSENT_SCOPES: ConsentScope[] = [
+  'MEDICAL_RECORDS', 'DOCUMENTS', 'PRESCRIPTIONS',
+  'APPOINTMENTS', 'ENCOUNTERS', 'PROFILE', 'CHAT',
+];
+
+export interface CreateConsentPayload {
+  patientId: string;
+  doctorId: string;
+  grantedBy: string;
+  grantedTo: string;
+  type: ConsentType;
+  scope: ConsentScope[];
+  reason?: string;
+  expiresAt?: string;
+}
+
+// شكل الـ response اللي راجع من create — منستخدمش ConsentRequest
+// الأصلي عشان منتقيدش بأي تعديل حد تاني هيعمله عليه
+export interface CreatedConsentResponse {
+  _id: string;
+  patientId: string;
+  doctorId: string;
+  status: string;
+  createdAt?: string;
+}

@@ -59,19 +59,27 @@ export const API_ENDPOINTS = {
     base: '/prescriptions',
     byId: (id: string) => `/prescriptions/${id}`,
   },
-  medications: {
-    base: '/medications',
-    byId: (id: string) => `/medications/${id}`,
-  },
-  documents: {
-    base: '/documents',
-    upload: '/documents/upload',
-    byId: (id: string) => `/documents/${id}`,
-  },
-  consent: {
-    base: '/consent',
-    byId: (id: string) => `/consent/${id}`,
-  },
+ medications: {
+  base: '/medications',
+  byId: (id: string) => `/medications/${id}`,
+  updateStatus: (id: string) => `/medications/${id}/status`, 
+},
+documents: {
+  base: '/document',
+  upload: '/document/upload',
+  byId: (id: string) => `/document/${id}`,
+  patientDocuments: (patientId: string) => `/document/patient/${patientId}`,   
+},
+consent: {
+  base: '/consent',
+  byId: (id: string) => `/consent/${id}`,
+  patientConsents: (patientId: string) => `/consent/patient/${patientId}`,
+  request: '/consent/request',                          // جديد
+  approve: (id: string) => `/consent/${id}/approve`,
+  reject: (id: string) => `/consent/${id}/reject`,       // جديد
+  revoke: (id: string) => `/consent/${id}/revoke`,
+  checkAccess: '/consent/check-access',
+},
   chat: {
     conversations: '/chat/conversations',
     messages: (conversationId: string) => `/chat/conversations/${conversationId}/messages`,

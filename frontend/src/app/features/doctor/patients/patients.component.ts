@@ -52,4 +52,5 @@ export class DoctorPatientsComponent implements OnInit {
       (typeof p.userId === 'object' && (p.userId as any).firstName?.toLowerCase().includes(this.searchQuery))
     );
   }
+  
 }

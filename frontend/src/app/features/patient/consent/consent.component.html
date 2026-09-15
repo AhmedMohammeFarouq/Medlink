@@ -34,6 +34,7 @@
         <app-consent-card
           [consent]="c"
           (grant)="grantConsent($event)"
+          (reject)="rejectConsent($event)"
           (revoke)="revokeConsent($event)">
         </app-consent-card>
       }

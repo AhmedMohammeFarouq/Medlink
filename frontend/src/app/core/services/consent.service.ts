@@ -13,15 +13,36 @@ export class ConsentService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  getConsents(): Observable<ApiResponse<ConsentRequest[]>> {
-    return this.http.get<ApiResponse<ConsentRequest[]>>(`${this.baseUrl}${API_ENDPOINTS.consent.base}`);
+  getConsents(patientId: string): Observable<ApiResponse<ConsentRequest[]>> {
+    return this.http.get<ApiResponse<ConsentRequest[]>>(
+      `${this.baseUrl}${API_ENDPOINTS.consent.base}/patient/${patientId}`
+    );
+  }
+
+  // جديد: الدكتور بيبعت طلب consent للمريض
+  requestConsent(patientId: string, type: string, scope: string[], reason?: string): Observable<ApiResponse<ConsentRequest>> {
+    return this.http.post<ApiResponse<ConsentRequest>>(
+      `${this.baseUrl}${API_ENDPOINTS.consent.base}/request`,
+      { patientId, type, scope, reason }
+    );
   }
 
   grantConsent(id: string): Observable<ApiResponse<ConsentRequest>> {
-    return this.http.patch<ApiResponse<ConsentRequest>>(`${this.baseUrl}${API_ENDPOINTS.consent.byId(id)}/grant`, {});
+    return this.http.patch<ApiResponse<ConsentRequest>>(
+      `${this.baseUrl}${API_ENDPOINTS.consent.byId(id)}/approve`, {}
+    );
+  }
+
+  // جديد: المريض يرفض
+  rejectConsent(id: string): Observable<ApiResponse<ConsentRequest>> {
+    return this.http.patch<ApiResponse<ConsentRequest>>(
+      `${this.baseUrl}${API_ENDPOINTS.consent.byId(id)}/reject`, {}
+    );
   }
 
   revokeConsent(id: string): Observable<ApiResponse<ConsentRequest>> {
-    return this.http.patch<ApiResponse<ConsentRequest>>(`${this.baseUrl}${API_ENDPOINTS.consent.byId(id)}/revoke`, {});
+    return this.http.patch<ApiResponse<ConsentRequest>>(
+      `${this.baseUrl}${API_ENDPOINTS.consent.byId(id)}/revoke`, {}
+    );
   }
 }

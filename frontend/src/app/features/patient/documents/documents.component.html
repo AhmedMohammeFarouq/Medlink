@@ -51,7 +51,7 @@
   } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       @for (doc of documents; track doc._id) {
-        <app-document-card [document]="doc" (delete)="onDelete($event)"></app-document-card>
+        <app-document-card [document]="doc" (view)="onView($event)" (delete)="onDelete($event)"></app-document-card>
       }
     </div>
   }
@@ -67,8 +67,11 @@
       <div class="form-group">
         <label class="form-label">Category</label>
         <select class="form-control" formControlName="type">
-          <option value="LAB_REPORT">Lab Report</option>
+          <option value="LAB_RESULT">Lab Result</option>
+          <option value="MEDICAL_REPORT">Medical Report</option>
           <option value="IMAGING">Diagnostic Imaging (X-Ray, MRI, CT)</option>
+          <option value="PRESCRIPTION">Prescription</option>
+          <option value="MEDICAL_CERTIFICATE">Medical Certificate</option>
           <option value="DISCHARGE_SUMMARY">Discharge Summary</option>
           <option value="INSURANCE">Insurance Document</option>
           <option value="OTHER">Other</option>

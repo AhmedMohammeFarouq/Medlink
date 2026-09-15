@@ -6,6 +6,7 @@ import { MedicalDocument } from '../../../core/models/document.model';
 import { DocumentCardComponent } from '../../../shared/components/document-card/document-card.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-patient-documents',
@@ -16,6 +17,7 @@ import { ModalComponent } from '../../../shared/components/modal/modal.component
 })
 export class PatientDocumentsComponent implements OnInit {
   private docService = inject(DocumentService);
+    private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
   documents: MedicalDocument[] = [];
@@ -38,8 +40,15 @@ export class PatientDocumentsComponent implements OnInit {
   }
 
   loadDocuments(): void {
+    const user = this.authService.currentUser();
+  const patientId = (user as any)?.patientId || user?._id;
+
+  if (!patientId) {
+    this.isLoading = false;
+    return;
+  }
     this.isLoading = true;
-    this.docService.getDocuments().subscribe({
+    this.docService.getDocuments(patientId).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.documents = res.data || [];
@@ -61,18 +70,27 @@ export class PatientDocumentsComponent implements OnInit {
       return;
     }
 
+    const user = this.authService.currentUser();
+    const patientId = (user as any)?.patientId || user?._id;
+
+    if (!patientId) {
+      this.errorMessage = 'تعذر تحديد بيانات المريض، برجاء تسجيل الدخول من جديد.';
+      return;
+    }
+
     this.isUploading = true;
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    formData.append('document', this.selectedFile);
     formData.append('title', this.uploadForm.value.title!);
     formData.append('type', this.uploadForm.value.type!);
+    formData.append('patientId', patientId);
     if (this.uploadForm.value.notes) formData.append('notes', this.uploadForm.value.notes);
 
     this.docService.uploadDocument(formData).subscribe({
       next: () => {
         this.isUploading = false;
         this.isUploadModalOpen = false;
-        this.uploadForm.reset({ type: 'LAB_REPORT' });
+        this.uploadForm.reset({ type: 'LAB_RESULT' });
         this.selectedFile = null;
         this.successMessage = 'Document uploaded successfully.';
         this.loadDocuments();
@@ -97,5 +115,10 @@ export class PatientDocumentsComponent implements OnInit {
         this.errorMessage = err.message || 'Failed to delete document.';
       }
     });
+  }
+    onView(doc: MedicalDocument): void {
+    if (doc.fileUrl) {
+      window.open(doc.fileUrl, '_blank');
+    }
   }
 }
