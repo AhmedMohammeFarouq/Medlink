@@ -18,6 +18,7 @@
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.3",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
@@ -26,5 +27,12 @@
     "@angular/cli": "^19.0.0",
     "@angular/compiler-cli": "^19.0.0",
     "typescript": "~5.6.2"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.0": true,
+    "@parcel/watcher@2.6.0": true,
+    "lmdb@3.2.6": true,
+    "msgpackr-extract@3.0.4": true
   }
 }
