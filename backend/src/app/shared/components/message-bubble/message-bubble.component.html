@@ -1,0 +1,11 @@
+<div class="message-wrap" [class.is-me]="isMe">
+  <div class="bubble">
+    <p class="content">{{ message.content }}</p>
+    <span class="time">
+      {{ message.createdAt | dateFormat:true }}
+      @if (isMe && message.readAt) {
+        <span class="read-indicator">✓✓</span>
+      }
+    </span>
+  </div>
+</div>

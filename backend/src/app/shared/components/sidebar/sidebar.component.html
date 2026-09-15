@@ -1,0 +1,56 @@
+<!-- Mobile Backdrop -->
+@if (isOpen) {
+  <div class="sidebar-backdrop" (click)="closeSidebar.emit()"></div>
+}
+
+<aside class="sidebar-aside" [class.is-open]="isOpen">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="brand-wrap">
+      <app-logo size="sm" (click)="onNavigate()"></app-logo>
+      <span class="badge badge-primary portal-tag">{{ portalTitle | translate }}</span>
+    </div>
+    <button type="button" class="sidebar-close-btn" (click)="closeSidebar.emit()" aria-label="Close menu">
+      <app-icon name="x" [size]="18"></app-icon>
+    </button>
+  </div>
+
+  <!-- Navigation Links -->
+  <nav class="sidebar-nav">
+    @for (item of items; track item.route) {
+      <a [routerLink]="item.route" (click)="onNavigate()" routerLinkActive="active" class="sidebar-link">
+        <app-icon [name]="item.icon" [size]="18" customClass="nav-icon"></app-icon>
+        <span class="nav-label">{{ item.label | translate }}</span>
+        @if (item.badge) {
+          <span class="badge badge-primary nav-badge">{{ item.badge }}</span>
+        }
+      </a>
+    }
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <!-- Language Toggle Button -->
+    <button type="button" class="sidebar-lang-btn" (click)="toggleLanguage()">
+      <app-icon name="globe" [size]="15"></app-icon>
+      <span>{{ 'nav.switch_lang' | translate }}</span>
+    </button>
+
+    @if (currentUser()) {
+      <div class="user-profile-widget">
+        <div class="user-avatar-initials">
+          {{ currentUser()?.firstName?.charAt(0) || 'U' }}
+        </div>
+        <div class="user-meta-info">
+          <strong class="user-display-name">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</strong>
+          <span class="user-role-tag">{{ currentUser()?.role }}</span>
+        </div>
+      </div>
+    }
+
+    <button class="logout-btn" (click)="logout()">
+      <app-icon name="log-out" [size]="16" customClass="text-danger"></app-icon>
+      <span>{{ 'nav.logout' | translate }}</span>
+    </button>
+  </div>
+</aside>

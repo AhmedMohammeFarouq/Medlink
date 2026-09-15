@@ -1,0 +1,20 @@
+.doctor-details-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.doctor-avatar-wrap {
+  width: 5rem;
+  height: 5rem;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.doctor-icon {
+  font-size: 2.5rem;
+  color: var(--primary);
+}
