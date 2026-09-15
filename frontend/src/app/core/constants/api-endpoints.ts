@@ -73,13 +73,17 @@ export const API_ENDPOINTS = {
     byId: (id: string) => `/consent/${id}`,
   },
   chat: {
-    conversations: '/chat/conversations',
-    messages: (conversationId: string) => `/chat/conversations/${conversationId}/messages`,
+    createRoom: '/chat/rooms/create',
+    myRooms: '/chat/rooms/myRooms',
+    roomById: (roomId: string) => `/chat/rooms/myRooms/${roomId}`,
+    closeRoom: (roomId: string) => `/chat/rooms/myRooms/${roomId}/close`,
+    messages: (roomId: string) => `/chat/rooms/myRooms/${roomId}/messages`,
+    markRead: (roomId: string) => `/chat/rooms/myRooms/${roomId}/read`,
   },
   notifications: {
     base: '/notifications',
-    markRead: (id: string) => `/notifications/${id}/read`,
-    markAllRead: '/notifications/mark-all-read',
+    markRead: (id: string) => `/notifications/readOne/${id}`,
+    markAllRead: '/notifications/readAll',
   },
   reviews: {
     base: '/reviews',

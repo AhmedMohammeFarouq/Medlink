@@ -41,6 +41,7 @@ export class DoctorLayoutComponent {
     { label: 'menu.prescriptions', icon: 'pill', route: '/doctor/prescriptions' },
     { label: 'menu.schedule', icon: 'clock', route: '/doctor/schedule' },
     { label: 'menu.follow_ups', icon: 'bell', route: '/doctor/follow-ups' },
+    { label: 'menu.notifications', icon: 'bell', route: '/doctor/notifications' },
     { label: 'menu.messages', icon: 'message-square', route: '/doctor/chat' },
     { label: 'menu.profile', icon: 'user', route: '/doctor/profile' },
     { label: 'menu.settings', icon: 'settings', route: '/doctor/settings' },

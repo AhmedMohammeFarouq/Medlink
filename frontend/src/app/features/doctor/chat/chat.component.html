@@ -6,24 +6,12 @@
     </div>
   </div>
 
-  @if (isBackendModulePending) {
-    <div class="alert alert-info mb-4">
-      <span class="material-symbols-outlined">info</span>
-      <div>
-        <strong>Doctor Chat Service Configured</strong>
-        <p class="text-xs mt-1">
-          Connected to <code>/api/v1/chat</code>. Telehealth conversations will populate when the chat route is enabled in the backend router.
-        </p>
-      </div>
-    </div>
-  }
-
   <div class="card chat-container">
     @if (isLoading) {
       <div class="py-12 text-center text-muted">
         Loading patient chat threads...
       </div>
-    } @else if (conversations.length === 0) {
+    } @else if (rooms.length === 0) {
       <app-empty-state
         icon="forum"
         title="No Active Patient Conversations"
@@ -32,32 +20,56 @@
     } @else {
       <div class="chat-layout">
         <div class="conversations-list">
-          @for (conv of conversations; track conv._id) {
-            <div class="conv-item" [class.active]="selectedConversation?._id === conv._id" (click)="selectConversation(conv)">
-              <div class="conv-avatar">
-                <span class="material-symbols-outlined">person</span>
-              </div>
-              <div class="conv-info">
-                <strong>Patient Thread</strong>
-                <p class="text-xs text-muted truncate">{{ conv.lastMessage?.content || 'No messages' }}</p>
-              </div>
-            </div>
-          }
-        </div>
+  @for (room of rooms; track room._id) {
+    <div
+      class="conv-item"
+      [class.active]="selectedRoom?._id === room._id"
+      (click)="selectRoom(room)"
+    >
+      <div class="conv-avatar">
+        @if (room.patientId.profileImage) {
+          <img
+            [src]="room.patientId.profileImage"
+            alt="Patient"
+          />
+        } @else {
+          <span class="material-symbols-outlined">
+            person
+          </span>
+        }
+      </div>
+
+      <div class="conv-info">
+        <strong>
+          {{ room.patientId.firstName }}
+          {{ room.patientId.lastName }}
+        </strong>
+
+        <p class="text-xs text-muted truncate">
+          Status: {{ room.status }}
+        </p>
+      </div>
+    </div>
+  }
+</div>
 
         <div class="chat-main">
           <div class="messages-area">
             @for (msg of messages; track msg._id) {
               <app-message-bubble [message]="msg" [isMe]="msg.senderId === currentUser()?._id"></app-message-bubble>
             }
+            @if (typingUserId) {
+              <p class="text-xs text-muted typing-indicator">Typing...</p>
+            }
           </div>
 
           <div class="input-area">
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Type medical guidance..." 
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Type medical guidance..."
               [(ngModel)]="newMessageText"
+              (input)="onTyping()"
               (keyup.enter)="sendMessage()"
             />
             <button class="btn btn-primary" (click)="sendMessage()">

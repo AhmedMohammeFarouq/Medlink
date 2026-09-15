@@ -32,8 +32,8 @@ function markUserOffline(io,userId,socketId){
 export const registerChatSocket=(io)=>{
 
     io.use((socket,next)=>{
-        const token=socket.handshake.auth? socket.handshake.auth.token:null;
-        if(!token){
+const token =socket.handshake.auth?.token ||socket.handshake.query?.token;
+            if(!token){
             next(new Error("token not found"));
             return;
         }
@@ -53,12 +53,12 @@ export const registerChatSocket=(io)=>{
     io.on("connection",(socket)=>{
         const user=socket.data.user;
 
-        socket.join(`user:${user.id}`);
-        markUserOnline(io,user.id,socket.id);
+        socket.join(`user:${user.userId}`);
+        markUserOnline(io,user.userId,socket.id);
 
         socket.on(chat_socket_event.JOIN_ROOM,async({roomId})=>{
             try{
-                const room = await chatService.getRoomByIdForUser(roomId,user.id);
+                const room = await chatService.getRoomByIdForUser(roomId,user.userId);
                 socket.join(`chatRoom:${room._id}`);
                 socket.emit(chat_socket_event.ROOM_JOINED,{roomId:room._id});
 
@@ -74,12 +74,12 @@ export const registerChatSocket=(io)=>{
         })
 
 
-        socket.on(chat_socket_event.SEND_MESSAGE,async({roomId,senderId,content,messageType,attachments})=>{
+        socket.on(chat_socket_event.SEND_MESSAGE,async({roomId,content,messageType,attachments})=>{
 
             try{
                 const message = await chatService.sendMessage({
                     roomId,
-                    senderId:user.id,
+                    senderId:user.userId,
                     content,
                     messageType,
                     attachments
@@ -95,7 +95,7 @@ export const registerChatSocket=(io)=>{
             if(!roomId){
                 return;
             }
-            socket.to(`chatRoom:${roomId}`).emit(chat_socket_event.USER_TYPING,{roomId  ,userId:user.id});
+            socket.to(`chatRoom:${roomId}`).emit(chat_socket_event.USER_TYPING,{roomId  ,userId:user.userId});
         });
 
 
@@ -103,19 +103,19 @@ export const registerChatSocket=(io)=>{
             if(!roomId){
                 return;
             }
-            socket.to(`chatRoom:${roomId}`).emit(chat_socket_event.USER_STOPPED_TYPING,{roomId,userId:user.id})
+            socket.to(`chatRoom:${roomId}`).emit(chat_socket_event.USER_STOPPED_TYPING,{roomId,userId:user.userId})
         });
 
 
         socket.on(chat_socket_event.MARK_READ,async({roomId})=>{
 
             try{
-                const updatedMessages=await chatService.markMessagesAsRead(roomId,user.id);
+                const updatedMessages=await chatService.markMessagesAsRead(roomId,user.userId);
                 if(updatedMessages.length>0){
                     io.to(`chatRoom:${roomId}`).emit(chat_socket_event.MESSAGE_READ,{
                         roomId,
                         messageIds:updatedMessages,
-                        readBy:user.id
+                        readBy:user.userId
                     })
                 }
             }catch(error){
@@ -125,7 +125,7 @@ export const registerChatSocket=(io)=>{
         });
 
         socket.on("disconnect", () => {
-        markUserOffline(io, user.id, socket.id);
+        markUserOffline(io, user.userId, socket.id);
     });
 
 
