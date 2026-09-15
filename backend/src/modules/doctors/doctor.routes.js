@@ -10,6 +10,13 @@ const router = express.Router();
 
 router.get("/", authMiddleware, doctorController.getAllDoctors);
 router.get(
+    "/me",
+    authMiddleware,
+    roleMiddleware("DOCTOR"),
+    doctorController.getMyDoctorProfile
+);
+
+router.get(
     "/:id",
     authMiddleware,
     doctorController.getDoctorById
@@ -20,12 +27,7 @@ router.put(
     roleMiddleware("DOCTOR"),
     doctorController.updateDoctor
 );
-router.get(
-    "/me",
-    authMiddleware,
-    roleMiddleware("DOCTOR"),
-    doctorController.getMyDoctorProfile
-);
+
 router.post(
     "/",
     authMiddleware,
