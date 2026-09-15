@@ -1,21 +1,22 @@
 <div class="doctor-verif-page">
-  <div class="page-header mb-6">
-    <div>
-      <h2 class="text-2xl font-bold">Doctor Syndicate Verification</h2>
-      <p class="text-muted text-sm">Review medical licenses, national certificates, and approve practitioner onboarding</p>
-    </div>
-  </div>
+  <app-page-header
+    title="Doctor Syndicate Verification"
+    subtitle="Review medical licenses, national certificates, and approve practitioner onboarding"
+    icon="user-check"
+    role="admin"
+    badge="portal.admin">
+  </app-page-header>
 
   @if (successMessage) {
     <div class="alert alert-success">
-      <span class="material-symbols-outlined">check_circle</span>
+      <app-icon name="check-circle" [size]="18"></app-icon>
       <span>{{ successMessage }}</span>
     </div>
   }
 
   @if (errorMessage) {
     <div class="alert alert-danger">
-      <span class="material-symbols-outlined">error</span>
+      <app-icon name="alert-circle" [size]="18"></app-icon>
       <span>{{ errorMessage }}</span>
     </div>
   }
@@ -27,7 +28,7 @@
       </div>
     } @else if (pendingDoctors.length === 0) {
       <app-empty-state
-        icon="verified_user"
+        icon="shield-check"
         title="Verification Queue Clear"
         description="All registered doctors currently have their credentials verified.">
       </app-empty-state>
@@ -37,9 +38,10 @@
           <thead>
             <tr>
               <th>Doctor Applicant</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Application Date</th>
+              <th>Specialty</th>
+              <th>License No.</th>
+              <th>Status</th>
+              <th>Applied</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -47,16 +49,29 @@
             @for (d of pendingDoctors; track d._id) {
               <tr>
                 <td>
-                  <strong>Dr. {{ d.firstName }} {{ d.lastName }}</strong>
+                  <strong>Dr. {{ applicantName(d) }}</strong>
+                  <div class="text-xs text-muted">{{ applicantEmail(d) }}</div>
                 </td>
-                <td>{{ d.email }}</td>
-                <td>{{ d.phone || '—' }}</td>
-                <td>{{ d.createdAt | dateFormat }}</td>
+                <td>{{ d.professionalInfo?.specialty || '—' }}</td>
+                <td class="font-mono text-xs">{{ d.professionalInfo?.licenseNumber || '—' }}</td>
                 <td>
-                  <button class="btn btn-primary btn-sm" (click)="approveDoctor(d)">
-                    <span class="material-symbols-outlined">verified</span>
-                    <span>Approve Credentials</span>
-                  </button>
+                  <span class="badge badge-warning">{{ d.verification?.status }}</span>
+                </td>
+                <td class="text-xs text-muted">{{ d.createdAt | dateFormat }}</td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <button class="btn btn-outline btn-sm" (click)="openDetails(d)" title="View Details">
+                      <app-icon name="eye" [size]="14"></app-icon>
+                    </button>
+                    <button class="btn btn-primary btn-sm" [disabled]="actionInFlightId === d._id" (click)="approveDoctor(d)">
+                      <app-icon name="check" [size]="14"></app-icon>
+                      <span>Approve</span>
+                    </button>
+                    <button class="btn btn-outline btn-sm text-danger" [disabled]="actionInFlightId === d._id" (click)="openReject(d)">
+                      <app-icon name="x" [size]="14"></app-icon>
+                      <span>Reject</span>
+                    </button>
+                  </div>
                 </td>
               </tr>
             }
@@ -65,4 +80,57 @@
       </div>
     }
   </div>
+
+  <!-- Doctor Details Modal -->
+  <app-modal [isOpen]="isDetailsModalOpen" title="Doctor Application Details" (close)="isDetailsModalOpen = false">
+    @if (selectedDoctor) {
+      <div class="doctor-details-modal">
+        <h3 class="text-lg font-bold">Dr. {{ applicantName(selectedDoctor) }}</h3>
+        <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+          <div><strong>Email:</strong> {{ applicantEmail(selectedDoctor) }}</div>
+          <div><strong>Phone:</strong> {{ applicantPhone(selectedDoctor) }}</div>
+          <div><strong>Specialty:</strong> {{ selectedDoctor.professionalInfo?.specialty || '—' }}</div>
+          <div><strong>Sub-specialty:</strong> {{ selectedDoctor.professionalInfo?.subSpecialty || '—' }}</div>
+          <div><strong>Medical Degree:</strong> {{ selectedDoctor.professionalInfo?.medicalDegree || '—' }}</div>
+          <div><strong>License No.:</strong> {{ selectedDoctor.professionalInfo?.licenseNumber || '—' }}</div>
+          <div><strong>Years Experience:</strong> {{ selectedDoctor.professionalInfo?.yearsOfExperience ?? '—' }}</div>
+          <div><strong>Verification Status:</strong> {{ selectedDoctor.verification?.status }}</div>
+          <div class="col-span-2"><strong>Bio:</strong> {{ selectedDoctor.professionalInfo?.bio || '—' }}</div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button class="btn btn-primary" (click)="isDetailsModalOpen = false">Close</button>
+        </div>
+      </div>
+    }
+  </app-modal>
+
+  <!-- Reject Modal -->
+  <app-modal [isOpen]="isRejectModalOpen" title="Reject Doctor Application" (close)="isRejectModalOpen = false">
+    @if (rejectTargetDoctor) {
+      <div class="reject-modal-form">
+        <p class="text-sm text-muted mb-4">
+          Rejecting the application for <strong>Dr. {{ applicantName(rejectTargetDoctor) }}</strong>. A reason is required.
+        </p>
+
+        @if (rejectError) {
+          <div class="alert alert-danger mb-4">
+            <app-icon name="alert-circle" [size]="16"></app-icon>
+            <span>{{ rejectError }}</span>
+          </div>
+        }
+
+        <div class="form-group">
+          <label class="form-label">Rejection Reason</label>
+          <textarea class="form-control" rows="4" [(ngModel)]="rejectReason" placeholder="Explain why this application is being rejected..."></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-6">
+          <button class="btn btn-outline" (click)="isRejectModalOpen = false">Cancel</button>
+          <button class="btn btn-primary text-danger" [disabled]="actionInFlightId === rejectTargetDoctor._id" (click)="confirmReject()">
+            {{ actionInFlightId === rejectTargetDoctor._id ? 'Rejecting...' : 'Confirm Rejection' }}
+          </button>
+        </div>
+      </div>
+    }
+  </app-modal>
 </div>

@@ -195,6 +195,7 @@ export class TranslationService {
     'menu.doctor_verification': { en: 'Doctor Verification', ar: 'اعتماد الأطباء' },
     'menu.clinics': { en: 'Clinics Registry', ar: 'سجل العيادات' },
     'menu.audit_logs': { en: 'Audit Logs', ar: 'سجلات النشاط' },
+    'menu.reviews': { en: 'Reviews', ar: 'التقييمات' },
     'menu.complaints': { en: 'Complaints', ar: 'الشكاوى' },
     'menu.statistics': { en: 'System Stats', ar: 'إحصائيات النظام' }
   };

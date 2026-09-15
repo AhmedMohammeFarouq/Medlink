@@ -13,40 +13,15 @@ export class MedicalRecordService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  // 1. Get Medical Record by Patient ID (GET)
-  getMedicalRecordByPatientId(patientId: string): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(
-      `${this.baseUrl}${API_ENDPOINTS.medicalRecords.getByPatientId(patientId)}`
-    );
+  getRecords(): Observable<ApiResponse<MedicalRecord[]>> {
+    return this.http.get<ApiResponse<MedicalRecord[]>>(`${this.baseUrl}${API_ENDPOINTS.medicalRecords.base}`);
   }
 
-  // 2. Update Medical Record (PATCH)
-  updateMedicalRecord(patientId: string, data: { diagnosis?: string; treatmentPlan?: string; notes?: string }): Observable<ApiResponse<any>> {
-    return this.http.patch<ApiResponse<any>>(
-      `${this.baseUrl}${API_ENDPOINTS.medicalRecords.updateByPatientId(patientId)}`,
-      data
-    );
+  getRecordById(id: string): Observable<ApiResponse<MedicalRecord>> {
+    return this.http.get<ApiResponse<MedicalRecord>>(`${this.baseUrl}${API_ENDPOINTS.medicalRecords.byId(id)}`);
   }
 
-  // 3. Add Allergy to Patient (POST)
-  addAllergy(patientId: string, allergyData: { name: string }): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(
-      `${this.baseUrl}${API_ENDPOINTS.medicalRecords.addAllergy(patientId)}`,
-      allergyData
-    )
+  getPatientRecords(patientId: string): Observable<ApiResponse<MedicalRecord[]>> {
+    return this.http.get<ApiResponse<MedicalRecord[]>>(`${this.baseUrl}${API_ENDPOINTS.medicalRecords.patientRecords(patientId)}`);
   }
-
-
-
-  // getRecords(): Observable<ApiResponse<MedicalRecord[]>> {
-  //   return this.http.get<ApiResponse<MedicalRecord[]>>(`${this.baseUrl}${API_ENDPOINTS.medicalRecords.base}`);
-  // }
-
-  // getRecordById(id: string): Observable<ApiResponse<MedicalRecord>> {
-  //   return this.http.get<ApiResponse<MedicalRecord>>(`${this.baseUrl}${API_ENDPOINTS.medicalRecords.byId(id)}`);
-  // }
-
-  // getPatientRecords(patientId: string): Observable<ApiResponse<MedicalRecord[]>> {
-  //   return this.http.get<ApiResponse<MedicalRecord[]>>(`${this.baseUrl}${API_ENDPOINTS.medicalRecords.patientRecords(patientId)}`);
-  // }
 }

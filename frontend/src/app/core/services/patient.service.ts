@@ -13,37 +13,15 @@ export class PatientService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  // جلب بروفايل المريض الحالي (GET /patients/me)
-  getPatient(): Observable<ApiResponse<Patient[]>> {
-  return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}${API_ENDPOINTS.patients.me}`);
+  getPatients(): Observable<ApiResponse<Patient[]>> {
+    return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}${API_ENDPOINTS.patients.base}`);
   }
 
-  // تحديث بروفايل المريض الحالي (PATCH /patients/me)
-  updatePatientMe(data: Partial<Patient>): Observable<ApiResponse<Patient>> {
-    return this.http.patch<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.me}`, data);
+  getPatientById(id: string): Observable<ApiResponse<Patient>> {
+    return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.byId(id)}`);
   }
 
-  // جلب السجل الطبي للمريض (GET /patients/:id/medical-record)
-  getPatientMedicalRecord(id: string): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`${this.baseUrl}${API_ENDPOINTS.patients.medicalRecord(id)}`);
-  }
-
-  // جلب التايم لاين للمريض (GET /patients/:id/timeline)
-  getPatientTimeline(id: string): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`${this.baseUrl}${API_ENDPOINTS.patients.timeline(id)}`);
+  getPatientProfile(): Observable<ApiResponse<Patient>> {
+    return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.profile}`);
   }
 }
-//   return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}${API_ENDPOINTS.patients.base}`);
-// }
-
-// getPatientById(id: string): Observable<ApiResponse<Patient>> {
-//   return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.byId(id)}`);
-// }
-
-// getPatientProfile(): Observable<ApiResponse<Patient>> {
-//   return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.profile}`);
-// }
-
-
-
-

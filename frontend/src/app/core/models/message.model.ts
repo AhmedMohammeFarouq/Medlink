@@ -1,19 +1,11 @@
-export type MessageType = 'text' | 'image' | 'file' | 'system';
-
-export interface MessageAttachment {
-  url: string;
-  fileName?: string | null;
-  mimeType?: string | null;
-  sizeInBytes?: number | null;
-}
-
 export interface ChatMessage {
   _id: string;
-  roomId: string;
+  conversationId: string;
   senderId: string;
-  messageType: MessageType;
+  senderName?: string;
+  senderRole?: string;
   content: string;
-  attachments: MessageAttachment[];
-  readAt?: string | Date | null;
+  attachments?: string[];
+  isRead: boolean;
   createdAt: string | Date;
 }

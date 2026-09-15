@@ -1,8 +1,17 @@
-<div class="rating-stars">
+<div class="rating-stars" [class.interactive]="interactive" (mouseleave)="onMouseLeave()">
   @for (star of stars; track star) {
-    <span class="material-symbols-outlined star-icon" [class.filled]="star <= rating">
-      {{ star <= rating ? 'star' : 'star_outline' }}
+    <span
+      class="material-symbols-outlined star-icon"
+      [class.filled]="star <= displayRating"
+      [class.clickable]="interactive"
+      (click)="selectStar(star)"
+      (mouseenter)="onStarHover(star)"
+      [attr.role]="interactive ? 'button' : null"
+      [attr.aria-label]="interactive ? ('Rate ' + star + ' out of ' + max) : null">
+      {{ star <= displayRating ? 'star' : 'star_outline' }}
     </span>
   }
-  <span class="rating-value">{{ rating.toFixed(1) }}</span>
+  @if (!interactive) {
+    <span class="rating-value">{{ rating.toFixed(1) }}</span>
+  }
 </div>

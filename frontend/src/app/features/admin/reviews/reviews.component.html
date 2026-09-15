@@ -1,0 +1,126 @@
+<div class="admin-reviews-page">
+  <app-page-header
+    title="Doctor Reviews Moderation"
+    subtitle="Patient ratings and feedback submitted for completed appointments"
+    icon="star"
+    role="admin"
+    badge="portal.admin">
+  </app-page-header>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <app-icon name="check-circle" [size]="18"></app-icon>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <app-icon name="alert-circle" [size]="18"></app-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Filters Toolbar -->
+  <div class="card mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+      <div class="form-group mb-0">
+        <label class="form-label">Doctor ID</label>
+        <input class="form-control" type="text" placeholder="enter doctor ID" [(ngModel)]="filterDoctorId" />
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label">Patient ID</label>
+        <input class="form-control" type="text" placeholder="enter patient ID" [(ngModel)]="filterPatientId" />
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label">Status</label>
+        <select class="form-control" [(ngModel)]="filterStatus">
+          <option value="">All (excludes deleted)</option>
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="HIDDEN">HIDDEN</option>
+          <option value="DELETED">DELETED</option>
+        </select>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-outline btn-sm" (click)="clearFilters()">Clear</button>
+        <button class="btn btn-primary btn-sm" (click)="applyFilters()">
+          <app-icon name="filter" [size]="14"></app-icon>
+          <span>Apply</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    @if (isLoading) {
+      <div class="py-12 text-center text-muted">
+        Loading reviews...
+      </div>
+    } @else if (reviews.length === 0) {
+      <app-empty-state
+        icon="star"
+        title="No Reviews Found"
+        description="No reviews matched your current filters.">
+      </app-empty-state>
+    } @else {
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Doctor ID</th>
+              <th>Rating</th>
+              <th>Comment</th>
+              <th>Status</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of reviews; track r._id) {
+              <tr>
+                <td>{{ patientLabel(r) }}</td>
+                <td class="font-mono text-xs">{{ r.doctorId }}</td>
+                <td><app-rating-stars [rating]="r.rating"></app-rating-stars></td>
+                <td class="review-comment">{{ r.comment || '—' }}</td>
+                <td>
+                  <span class="badge"
+                        [class.badge-success]="r.status === 'ACTIVE'"
+                        [class.badge-warning]="r.status === 'HIDDEN'"
+                        [class.badge-danger]="r.status === 'DELETED'">
+                    {{ r.status }}
+                  </span>
+                </td>
+                <td class="text-xs text-muted">{{ r.createdAt | dateFormat }}</td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    @if (r.status !== 'DELETED') {
+                      <button class="btn btn-outline btn-sm" (click)="toggleVisibility(r)" [title]="r.status === 'HIDDEN' ? 'Unhide' : 'Hide'">
+                        <app-icon [name]="r.status === 'HIDDEN' ? 'eye' : 'shield-alert'" [size]="14"></app-icon>
+                      </button>
+                      <button class="btn btn-outline btn-sm text-danger" (click)="deleteReview(r)" title="Delete">
+                        <app-icon name="trash" [size]="14"></app-icon>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination [meta]="paginationMeta" (pageChange)="loadReviews($event)"></app-pagination>
+    }
+  </div>
+
+  <app-confirm-dialog
+    [isOpen]="isConfirmOpen"
+    [title]="confirmTitle"
+    [message]="confirmMessage"
+    confirmText="Confirm"
+    [isDanger]="confirmIsDanger"
+    (confirm)="onConfirm()"
+    (cancel)="isConfirmOpen = false">
+  </app-confirm-dialog>
+</div>

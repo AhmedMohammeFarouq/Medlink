@@ -18,7 +18,6 @@ export const API_ENDPOINTS = {
     sessions: '/users/me/sessions',
     revokeSession: (sessionId: string) => `/users/me/sessions/${sessionId}`,
     revokeAllSessions: '/users/me/sessions',
-
     // Admin user management endpoints
     getAll: '/users',
     getById: (userId: string) => `/users/${userId}`,
@@ -36,51 +35,30 @@ export const API_ENDPOINTS = {
     confirm: (id: string) => `/appointments/${id}/confirm`,
     reschedule: (id: string) => `/appointments/${id}/reschedule`,
   },
-
   patients: {
     base: '/patients',
-    me: '/patients/me',
     byId: (id: string) => `/patients/${id}`,
     profile: '/patients/profile',
-    medicalRecord: (id: string) => `/patients/${id}/medical-record`,
-    timeline: (id: string) => `/patients/${id}/timeline`
-
-    // base: '/patients',
-    // byId: (id: string) => `/patients/${id}`,
-    // profile: '/patients/profile',
   },
-
   doctors: {
     base: '/doctors',
     byId: (id: string) => `/doctors/${id}`,
     profile: '/doctors/profile',
     verification: '/doctors/verification',
   },
-
   medicalRecords: {
     base: '/medical-records',
-    getByPatientId: (patientId: string) => `/medical-records/${patientId}`,
-    updateByPatientId: (patientId: string) => `/medical-records/${patientId}`,
-    addAllergy: (patientId: string) => `/medical-records/${patientId}/allergies`
-
-    // base: '/medical-records',
-    // byId: (id: string) => `/medical-records/${id}`,
-    // patientRecords: (patientId: string) => `/medical-records/patient/${patientId}`,
+    byId: (id: string) => `/medical-records/${id}`,
+    patientRecords: (patientId: string) => `/medical-records/patient/${patientId}`,
   },
   encounters: {
     base: '/encounters',
     byId: (id: string) => `/encounters/${id}`,
-    byPatientId: (patientId: string) => `/encounters/patient/${patientId}`,
-    byDoctorId: (doctorId: string) => `/encounters/doctor/${doctorId}`,
-    updateStatus: (id: string) => `/encounters/${id}/status`,
-
   },
-
   prescriptions: {
     base: '/prescriptions',
     byId: (id: string) => `/prescriptions/${id}`,
   },
-
   medications: {
     base: '/medications',
     byId: (id: string) => `/medications/${id}`,
@@ -95,13 +73,8 @@ export const API_ENDPOINTS = {
     byId: (id: string) => `/consent/${id}`,
   },
   chat: {
-    createRoom: '/chat/rooms/create',
-    myRooms: '/chat/rooms/myRooms',
-    roomById: (roomId: string) => `/chat/rooms/myRooms/${roomId}`,
-    closeRoom: (roomId: string) => `/chat/rooms/myRooms/${roomId}/close`,
-    messages: (roomId: string) => `/chat/rooms/myRooms/${roomId}/messages`,
-    sendMessage: (roomId: string) => `/chat/rooms/myRooms/${roomId}/messages`,
-    markRead: (roomId: string) => `/chat/rooms/myRooms/${roomId}/read`,
+    conversations: '/chat/conversations',
+    messages: (conversationId: string) => `/chat/conversations/${conversationId}/messages`,
   },
   notifications: {
     base: '/notifications',

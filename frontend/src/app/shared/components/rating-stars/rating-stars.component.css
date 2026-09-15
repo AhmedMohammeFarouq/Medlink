@@ -13,6 +13,19 @@
   color: #eab308;
 }
 
+.rating-stars.interactive .star-icon {
+  font-size: 1.75rem;
+}
+
+.star-icon.clickable {
+  cursor: pointer;
+  transition: transform 0.1s ease, color 0.1s ease;
+}
+
+.star-icon.clickable:hover {
+  transform: scale(1.15);
+}
+
 .rating-value {
   margin-left: 0.375rem;
   font-size: 0.875rem;

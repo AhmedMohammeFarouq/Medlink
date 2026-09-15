@@ -8,11 +8,21 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { WriteReviewButtonComponent } from '../../../shared/components/write-review-button/write-review-button.component';
 
 @Component({
   selector: 'app-patient-appointments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AppointmentCardComponent, EmptyStateComponent, ModalComponent, PageHeaderComponent, IconComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AppointmentCardComponent,
+    EmptyStateComponent,
+    ModalComponent,
+    PageHeaderComponent,
+    IconComponent,
+    WriteReviewButtonComponent
+  ],
   templateUrl: './appointments.component.html',
   styleUrl: './appointments.component.css'
 })

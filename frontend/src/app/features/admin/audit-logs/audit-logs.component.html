@@ -1,35 +1,125 @@
 <div class="audit-logs-page">
-  <div class="page-header mb-6">
-    <div>
-      <h2 class="text-2xl font-bold">Security & System Audit Logs</h2>
-      <p class="text-muted text-sm">Immutable trail of authentication events, user role alterations, and data transactions</p>
+  <app-page-header
+    title="Security & System Audit Logs"
+    subtitle="Immutable trail of authentication events, user role alterations, and data transactions"
+    icon="file-text"
+    role="admin"
+    badge="portal.admin">
+  </app-page-header>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <app-icon name="alert-circle" [size]="18"></app-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Filters Toolbar -->
+  <div class="card mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+      <div class="form-group mb-0">
+        <label class="form-label">Action</label>
+        <input class="form-control" type="text" placeholder="e.g. ADMIN_APPROVED_DOCTOR" [(ngModel)]="filterAction" />
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label">Resource Type</label>
+        <input class="form-control" type="text" placeholder="e.g. Doctor, Review" [(ngModel)]="filterResourceType" />
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label">Actor ID</label>
+        <input class="form-control" type="text" placeholder="Mongo ObjectId" [(ngModel)]="filterActorId" />
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label">From</label>
+        <input class="form-control" type="date" [(ngModel)]="filterStartDate" />
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label">To</label>
+        <input class="form-control" type="date" [(ngModel)]="filterEndDate" />
+      </div>
+    </div>
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="btn btn-outline btn-sm" (click)="clearFilters()">Clear</button>
+      <button class="btn btn-primary btn-sm" (click)="applyFilters()">
+        <app-icon name="filter" [size]="14"></app-icon>
+        <span>Apply Filters</span>
+      </button>
     </div>
   </div>
 
   <div class="card">
-    <div class="table-container">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Event Action</th>
-            <th>Principal / User</th>
-            <th>IP Address</th>
-            <th>Status</th>
-            <th>Timestamp</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (log of logs; track log.time) {
+    @if (isLoading) {
+      <div class="py-12 text-center text-muted">
+        Loading audit trail...
+      </div>
+    } @else if (logs.length === 0) {
+      <app-empty-state
+        icon="file-text"
+        title="No Audit Records"
+        description="No audit log entries matched your current filters.">
+      </app-empty-state>
+    } @else {
+      <div class="table-container">
+        <table class="table">
+          <thead>
             <tr>
-              <td><span class="badge badge-primary font-mono">{{ log.event }}</span></td>
-              <td>{{ log.user }}</td>
-              <td class="font-mono text-xs">{{ log.ip }}</td>
-              <td><span class="badge badge-success">{{ log.status }}</span></td>
-              <td class="text-xs text-muted">{{ log.time }}</td>
+              <th>Action</th>
+              <th>Actor</th>
+              <th>Resource</th>
+              <th>Timestamp</th>
+              <th></th>
             </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            @for (log of logs; track log._id) {
+              <tr>
+                <td><span class="badge badge-primary font-mono">{{ log.action }}</span></td>
+                <td class="text-xs">{{ actorLabel(log) }}</td>
+                <td class="text-xs">
+                  {{ log.resourceType }}
+                  @if (log.resourceId) {
+                    <span class="text-muted font-mono">#{{ log.resourceId }}</span>
+                  }
+                </td>
+                <td class="text-xs text-muted">{{ log.createdAt | dateFormat:true }}</td>
+                <td>
+                  <button class="btn btn-outline btn-sm" (click)="openDetails(log)" title="View Details">
+                    <app-icon name="eye" [size]="14"></app-icon>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination [meta]="paginationMeta" (pageChange)="loadLogs($event)"></app-pagination>
+    }
   </div>
+
+  <!-- Details Modal -->
+  <app-modal [isOpen]="isDetailsModalOpen" title="Audit Log Details" (close)="isDetailsModalOpen = false">
+    @if (isDetailsLoading) {
+      <div class="py-6 text-center text-muted">Loading log details...</div>
+    } @else if (selectedLog) {
+      <div class="audit-details-modal text-sm">
+        <div class="grid grid-cols-2 gap-4">
+          <div><strong>Action:</strong> {{ selectedLog.action }}</div>
+          <div><strong>Actor:</strong> {{ actorLabel(selectedLog) }}</div>
+          <div><strong>Resource Type:</strong> {{ selectedLog.resourceType }}</div>
+          <div><strong>Resource ID:</strong> {{ selectedLog.resourceId || '—' }}</div>
+          <div><strong>IP Address:</strong> {{ selectedLog.ipAddress || '—' }}</div>
+          <div><strong>Timestamp:</strong> {{ selectedLog.createdAt | dateFormat:true }}</div>
+          <div class="col-span-2"><strong>User Agent:</strong> {{ selectedLog.userAgent || '—' }}</div>
+        </div>
+        <div class="mt-4">
+          <strong>Metadata:</strong>
+          <pre class="metadata-block">{{ formatMetadata(selectedLog.metadata) }}</pre>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button class="btn btn-primary" (click)="isDetailsModalOpen = false">Close</button>
+        </div>
+      </div>
+    }
+  </app-modal>
 </div>

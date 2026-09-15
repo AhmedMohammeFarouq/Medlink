@@ -1,4 +1,4 @@
-<!-- <div class="card record-card">
+<div class="card record-card">
   <div class="record-header">
     <div class="record-category">
       <span class="material-symbols-outlined icon">folder_shared</span>
@@ -24,92 +24,5 @@
       <span>View Record</span>
       <span class="material-symbols-outlined">arrow_forward</span>
     </button>
-  </div>
-</div> -->
-
-
-<div class="card record-card">
-  <div class="record-header">
-    <div class="record-category">
-      <span class="material-symbols-outlined icon">folder_shared</span>
-      <span class="badge badge-primary">{{ record.bloodType }}</span>
-    </div>
-    @if (record.updatedAt) {
-      <span class="record-date">Updated {{ record.updatedAt | dateFormat }}</span>
-    }
-  </div>
-
-  <!-- Allergies -->
-  <div class="record-section">
-    <h4 class="record-section-title">Allergies</h4>
-    @if (record.allergies.length) {
-      <ul class="record-list">
-        @for (a of record.allergies; track a._id) {
-          <li>
-            <strong>{{ a.name || 'Unnamed allergy' }}</strong>
-            @if (a.severity) { <span class="badge badge-sm">{{ a.severity }}</span> }
-            @if (a.reaction) { <p class="record-note">{{ a.reaction }}</p> }
-          </li>
-        }
-      </ul>
-    } @else {
-      <p class="record-empty">No known allergies</p>
-    }
-  </div>
-
-  <!-- Chronic Conditions -->
-  <div class="record-section">
-    <h4 class="record-section-title">Chronic Conditions</h4>
-    @if (record.chronicConditions.length) {
-      <ul class="record-list">
-        @for (c of record.chronicConditions; track c._id) {
-          <li>
-            <strong>{{ c.name || 'Unnamed condition' }}</strong>
-            @if (c.status) { <span class="badge badge-sm">{{ c.status }}</span> }
-            @if (c.diagnosedAt) { <span class="record-date-inline">{{ c.diagnosedAt | dateFormat }}</span> }
-            @if (c.notes) { <p class="record-note">{{ c.notes }}</p> }
-          </li>
-        }
-      </ul>
-    } @else {
-      <p class="record-empty">No chronic conditions recorded</p>
-    }
-  </div>
-
-  <!-- Family History -->
-  <div class="record-section">
-    <h4 class="record-section-title">Family History</h4>
-    @if (record.familyHistory.length) {
-      <ul class="record-list">
-        @for (f of record.familyHistory; track f._id) {
-          <li>
-            <strong>{{ f.condition || 'Unnamed condition' }}</strong>
-            @if (f.relationship) { <span class="badge badge-sm">{{ f.relationship }}</span> }
-            @if (f.notes) { <p class="record-note">{{ f.notes }}</p> }
-          </li>
-        }
-      </ul>
-    } @else {
-      <p class="record-empty">No family history recorded</p>
-    }
-  </div>
-
-  <!-- Surgical History -->
-  <div class="record-section">
-    <h4 class="record-section-title">Surgical History</h4>
-    @if (record.surgicalHistory.length) {
-      <ul class="record-list">
-        @for (s of record.surgicalHistory; track s._id) {
-          <li>
-            <strong>{{ s.procedure || 'Unnamed procedure' }}</strong>
-            @if (s.date) { <span class="record-date-inline">{{ s.date | dateFormat }}</span> }
-            @if (s.hospital) { <p class="record-note">{{ s.hospital }}</p> }
-            @if (s.notes) { <p class="record-note">{{ s.notes }}</p> }
-          </li>
-        }
-      </ul>
-    } @else {
-      <p class="record-empty">No surgical history recorded</p>
-    }
   </div>
 </div>
