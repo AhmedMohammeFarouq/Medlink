@@ -16,10 +16,13 @@ const router = Router();
 
 router.use(authMiddleware);
 
+
 router.get("/me", getMyProfile);
+
 router.patch("/me", validationMiddleware(validatePatientUpdate), updateMyProfile);
 
 router.get("/:id", roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN), getPatientById);
+
 router.get(
     "/:id/medical-record",
     roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN),

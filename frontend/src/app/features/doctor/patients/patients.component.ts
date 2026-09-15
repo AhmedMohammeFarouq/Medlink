@@ -37,7 +37,7 @@ export class DoctorPatientsComponent implements OnInit {
 
   loadPatients(): void {
     this.isLoading = true;
-    this.patientService.getPatients().subscribe({
+    this.patientService.getPatient().subscribe({
       next: (res) => {
         this.isLoading = false;
         this.patients = res.data || [];
@@ -56,7 +56,7 @@ export class DoctorPatientsComponent implements OnInit {
       this.filteredPatients = this.patients;
       return;
     }
-    this.filteredPatients = this.patients.filter(p => 
+    this.filteredPatients = this.patients.filter(p =>
       p.healthId?.toLowerCase().includes(this.searchQuery) ||
       (typeof p.userId === 'object' && (p.userId as any).firstName?.toLowerCase().includes(this.searchQuery))
     );
@@ -80,5 +80,9 @@ export class DoctorPatientsComponent implements OnInit {
         this.startingChatForPatientId = null;
       }
     });
+  }
+
+  viewEncounters(patientId: string): void {
+    this.router.navigate(['/doctor/patients', patientId, 'encounters']);
   }
 }
