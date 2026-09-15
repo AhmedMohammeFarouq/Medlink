@@ -1,1 +1,90 @@
+/* Card variant — matches the dashboard's quick-action cards */
+.write-review-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.75rem 1.25rem;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+  color: var(--text-main);
+  text-decoration: none;
+  width: 100%;
+  cursor: pointer;
+  font: inherit;
+}
 
+.write-review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-300);
+}
+
+.action-icon-wrap {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.875rem;
+}
+
+.action-icon-wrap.warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.action-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.action-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Modal content — same look as the review form used on Appointments */
+.review-target-doctor {
+  padding: 0.75rem 1rem;
+  background: var(--bg-subtle, #f8fafc);
+  border-radius: var(--radius-md);
+}
+
+.alternate-doctor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.alternate-doctor-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface, #fff);
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.alternate-doctor-item:hover {
+  border-color: var(--primary-300);
+  background: var(--primary-light);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
