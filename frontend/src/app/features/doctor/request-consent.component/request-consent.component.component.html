@@ -1,0 +1,60 @@
+@if (isOpen) {
+  <div class="modal-backdrop" (click)="onBackdropClick($event)">
+    <div class="modal-panel card">
+      <div class="modal-header">
+        <h3 class="text-lg font-bold">Request Patient Consent</h3>
+        <button type="button" class="btn-icon" (click)="close()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+
+        @if (errorMessage) {
+          <div class="alert alert-danger mb-4">
+            <span class="material-symbols-outlined">error</span>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        <div class="form-group">
+          <label class="form-label">Access Type</label>
+          <select class="form-control" formControlName="type">
+            @for (t of consentTypes; track t.value) {
+              <option [value]="t.value">{{ t.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group" formArrayName="scope">
+          <label class="form-label">Requested Permissions</label>
+          <div class="scope-grid">
+            @for (s of consentScopes; track s; let i = $index) {
+              <label class="scope-checkbox">
+                <input type="checkbox" [formControlName]="i" />
+                <span>{{ s }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Reason (Optional)</label>
+          <textarea
+            class="form-control"
+            rows="2"
+            placeholder="e.g. Reviewing recent lab results for follow-up"
+            formControlName="reason">
+          </textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-6">
+          <button type="button" class="btn btn-outline" (click)="close()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Sending...' : 'Send Request' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
