@@ -17,6 +17,25 @@ router.get(
     authMiddleware,
     appointmentController.getAppointmentById
 );
+
+router.patch(
+    "/:id/confirm",
+    authMiddleware,
+    roleMiddleware("DOCTOR"),
+    appointmentController.confirmAppointment
+);
+router.patch(
+    "/:id/cancel",
+    authMiddleware,
+    roleMiddleware("DOCTOR"),
+    appointmentController.cancelAppointment
+);
+router.patch(
+    "/:id/reschedule",
+    authMiddleware,
+    roleMiddleware("DOCTOR"),
+    appointmentController.rescheduleAppointment
+);
 router.put(
     "/:id",
     authMiddleware,
