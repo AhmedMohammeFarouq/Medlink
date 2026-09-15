@@ -24,4 +24,13 @@ export class PrescriptionService {
   createPrescription(data: Partial<Prescription>): Observable<ApiResponse<Prescription>> {
     return this.http.post<ApiResponse<Prescription>>(`${this.baseUrl}${API_ENDPOINTS.prescriptions.base}`, data);
   }
+  updatePrescription(
+  id: string,
+  data: Partial<Prescription>
+): Observable<ApiResponse<Prescription>> {
+  return this.http.put<ApiResponse<Prescription>>(
+    `${this.baseUrl}${API_ENDPOINTS.prescriptions.byId(id)}`,
+    data
+  );
+}
 }
