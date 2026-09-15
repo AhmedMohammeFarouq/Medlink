@@ -49,7 +49,28 @@ export class DoctorAppointmentsComponent implements OnInit {
       error: (err) => this.errorMessage = err.message
     });
   }
+rescheduleAppointment(appt: Appointment): void {
+  const newDate = prompt(
+    'Enter new appointment date and time:',
+    '2026-09-17T12:00:00'
+  );
 
+  if (!newDate) {
+    return;
+  }
+
+  this.apptService.rescheduleAppointment(appt._id, newDate).subscribe({
+    next: () => {
+      this.successMessage = 'Appointment rescheduled.';
+      this.loadAppointments();
+
+      setTimeout(() => this.successMessage = null, 3000);
+    },
+    error: (err) => {
+      this.errorMessage = err.message;
+    }
+  });
+}
   cancelAppointment(appt: Appointment): void {
     this.apptService.cancelAppointment(appt._id).subscribe({
       next: () => {

@@ -13,4 +13,6 @@ import { DateFormatPipe } from '../../pipes/date-format.pipe';
 export class PrescriptionCardComponent {
   @Input({ required: true }) prescription!: Prescription;
   @Output() print = new EventEmitter<Prescription>();
+  @Output() edit = new EventEmitter<Prescription>();
+  @Output() complete = new EventEmitter<Prescription>();
 }

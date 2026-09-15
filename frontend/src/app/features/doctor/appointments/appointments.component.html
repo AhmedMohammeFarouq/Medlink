@@ -45,10 +45,12 @@
   } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (appt of appointments; track appt._id) {
-        <app-appointment-card
-          [appointment]="appt"
-          (cancel)="cancelAppointment($event)">
-        </app-appointment-card>
+       <app-appointment-card
+  [appointment]="appt"
+  (confirm)="confirmAppointment($event)"
+  (cancel)="cancelAppointment($event)"
+  (reschedule)="rescheduleAppointment($event)">
+</app-appointment-card>
       }
     </div>
   }

@@ -1,26 +1,8 @@
-const isValidObjectId = (id) => {
-    return /^[0-9a-fA-F]{24}$/.test(id);
-};
-
 export const createPrescriptionValidation = (body) => {
     const errors = [];
 
     if (!body.patientId) {
-        errors.push("Patient ID is required");
-    } else if (!isValidObjectId(body.patientId)) {
-        errors.push("Invalid patient ID");
-    }
-
-    if (!body.doctorId) {
-        errors.push("Doctor ID is required");
-    } else if (!isValidObjectId(body.doctorId)) {
-        errors.push("Invalid doctor ID");
-    }
-
-    if (!body.createdBy) {
-        errors.push("Created by is required");
-    } else if (!isValidObjectId(body.createdBy)) {
-        errors.push("Invalid created by ID");
+        errors.push("Patient Health ID is required");
     }
 
     if (!body.medications || !Array.isArray(body.medications)) {
@@ -29,13 +11,33 @@ export const createPrescriptionValidation = (body) => {
         errors.push("At least one medication is required");
     } else {
         body.medications.forEach((medication, index) => {
-            if (!medication.medicationId) {
+            if (!medication.medicationName) {
                 errors.push(
-                    `Medication ${index + 1}: Medication ID is required`
+                    `Medication ${index + 1}: Medication name is required`
                 );
-            } else if (!isValidObjectId(medication.medicationId)) {
+            }
+
+            if (!medication.dosage) {
                 errors.push(
-                    `Medication ${index + 1}: Invalid medication ID`
+                    `Medication ${index + 1}: Dosage is required`
+                );
+            }
+
+            if (!medication.frequency) {
+                errors.push(
+                    `Medication ${index + 1}: Frequency is required`
+                );
+            }
+
+            if (!medication.duration) {
+                errors.push(
+                    `Medication ${index + 1}: Duration is required`
+                );
+            }
+
+            if (!medication.instructions) {
+                errors.push(
+                    `Medication ${index + 1}: Instructions are required`
                 );
             }
         });
@@ -43,34 +45,35 @@ export const createPrescriptionValidation = (body) => {
 
     if (
         body.status !== undefined &&
-        !["ACTIVE", "COMPLETED", "EXPIRED", "CANCELLED"].includes(
-            body.status
-        )
+        !["ACTIVE", "COMPLETED", "DISCONTINUED", "EXPIRED"].includes(body.status)
     ) {
         errors.push("Invalid prescription status");
     }
 
-    if (body.expiresAt !== undefined && body.expiresAt !== null) {
-        if (isNaN(Date.parse(body.expiresAt))) {
-            errors.push("Invalid expiration date");
-        }
+    if (
+        body.issueDate !== undefined &&
+        isNaN(Date.parse(body.issueDate))
+    ) {
+        errors.push("Invalid issue date");
     }
 
     return errors;
 };
+
 export const updatePrescriptionValidation = (body) => {
     const errors = [];
 
     if (body.status !== undefined) {
         if (
-            ![
-                "ACTIVE",
-                "COMPLETED",
-                "EXPIRED",
-                "CANCELLED",
-            ].includes(body.status)
+            !["ACTIVE", "COMPLETED", "DISCONTINUED", "EXPIRED"].includes(body.status)
         ) {
             errors.push("Invalid prescription status");
+        }
+    }
+
+    if (body.issueDate !== undefined) {
+        if (isNaN(Date.parse(body.issueDate))) {
+            errors.push("Invalid issue date");
         }
     }
 
@@ -84,10 +87,11 @@ export const updatePrescriptionValidation = (body) => {
         errors.push("Notes must be a string");
     }
 
-    if (body.diagnosis !== undefined) {
-        if (!Array.isArray(body.diagnosis)) {
-            errors.push("Diagnosis must be an array");
-        }
+    if (
+        body.diagnosis !== undefined &&
+        typeof body.diagnosis !== "string"
+    ) {
+        errors.push("Diagnosis must be a string");
     }
 
     return errors;

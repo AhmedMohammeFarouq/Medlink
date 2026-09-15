@@ -5,9 +5,9 @@
       <p class="text-muted text-sm">Issue, sign, and review digital prescriptions for active treatments</p>
     </div>
     <button class="btn btn-primary" (click)="isCreateModalOpen = true">
-      <span class="material-symbols-outlined">add</span>
-      <span>Create E-Prescription</span>
-    </button>
+  <span class="material-symbols-outlined">add</span>
+  Create E-Prescription
+</button>
   </div>
 
   @if (successMessage) {
@@ -51,14 +51,22 @@
   } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (rx of prescriptions; track rx._id) {
-        <app-prescription-card [prescription]="rx"></app-prescription-card>
+      <app-prescription-card
+  [prescription]="rx"
+  (edit)="editPrescription($event)"
+  (print)="printPrescription($event)"
+  (complete)="completePrescription($event)">
+</app-prescription-card>
       }
     </div>
   }
 
   <!-- Create Rx Modal -->
-  <app-modal [isOpen]="isCreateModalOpen" title="New E-Prescription" (close)="isCreateModalOpen = false">
-    <form [formGroup]="rxForm" (ngSubmit)="issuePrescription()">
+  <app-modal
+  [isOpen]="isCreateModalOpen"
+  [title]="editingPrescription ? 'Edit E-Prescription' : 'New E-Prescription'"
+  (close)="isCreateModalOpen = false">
+  <form [formGroup]="rxForm" (ngSubmit)="issuePrescription()">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="form-group">
           <label class="form-label">Patient Health ID</label>
@@ -104,9 +112,13 @@
 
       <div class="flex justify-end gap-2 mt-6">
         <button type="button" class="btn btn-outline" (click)="isCreateModalOpen = false">Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Signing...' : 'Sign & Issue Prescription' }}
-        </button>
+        <button
+  type="submit"
+  class="btn btn-primary"
+  [disabled]="isSubmitting"
+>
+  {{ editingPrescription ? 'Update Prescription' : 'Sign & Issue Prescription' }}
+</button>
       </div>
     </form>
   </app-modal>

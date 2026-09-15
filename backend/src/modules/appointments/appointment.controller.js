@@ -70,6 +70,73 @@ const updateAppointment = async (req, res, next) => {
         next(error);
     }
 };
+
+const confirmAppointment = async (req, res, next) => {
+    try {
+        const appointment =
+            await appointmentService.confirmAppointment(req.params.id);
+
+        if (!appointment) {
+            return res.status(404).json({
+                success: false,
+                message: "Appointment not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: appointment,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+const cancelAppointment = async (req, res, next) => {
+    try {
+        const appointment =
+            await appointmentService.cancelAppointment(
+                req.params.id,
+                req.body.reason
+            );
+
+        if (!appointment) {
+            return res.status(404).json({
+                success: false,
+                message: "Appointment not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: appointment,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+const rescheduleAppointment = async (req, res, next) => {
+    try {
+        const appointment =
+            await appointmentService.rescheduleAppointment(
+                req.params.id,
+                req.body
+            );
+
+        if (!appointment) {
+            return res.status(404).json({
+                success: false,
+                message: "Appointment not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: appointment,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 const deleteAppointment = async (req, res, next) => {
     try {
         const appointment =
@@ -95,5 +162,8 @@ export default {
     getAppointmentById,
     createAppointment,
     updateAppointment,
+    confirmAppointment,
+    cancelAppointment,
+    rescheduleAppointment,
     deleteAppointment,
 };
