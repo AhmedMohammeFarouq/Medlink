@@ -1,0 +1,80 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="card auth-card">
+      <div class="auth-header text-center">
+        <div class="flex justify-center mb-4">
+          <app-logo size="md" link="/"></app-logo>
+        </div>
+        <h2 class="auth-title">{{ 'auth.welcome_back' | translate }}</h2>
+        <p class="auth-subtitle">{{ 'auth.signin_subtitle' | translate }}</p>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger mb-4">
+          <app-icon name="alert-circle" [size]="18"></app-icon>
+          <div class="flex-1">
+            <div>{{ errorMessage }}</div>
+            @if (needsEmailVerification) {
+              <a [routerLink]="['/verify-account']" [queryParams]="{email: unverifiedEmail}" class="verify-link mt-2">
+                Click here to enter your 6-digit verification code &rarr;
+              </a>
+            }
+          </div>
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">{{ 'auth.email' | translate }}</label>
+          <input 
+            id="login-email"
+            type="email" 
+            class="form-control" 
+            placeholder="name@example.com"
+            formControlName="email"
+            [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          />
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <span class="form-error">Please enter a valid email address</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <div class="flex justify-between items-center mb-1">
+            <label class="form-label" for="login-pass">{{ 'auth.password' | translate }}</label>
+            <a routerLink="/forgot-password" class="text-xs text-primary font-semibold">{{ 'auth.forgot_pass' | translate }}</a>
+          </div>
+          <input 
+            id="login-pass"
+            type="password" 
+            class="form-control" 
+            placeholder="••••••••"
+            formControlName="password"
+            [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          />
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <span class="form-error">Password is required (min 6 characters)</span>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full py-3" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner-sm"></span>
+            <span>{{ 'auth.signing_in' | translate }}</span>
+          } @else {
+            <app-icon name="log-in" [size]="18" [flipOnRtl]="true"></app-icon>
+            <span>{{ 'auth.signin_btn' | translate }}</span>
+          }
+        </button>
+      </form>
+
+      <div class="auth-footer text-center mt-6">
+        <p class="text-sm text-muted">
+          {{ 'auth.no_account' | translate }} 
+          <a routerLink="/register" class="font-semibold text-primary ms-1">{{ 'auth.create_account' | translate }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,40 @@
+<div class="card consent-card">
+  <div class="consent-header">
+    <div class="doctor-badge">
+      <span class="material-symbols-outlined icon">verified_user</span>
+      <strong>Dr. {{ consent.doctorName || 'Doctor' }}</strong>
+      @if (consent.doctorSpecialty) {
+        <span class="text-xs text-muted">({{ consent.doctorSpecialty }})</span>
+      }
+    </div>
+    <span class="badge" [class.badge-success]="consent.status === 'GRANTED'" [class.badge-warning]="consent.status === 'PENDING'">
+      {{ consent.status }}
+    </span>
+  </div>
+
+  <div class="consent-body">
+    <p class="purpose"><strong>Purpose:</strong> {{ consent.purpose }}</p>
+    
+    <div class="permissions-list">
+      <span class="text-xs font-semibold text-muted">Permissions:</span>
+      <div class="tags">
+        @for (p of consent.requestedPermissions; track p) {
+          <span class="badge badge-neutral">{{ p }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="validity">
+      <span class="text-xs text-muted">Valid until: {{ consent.expirationDate | dateFormat }}</span>
+    </div>
+  </div>
+
+  <div class="consent-footer">
+    @if (consent.status === 'PENDING') {
+      <button class="btn btn-primary btn-sm" (click)="grant.emit(consent)">Authorize Access</button>
+    }
+    @if (consent.status === 'GRANTED') {
+      <button class="btn btn-outline btn-sm text-danger" (click)="revoke.emit(consent)">Revoke Access</button>
+    }
+  </div>
+</div>

@@ -1,0 +1,93 @@
+<header class="navbar-header">
+  <div class="container navbar-container">
+    <!-- Brand Logo -->
+    <app-logo (click)="closeMobileMenu()"></app-logo>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="navbar-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">{{ 'nav.home' | translate }}</a>
+      <a routerLink="/patient/doctors" routerLinkActive="active" class="nav-link">{{ 'nav.doctors' | translate }}</a>
+      <a routerLink="/patient/appointments" routerLinkActive="active" class="nav-link">{{ 'nav.patient_exp' | translate }}</a>
+      <a routerLink="/doctor/dashboard" routerLinkActive="active" class="nav-link">{{ 'nav.doctor_exp' | translate }}</a>
+    </nav>
+
+    <!-- Desktop & Action Controls -->
+    <div class="navbar-actions">
+      <!-- Language Switcher Pill -->
+      <button 
+        type="button" 
+        class="lang-pill-btn" 
+        (click)="toggleLanguage()" 
+        [title]="currentLang() === 'en' ? 'التحويل إلى اللغة العربية' : 'Switch to English'"
+        aria-label="Toggle language">
+        <app-icon name="globe" [size]="14"></app-icon>
+        <span class="lang-text">{{ 'nav.switch_lang' | translate }}</span>
+      </button>
+
+      @if (isAuthenticated()) {
+        <a [routerLink]="dashboardLink" class="btn btn-outline btn-sm nav-auth-btn">
+          <app-icon name="dashboard" [size]="15"></app-icon>
+          <span>{{ 'nav.dashboard' | translate }}</span>
+        </a>
+        <button class="btn btn-ghost btn-sm nav-auth-btn" (click)="logout()" title="Sign Out">
+          <app-icon name="log-out" [size]="15"></app-icon>
+          <span>{{ 'nav.logout' | translate }}</span>
+        </button>
+      } @else {
+        <a routerLink="/login" class="btn btn-outline btn-sm nav-auth-btn">{{ 'nav.signin' | translate }}</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm nav-auth-btn">{{ 'nav.getstarted' | translate }}</a>
+      }
+
+      <!-- Mobile Hamburger Toggle -->
+      <button 
+        type="button" 
+        class="mobile-menu-toggle" 
+        (click)="toggleMobileMenu()" 
+        [class.is-active]="isMobileMenuOpen()"
+        aria-label="Toggle Menu">
+        <app-icon [name]="isMobileMenuOpen() ? 'x' : 'menu'" [size]="20"></app-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Dropdown -->
+  @if (isMobileMenuOpen()) {
+    <div class="mobile-drawer-backdrop" (click)="closeMobileMenu()"></div>
+    <div class="mobile-drawer">
+      <nav class="mobile-nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()" class="mobile-link">
+          <app-icon name="activity" [size]="18"></app-icon>
+          <span>{{ 'nav.home' | translate }}</span>
+        </a>
+        <a routerLink="/patient/doctors" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-link">
+          <app-icon name="stethoscope" [size]="18"></app-icon>
+          <span>{{ 'nav.doctors' | translate }}</span>
+        </a>
+        <a routerLink="/patient/appointments" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-link">
+          <app-icon name="calendar" [size]="18"></app-icon>
+          <span>{{ 'nav.patient_exp' | translate }}</span>
+        </a>
+        <a routerLink="/doctor/dashboard" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-link">
+          <app-icon name="shield" [size]="18"></app-icon>
+          <span>{{ 'nav.doctor_exp' | translate }}</span>
+        </a>
+      </nav>
+
+      <div class="mobile-auth-actions">
+        @if (isAuthenticated()) {
+          <a [routerLink]="dashboardLink" (click)="closeMobileMenu()" class="btn btn-primary w-full">
+            <app-icon name="dashboard" [size]="16"></app-icon>
+            <span>{{ 'nav.dashboard' | translate }}</span>
+          </a>
+          <button class="btn btn-danger w-full" (click)="logout()">
+            <app-icon name="log-out" [size]="16"></app-icon>
+            <span>{{ 'nav.logout' | translate }}</span>
+          </button>
+        } @else {
+          <a routerLink="/login" (click)="closeMobileMenu()" class="btn btn-outline w-full">{{ 'nav.signin' | translate }}</a>
+          <a routerLink="/register" (click)="closeMobileMenu()" class="btn btn-primary w-full">{{ 'nav.getstarted' | translate }}</a>
+        }
+      </div>
+    </div>
+  }
+</header>

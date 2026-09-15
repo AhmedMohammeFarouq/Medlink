@@ -1,0 +1,55 @@
+.record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.record-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.record-category {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.record-category .icon {
+  color: var(--primary);
+  font-size: 1.25rem;
+}
+
+.record-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.record-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.record-summary {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.record-diag {
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-muted);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+}
+
+.record-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}

@@ -1,0 +1,88 @@
+<div class="admin-dashboard">
+  <!-- Role-Based Page Header (Admin Theme) -->
+  <app-page-header 
+    title="MEDLINK System Administration" 
+    [subtitle]="'dash.admin_desc' | translate"
+    icon="shield"
+    role="admin"
+    badge="portal.admin">
+    <span class="badge badge-warning px-3 py-2 text-sm">
+      <app-icon name="shield-check" [size]="14"></app-icon>
+      <span>System Administrator</span>
+    </span>
+  </app-page-header>
+
+  <!-- Real Statistics Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <app-icon name="users" [size]="22"></app-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-val">{{ isLoading ? '—' : totalUsers }}</span>
+        <span class="stat-label">Total Users in Database</span>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap secondary">
+        <app-icon name="user" [size]="22"></app-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-val">{{ isLoading ? '—' : totalPatients }}</span>
+        <span class="stat-label">Registered Patients</span>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap accent">
+        <app-icon name="stethoscope" [size]="22"></app-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-val">{{ isLoading ? '—' : totalDoctors }}</span>
+        <span class="stat-label">Medical Specialists</span>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap warning">
+        <app-icon name="clock" [size]="22"></app-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-val">{{ isLoading ? '—' : totalPending }}</span>
+        <span class="stat-label">Pending Verification</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Admin Links -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="card">
+      <h4 class="text-lg font-bold mb-2">User Governance</h4>
+      <p class="text-sm text-muted mb-4">Search, filter, update roles, or restore soft-deleted user accounts.</p>
+      <a routerLink="/admin/users" class="btn btn-primary btn-sm w-full">
+        <span>Open User Directory</span>
+        <app-icon name="arrow-right" [size]="16" [flipOnRtl]="true"></app-icon>
+      </a>
+    </div>
+
+    <div class="card">
+      <h4 class="text-lg font-bold mb-2">Doctor Syndicate Verification</h4>
+      <p class="text-sm text-muted mb-4">Review medical degree licenses, national IDs, and credentials.</p>
+      <a routerLink="/admin/doctor-verification" class="btn btn-outline btn-sm w-full">
+        <span>Verification Queue</span>
+        <app-icon name="arrow-right" [size]="16" [flipOnRtl]="true"></app-icon>
+      </a>
+    </div>
+
+    <div class="card">
+      <h4 class="text-lg font-bold mb-2">Security Sessions & Devices</h4>
+      <p class="text-sm text-muted mb-4">Inspect active tokens, IP addresses, and revoke compromised device sessions.</p>
+      <a routerLink="/admin/settings" class="btn btn-outline btn-sm w-full">
+        <span>Admin Device Security</span>
+        <app-icon name="arrow-right" [size]="16" [flipOnRtl]="true"></app-icon>
+      </a>
+    </div>
+  </div>
+</div>
+

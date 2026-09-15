@@ -1,0 +1,233 @@
+<div class="users-page">
+  <app-page-header
+    title="User Directory"
+    subtitle="System user accounts, roles, access statuses, and verification lifecycle"
+    icon="users"
+    role="admin"
+    badge="portal.admin">
+  </app-page-header>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <app-icon name="check-circle" [size]="18"></app-icon>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <app-icon name="alert-circle" [size]="18"></app-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Filters Toolbar -->
+  <div class="card mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+      <div class="md:grid-cols-2" style="grid-column: span 2;">
+        <app-search-bar 
+          placeholder="Search by first name, last name, or email..." 
+          [value]="searchTerm"
+          (search)="onSearch($event)">
+        </app-search-bar>
+      </div>
+
+      <div class="form-group mb-0">
+        <select class="form-control" [(ngModel)]="selectedRole" (change)="onFilterChange()">
+          <option value="">All Roles</option>
+          <option value="PATIENT">PATIENT</option>
+          <option value="DOCTOR">DOCTOR</option>
+          <option value="SYSTEM_ADMIN">SYSTEM_ADMIN</option>
+          <option value="CLINIC_ADMIN">CLINIC_ADMIN</option>
+          <option value="RECEPTIONIST">RECEPTIONIST</option>
+        </select>
+      </div>
+
+      <div class="form-group mb-0">
+        <select class="form-control" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+          <option value="">All Statuses</option>
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="PENDING">PENDING</option>
+          <option value="INACTIVE">INACTIVE</option>
+          <option value="SUSPENDED">SUSPENDED</option>
+          <option value="DELETED">DELETED</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="card">
+    @if (isLoading) {
+      <div class="py-12 text-center text-muted">
+        <p>Loading users from backend database...</p>
+      </div>
+    } @else if (users.length === 0) {
+      <div class="py-12 text-center text-muted">
+        <p>No user accounts matched your search criteria.</p>
+      </div>
+    } @else {
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Email Verified</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users; track u._id) {
+              <tr>
+                <td>
+                  <div class="flex items-center gap-3">
+                    <div class="user-avatar-sm">
+                      {{ u.firstName.charAt(0) }}
+                    </div>
+                    <div>
+                      <strong>{{ u.firstName }} {{ u.lastName }}</strong>
+                      <div class="text-xs text-muted">{{ u.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge" [class.badge-primary]="u.role === 'PATIENT'" [class.badge-secondary]="u.role === 'DOCTOR'" [class.badge-warning]="u.role === 'SYSTEM_ADMIN'">
+                    {{ u.role }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" 
+                        [class.badge-success]="u.status === 'ACTIVE'"
+                        [class.badge-warning]="u.status === 'PENDING'"
+                        [class.badge-danger]="u.status === 'SUSPENDED' || u.status === 'DELETED'">
+                    {{ u.status }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [class.badge-success]="u.isEmailVerified" [class.badge-neutral]="!u.isEmailVerified">
+                    {{ u.isEmailVerified ? 'VERIFIED' : 'UNVERIFIED' }}
+                  </span>
+                </td>
+                <td class="text-xs text-muted">{{ u.createdAt | dateFormat }}</td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <button class="btn btn-outline btn-sm" (click)="openDetails(u)" title="View Details">
+                      <app-icon name="eye" [size]="14"></app-icon>
+                    </button>
+                    <button class="btn btn-outline btn-sm" (click)="openEdit(u)" title="Edit Role/Status">
+                      <app-icon name="edit" [size]="14"></app-icon>
+                    </button>
+                    @if (u.status !== 'DELETED') {
+                      <button class="btn btn-outline btn-sm text-danger" (click)="deleteUser(u)" title="Deactivate">
+                        <app-icon name="trash" [size]="14"></app-icon>
+                      </button>
+                    } @else {
+                      <button class="btn btn-outline btn-sm text-success" (click)="restoreUser(u)" title="Restore">
+                        <app-icon name="refresh" [size]="14"></app-icon>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination [meta]="paginationMeta" (pageChange)="loadUsers($event)"></app-pagination>
+    }
+  </div>
+
+  <!-- User Details Modal -->
+  <app-modal [isOpen]="isDetailsModalOpen" title="User Details" (close)="isDetailsModalOpen = false">
+    @if (selectedUser) {
+      <div class="user-details-modal">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="user-avatar-lg">
+            {{ selectedUser.firstName.charAt(0) }}
+          </div>
+          <div>
+            <h3 class="text-lg font-bold">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h3>
+            <span class="text-sm text-muted">{{ selectedUser.email }}</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+          <div><strong>Role:</strong> {{ selectedUser.role }}</div>
+          <div><strong>Status:</strong> {{ selectedUser.status }}</div>
+          <div><strong>Phone:</strong> {{ selectedUser.phone || 'Not provided' }}</div>
+          <div><strong>Gender:</strong> {{ selectedUser.gender || 'Not specified' }}</div>
+          <div><strong>Email Verified:</strong> {{ selectedUser.isEmailVerified ? 'Yes' : 'No' }}</div>
+          <div><strong>Phone Verified:</strong> {{ selectedUser.isPhoneVerified ? 'Yes' : 'No' }}</div>
+          <div><strong>Created At:</strong> {{ selectedUser.createdAt | dateFormat:true }}</div>
+          <div><strong>Last Login:</strong> {{ selectedUser.lastLoginAt ? (selectedUser.lastLoginAt | dateFormat:true) : 'Never' }}</div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button class="btn btn-primary" (click)="isDetailsModalOpen = false">Close</button>
+        </div>
+      </div>
+    }
+  </app-modal>
+
+  <!-- Edit Role/Status Modal -->
+  <app-modal [isOpen]="isEditModalOpen" title="Update User Status & Role" (close)="isEditModalOpen = false">
+    @if (selectedUser) {
+      <div class="edit-modal-form">
+        <p class="text-sm text-muted mb-4">
+          Updating account properties for <strong>{{ selectedUser.firstName }} {{ selectedUser.lastName }}</strong>
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">System Role</label>
+          <select class="form-control" [(ngModel)]="editRole">
+            <option value="PATIENT">PATIENT</option>
+            <option value="DOCTOR">DOCTOR</option>
+            <option value="SYSTEM_ADMIN">SYSTEM_ADMIN</option>
+            <option value="CLINIC_ADMIN">CLINIC_ADMIN</option>
+            <option value="RECEPTIONIST">RECEPTIONIST</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Account Status</label>
+          <select class="form-control" [(ngModel)]="editStatus">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="PENDING">PENDING</option>
+            <option value="INACTIVE">INACTIVE</option>
+            <option value="SUSPENDED">SUSPENDED</option>
+            <option value="DELETED">DELETED</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="flex items-center gap-2">
+            <input type="checkbox" [(ngModel)]="editIsVerified" />
+            <span class="text-sm font-semibold">Mark as Verified Professional</span>
+          </label>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-6">
+          <button class="btn btn-outline" (click)="isEditModalOpen = false">Cancel</button>
+          <button class="btn btn-primary" (click)="saveUserChanges()" [disabled]="isSaving">
+            {{ isSaving ? 'Saving...' : 'Save Updates' }}
+          </button>
+        </div>
+      </div>
+    }
+  </app-modal>
+
+  <!-- Confirm Dialog -->
+  <app-confirm-dialog
+    [isOpen]="isConfirmOpen"
+    [title]="confirmTitle"
+    [message]="confirmMessage"
+    confirmText="Confirm"
+    [isDanger]="confirmIsDanger"
+    (confirm)="onConfirm()"
+    (cancel)="isConfirmOpen = false">
+  </app-confirm-dialog>
+</div>

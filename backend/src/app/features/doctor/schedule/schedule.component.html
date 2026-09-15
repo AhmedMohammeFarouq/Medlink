@@ -1,0 +1,37 @@
+<div class="schedule-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Consultation Working Hours & Slots</h2>
+      <p class="text-muted text-sm">Define weekly recurring clinic availability and consultation duration</p>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Day of Week</th>
+            <th>Status</th>
+            <th>Operating Hours</th>
+            <th>Available Slots (30 min)</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of daysOfWeek; track d.day) {
+            <tr>
+              <td><strong>{{ d.day }}</strong></td>
+              <td>
+                <span class="badge" [class.badge-success]="d.active" [class.badge-neutral]="!d.active">
+                  {{ d.active ? 'Active' : 'Closed' }}
+                </span>
+              </td>
+              <td>{{ d.hours }}</td>
+              <td>{{ d.slots }} Slots</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
