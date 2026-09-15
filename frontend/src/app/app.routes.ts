@@ -43,6 +43,8 @@ import { DoctorFollowUpsComponent } from './features/doctor/follow-ups/follow-up
 import { DoctorChatComponent } from './features/doctor/chat/chat.component';
 import { DoctorProfileComponent } from './features/doctor/profile/profile.component';
 import { DoctorSettingsComponent } from './features/doctor/settings/settings.component';
+import { DoctorNotificationsComponent } from './features/doctor/notifications/notifications.component';
+
 
 // Admin Pages
 import { AdminDashboardComponent } from './features/admin/dashboard/dashboard.component';
@@ -109,7 +111,9 @@ export const routes: Routes = [
       { path: 'follow-ups', component: DoctorFollowUpsComponent },
       { path: 'chat', component: DoctorChatComponent },
       { path: 'profile', component: DoctorProfileComponent },
-      { path: 'settings', component: DoctorSettingsComponent }
+      { path: 'settings', component: DoctorSettingsComponent },
+      { path: 'notifications', component: DoctorNotificationsComponent },
+
     ]
   },
 

@@ -1,11 +1,17 @@
-import { ChatMessage } from './message.model';
-
-export interface ChatConversation {
+export interface ChatUser {
   _id: string;
-  participants: string[];
-  participantNames?: { [userId: string]: string };
-  lastMessage?: ChatMessage;
-  unreadCount?: number;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
+  firstName: string;
+  lastName: string;
+  profileImage?: string | null;
+}
+
+export interface ChatRoom {
+  _id: string;
+  patientId: ChatUser;
+  doctorId: ChatUser;
+  appointmentId: string | null;
+  status: string;
+  expiresAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 }

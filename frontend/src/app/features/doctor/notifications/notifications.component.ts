@@ -12,7 +12,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css'
 })
-export class PatientNotificationsComponent implements OnInit {
+export class DoctorNotificationsComponent implements OnInit {
   private notifService = inject(NotificationService);
 
   notifications: AppNotification[] = [];

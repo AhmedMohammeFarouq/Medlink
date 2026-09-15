@@ -63,16 +63,20 @@ async function findOrCreateChatRoom({doctorId,patientId,appointmentId,expiresAt}
 }
 
 
-async function getAllRoomsForUser(userId){
-    const rooms = await ChatRoom.find(
-        {
-            $or:[{doctorId:userId},{patientId:userId}]
-        }
-    ).sort({
-        updatedAt:-1
+async function getAllRoomsForUser(userId) {
+    const rooms = await ChatRoom.find({
+        $or: [
+            { doctorId: userId },
+            { patientId: userId }
+        ]
     })
+    .populate('patientId', 'firstName lastName profileImage')
+    .populate('doctorId', 'firstName lastName profileImage')
+    .sort({
+        updatedAt: -1
+    });
 
-    return rooms 
+    return rooms;
 }
 
 
