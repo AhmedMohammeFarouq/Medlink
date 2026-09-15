@@ -73,21 +73,18 @@ export const API_ENDPOINTS = {
     byId: (id: string) => `/consent/${id}`,
   },
   chat: {
-    createRoom: '/chat/rooms/create',
-    myRooms: '/chat/rooms/myRooms',
-    roomById: (roomId: string) => `/chat/rooms/myRooms/${roomId}`,
-    closeRoom: (roomId: string) => `/chat/rooms/myRooms/${roomId}/close`,
-    messages: (roomId: string) => `/chat/rooms/myRooms/${roomId}/messages`,
-    markRead: (roomId: string) => `/chat/rooms/myRooms/${roomId}/read`,
+    conversations: '/chat/conversations',
+    messages: (conversationId: string) => `/chat/conversations/${conversationId}/messages`,
   },
   notifications: {
     base: '/notifications',
-    markRead: (id: string) => `/notifications/readOne/${id}`,
-    markAllRead: '/notifications/readAll',
+    markRead: (id: string) => `/notifications/${id}/read`,
+    markAllRead: '/notifications/mark-all-read',
   },
   reviews: {
     base: '/reviews',
     byId: (id: string) => `/reviews/${id}`,
+    forDoctor: (doctorId: string) => `/reviews/doctor/${doctorId}`,
   },
   clinics: {
     base: '/clinics',
@@ -95,7 +92,17 @@ export const API_ENDPOINTS = {
   },
   admin: {
     base: '/admin',
-    stats: '/admin/stats',
+    statistics: '/admin/statistics',
+    doctors: {
+      pending: '/admin/doctors/pending',
+      byId: (doctorId: string) => `/admin/doctors/${doctorId}`,
+      approve: (doctorId: string) => `/admin/doctors/${doctorId}/approve`,
+      reject: (doctorId: string) => `/admin/doctors/${doctorId}/reject`,
+    },
+  },
+  audit: {
+    base: '/audit',
+    byId: (auditId: string) => `/audit/${auditId}`,
   },
   ai: {
     symptomCheck: '/ai/symptom-check',
