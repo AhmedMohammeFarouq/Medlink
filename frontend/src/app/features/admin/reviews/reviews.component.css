@@ -1,1 +1,10 @@
+.admin-reviews-page {
+  display: flex;
+  flex-direction: column;
+}
 
+.review-comment {
+  max-width: 320px;
+  white-space: normal;
+  word-break: break-word;
+}
