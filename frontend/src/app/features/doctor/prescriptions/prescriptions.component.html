@@ -1,0 +1,113 @@
+<div class="doctor-rx-page">
+  <div class="page-header mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">E-Prescription Management</h2>
+      <p class="text-muted text-sm">Issue, sign, and review digital prescriptions for active treatments</p>
+    </div>
+    <button class="btn btn-primary" (click)="isCreateModalOpen = true">
+      <span class="material-symbols-outlined">add</span>
+      <span>Create E-Prescription</span>
+    </button>
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <span class="material-symbols-outlined">error</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  @if (isBackendModulePending) {
+    <div class="alert alert-info mb-6">
+      <span class="material-symbols-outlined">info</span>
+      <div>
+        <strong>Prescriptions Service Ready</strong>
+        <p class="text-xs mt-1">
+          Connected to <code>/api/v1/prescriptions</code>. Prescriptions will dispatch to patient portals upon route activation.
+        </p>
+      </div>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="card text-center py-12">
+      <p class="text-muted">Loading prescriptions...</p>
+    </div>
+  } @else if (prescriptions.length === 0) {
+    <app-empty-state
+      icon="prescriptions"
+      title="No Prescriptions Issued"
+      description="You have not created any digital prescriptions yet."
+      actionText="Create E-Prescription"
+      (action)="isCreateModalOpen = true">
+    </app-empty-state>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (rx of prescriptions; track rx._id) {
+        <app-prescription-card [prescription]="rx"></app-prescription-card>
+      }
+    </div>
+  }
+
+  <!-- Create Rx Modal -->
+  <app-modal [isOpen]="isCreateModalOpen" title="New E-Prescription" (close)="isCreateModalOpen = false">
+    <form [formGroup]="rxForm" (ngSubmit)="issuePrescription()">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label class="form-label">Patient Health ID</label>
+          <input type="text" class="form-control" placeholder="e.g. MV-2026-9A73K21" formControlName="patientId" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Patient Full Name</label>
+          <input type="text" class="form-control" placeholder="Patient Name" formControlName="patientName" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Diagnosis</label>
+        <input type="text" class="form-control" placeholder="Primary clinical diagnosis" formControlName="diagnosis" />
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label class="form-label">Medication Name</label>
+          <input type="text" class="form-control" placeholder="e.g. Amoxicillin / Clavulanate" formControlName="medName" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dosage</label>
+          <input type="text" class="form-control" placeholder="e.g. 1000 mg" formControlName="dosage" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label class="form-label">Frequency</label>
+          <input type="text" class="form-control" placeholder="e.g. Every 12 hours" formControlName="frequency" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration</label>
+          <input type="text" class="form-control" placeholder="e.g. 7 Days" formControlName="duration" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Administration Instructions</label>
+        <input type="text" class="form-control" placeholder="Take after food" formControlName="instructions" />
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" class="btn btn-outline" (click)="isCreateModalOpen = false">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Signing...' : 'Sign & Issue Prescription' }}
+        </button>
+      </div>
+    </form>
+  </app-modal>
+</div>
