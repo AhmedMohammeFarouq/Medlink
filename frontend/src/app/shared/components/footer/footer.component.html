@@ -1,0 +1,41 @@
+<footer class="footer">
+  <div class="container footer-container">
+    <div class="footer-brand-section">
+      <app-logo></app-logo>
+      <p class="footer-desc">
+        {{ 'footer.desc' | translate }}
+      </p>
+      <div class="footer-compliance-row">
+        <span class="badge badge-success">
+          <app-icon name="shield-check" [size]="12"></app-icon>
+          <span>ISO 27001 & HIPAA Certified</span>
+        </span>
+        <span class="badge badge-primary">
+          <app-icon name="lock" [size]="12"></app-icon>
+          <span>AES-256 Storage</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="footer-nav-groups">
+      <div class="footer-col">
+        <h5 class="footer-col-title">{{ 'footer.portals' | translate }}</h5>
+        <a routerLink="/patient/dashboard">{{ 'footer.patient_portal' | translate }}</a>
+        <a routerLink="/doctor/dashboard">{{ 'footer.doctor_portal' | translate }}</a>
+        <a routerLink="/admin/dashboard">{{ 'footer.admin_portal' | translate }}</a>
+      </div>
+
+      <div class="footer-col">
+        <h5 class="footer-col-title">{{ 'footer.standards' | translate }}</h5>
+        <a routerLink="/patient/doctors">{{ 'nav.doctors' | translate }}</a>
+        <a routerLink="/patient/appointments">{{ 'nav.patient_exp' | translate }}</a>
+        <a routerLink="/register">{{ 'nav.getstarted' | translate }}</a>
+        <a routerLink="/login">{{ 'nav.signin' | translate }}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; {{ currentYear }} MEDLINK Healthcare Infrastructure. {{ 'footer.rights' | translate }}</p>
+  </div>
+</footer>
