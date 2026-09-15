@@ -1,0 +1,24 @@
+<div class="card document-card">
+  <div class="document-icon-wrap">
+    <span class="material-symbols-outlined doc-icon">description</span>
+    <span class="badge badge-neutral doc-ext">{{ document.fileUrl | fileType }}</span>
+  </div>
+
+  <div class="document-info">
+    <h4 class="document-title">{{ document.title }}</h4>
+    <p class="document-date">{{ document.uploadedDate | dateFormat }}</p>
+    @if (document.notes) {
+      <p class="document-notes">{{ document.notes }}</p>
+    }
+  </div>
+
+  <div class="document-actions">
+    <button class="btn btn-outline btn-sm" (click)="view.emit(document)">
+      <span class="material-symbols-outlined">visibility</span>
+      <span>View</span>
+    </button>
+    <button class="btn btn-outline btn-sm text-danger" (click)="delete.emit(document)">
+      <span class="material-symbols-outlined">delete</span>
+    </button>
+  </div>
+</div>
