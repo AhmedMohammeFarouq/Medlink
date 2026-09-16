@@ -45,7 +45,7 @@
             <th>Health ID</th>
             <th>Blood Type</th>
             <th>Registered</th>
-            <th>Actions</th> <!-- 1. إضافة رأس العمود -->
+            <th>Actions</th> 
           </tr>
         </thead>
         <tbody>
@@ -60,13 +60,13 @@
               <td><span class="badge badge-primary font-mono">{{ p.healthId || 'N/A' }}</span></td>
               <td><span class="badge badge-secondary">{{ p.bloodType }}</span></td>
               <td>{{ p.createdAt | dateFormat }}</td>
-              <td>
-                <!-- 2. إضافة زرار التوجيه لصفحة الكشوفات الخاصة بالمريض -->
-                <button class="btn btn-sm btn-outline flex items-center gap-1" (click)="viewEncounters(p._id)">
+              <!-- <td>
+                <! 2. إضافة زرار التوجيه لصفحة الكشوفات الخاصة بالمريض -->
+                <!-- <button class="btn btn-sm btn-outline flex items-center gap-1" (click)="viewEncounters(p._id)">
                   <span class="material-symbols-outlined text-sm">clinical_notes</span>
                   <span>Encounters</span>
-                </button>
-              </td>
+                </button> -->
+              <!-- </td> --> 
             </tr>
           }
         </tbody>
