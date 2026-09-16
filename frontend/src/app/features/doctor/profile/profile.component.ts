@@ -6,7 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { User, UpdateProfileDto } from '../../../core/models/user.model';
 import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
-
+import { DoctorService } from '../../../core/services/doctor.service';
 @Component({
   selector: 'app-doctor-profile',
   standalone: true,
@@ -17,9 +17,12 @@ import { ModalComponent } from '../../../shared/components/modal/modal.component
 export class DoctorProfileComponent implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
+  private doctorService = inject(DoctorService);
   private fb = inject(FormBuilder);
 
   user: User | null = null;
+  doctor: any = null;
+isDoctorSaving = false;
   isLoading = true;
   errorMessage: string | null = null;
   successMessage: string | null = null;
@@ -36,16 +39,65 @@ export class DoctorProfileComponent implements OnInit {
     gender: ['MALE'],
     dateOfBirth: ['']
   });
-
+doctorForm = this.fb.group({
+  specialty: ['', Validators.required],
+  medicalDegree: [''],
+  yearsOfExperience: [0],
+  licenseNumber: ['', Validators.required],
+  bio: ['']
+});
   passwordForm = this.fb.group({
     currentPassword: ['', [Validators.required]],
     newPassword: ['', [Validators.required, Validators.minLength(8)]]
   });
 
-  ngOnInit(): void {
-    this.loadProfile();
-  }
+ ngOnInit(): void {
+  this.loadProfile();
+  this.loadDoctorProfile();
+}
+// loadDoctorProfile(): void {
+//   this.doctorService.getDoctorProfile().subscribe({
+//     next: (res) => {
+//       if (res.success && res.data) {
+//         this.doctor = res.data;
 
+// this.doctorForm.patchValue({
+//   specialty: res.data.professionalInfo?.specialty || '',
+//   medicalDegree: res.data.professionalInfo?.medicalDegree || '',
+//   yearsOfExperience: res.data.professionalInfo?.yearsOfExperience || 0,
+//   licenseNumber: res.data.professionalInfo?.licenseNumber || '',
+//   bio: res.data.professionalInfo?.bio || ''
+// });
+//       }
+//     },
+//     error: (err) => {
+//       console.error('Failed to load doctor profile:', err);
+//     }
+//   });
+// }
+loadDoctorProfile(): void {
+  this.doctorService.getDoctorProfile().subscribe({
+    next: (res) => {
+      console.log('DOCTOR PROFILE RESPONSE:', res);
+
+      if (res.success && res.data) {
+        this.doctor = res.data;
+
+        this.doctorForm.patchValue({
+          specialty: res.data.professionalInfo?.specialty || '',
+          medicalDegree: res.data.professionalInfo?.medicalDegree || '',
+          yearsOfExperience: res.data.professionalInfo?.yearsOfExperience || 0,
+          licenseNumber: res.data.professionalInfo?.licenseNumber || '',
+          bio: res.data.professionalInfo?.bio || ''
+        });
+      }
+    },
+
+    error: (err) => {
+      console.error('DOCTOR PROFILE ERROR:', err);
+    }
+  });
+}
   loadProfile(): void {
     this.isLoading = true;
     this.userService.getCurrentUser().subscribe({
@@ -115,7 +167,58 @@ export class DoctorProfileComponent implements OnInit {
       }
     });
   }
+submitVerification(): void {
+    console.log('SUBMIT CLICKED');
+  
+  if (!this.doctor || this.doctorForm.invalid) {
+    this.doctorForm.markAllAsTouched();
+    
+    return;
+  }
 
+  this.isDoctorSaving = true;
+
+  const data = {
+    professionalInfo: {
+      specialty: this.doctorForm.value.specialty,
+      medicalDegree: this.doctorForm.value.medicalDegree,
+      yearsOfExperience: this.doctorForm.value.yearsOfExperience,
+      licenseNumber: this.doctorForm.value.licenseNumber,
+      bio: this.doctorForm.value.bio
+    }
+  };
+
+this.doctorService.updateDoctor(this.doctor._id, data).subscribe({
+  next: (res) => {
+    console.log('UPDATE DOCTOR RESPONSE:', res);
+
+    this.isDoctorSaving = false;
+
+    if (res.success && res.data) {
+      this.doctor = res.data;
+    }
+
+    this.successMessage = 'Credentials submitted for admin review.';
+
+    setTimeout(() => {
+      this.successMessage = null;
+    }, 4000);
+  },
+
+  error: (err) => {
+    console.error('UPDATE DOCTOR ERROR:', err);
+
+    this.isDoctorSaving = false;
+
+    this.errorMessage =
+      err.message || 'Failed to submit credentials.';
+
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 4000);
+  }
+});
+}
   changePassword(): void {
     if (this.passwordForm.invalid) {
       this.passwordForm.markAllAsTouched();
