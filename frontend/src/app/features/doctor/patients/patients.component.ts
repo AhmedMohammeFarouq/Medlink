@@ -10,6 +10,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
 import { resolveId } from '../../../core/utils/id.util';
 
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-doctor-patients',
   standalone: true,
@@ -19,6 +20,7 @@ import { resolveId } from '../../../core/utils/id.util';
 })
 export class DoctorPatientsComponent implements OnInit {
   private patientService = inject(PatientService);
+  private router = inject(Router);
   private chatService = inject(ChatService);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -37,7 +39,7 @@ export class DoctorPatientsComponent implements OnInit {
 
   loadPatients(): void {
     this.isLoading = true;
-    this.patientService.getPatients().subscribe({
+    this.patientService.getPatient().subscribe({
       next: (res) => {
         this.isLoading = false;
         this.patients = res.data || [];
@@ -56,11 +58,15 @@ export class DoctorPatientsComponent implements OnInit {
       this.filteredPatients = this.patients;
       return;
     }
-    this.filteredPatients = this.patients.filter(p => 
+    this.filteredPatients = this.patients.filter(p =>
       p.healthId?.toLowerCase().includes(this.searchQuery) ||
       (typeof p.userId === 'object' && (p.userId as any).firstName?.toLowerCase().includes(this.searchQuery))
     );
   }
+  viewEncounters(patientId: string): void {
+    this.router.navigate(['/doctor/patients', patientId, 'encounters']);
+  }
+
 
   messagePatient(patient: Patient): void {
     const patientUserId = resolveId(patient.userId);

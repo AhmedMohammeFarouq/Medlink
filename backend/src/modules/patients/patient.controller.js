@@ -13,6 +13,17 @@ export const getMyProfile = async (req, res, next) => {
     }
 };
 
+export const getPatientById = async (req, res, next) => {
+    try {
+        const patient = await patientService.getPatientById(req.params.id);
+        patientService.checkPatientAccess(req.user, patient);
+
+        return successResponse({ res, message: "Patient retrieved", data: patient });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const updateMyProfile = async (req, res, next) => {
     try {
         const patient = await patientService.getOrCreatePatientProfile(req.user.userId);
@@ -24,16 +35,6 @@ export const updateMyProfile = async (req, res, next) => {
     }
 };
 
-export const getPatientById = async (req, res, next) => {
-    try {
-        const patient = await patientService.getPatientById(req.params.id);
-        patientService.checkPatientAccess(req.user, patient);
-
-        return successResponse({ res, message: "Patient retrieved", data: patient });
-    } catch (error) {
-        next(error);
-    }
-};
 
 export const getPatientMedicalRecord = async (req, res, next) => {
     try {

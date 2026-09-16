@@ -1,8 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { EncounterService } from '../../../core/services/encounter.service';
-import { Encounter } from '../../../core/models/encounter.model';
+import { Encounter, EncounterType, CreateEncounterPayload } from '../../../core/models/encounter.model';
+import { AuthService } from '../../../core/services/auth.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
@@ -17,8 +19,11 @@ import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
 export class DoctorEncountersComponent implements OnInit {
   private encService = inject(EncounterService);
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
 
   encounters: Encounter[] = [];
+  patientId = '';
   isLoading = true;
   isBackendModulePending = false;
   isCreateModalOpen = false;
@@ -26,65 +31,99 @@ export class DoctorEncountersComponent implements OnInit {
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
+  encounterTypes: EncounterType[] = ['CONSULTATION', 'FOLLOW_UP', 'EMERGENCY', 'ONLINE', 'IN_PERSON'];
+
   encounterForm = this.fb.group({
-    patientId: ['', [Validators.required]],
+    patientId: [''],
+    type: ['CONSULTATION' as EncounterType, [Validators.required]],
     chiefComplaint: ['', [Validators.required]],
-    subjective: [''],
-    objective: [''],
-    assessment: [''],
-    plan: ['']
+    clinicalNotes: [''],
+    treatmentPlan: ['']
   });
 
   ngOnInit(): void {
+    this.patientId = this.route.snapshot.paramMap.get('patientId') ?? '';
+
+    if (!this.patientId) {
+      this.isLoading = false;
+      return;
+    }
+
     this.loadEncounters();
   }
 
   loadEncounters(): void {
+    if (!this.patientId) return;
+
     this.isLoading = true;
-    this.encService.getEncounters().subscribe({
+    this.isBackendModulePending = false;
+    this.errorMessage = null;
+
+    this.encService.getEncountersByPatient(this.patientId).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.encounters = res.data || [];
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        this.isBackendModulePending = true;
+        if (err.status === 404 || err.status === 0) {
+          this.isBackendModulePending = true;
+        } else {
+          this.errorMessage = err.error?.message || 'Failed to load encounters.';
+        }
       }
     });
   }
 
   createEncounter(): void {
+    const val = this.encounterForm.value;
+    const targetPatientId = this.patientId || val.patientId;
+
+    if (!targetPatientId) {
+      this.errorMessage = 'Please enter or select a valid Patient ID.';
+      return;
+    }
+
     if (this.encounterForm.invalid) {
       this.encounterForm.markAllAsTouched();
       return;
     }
 
+    const doctorId = this.authService.currentUser()?._id;
+
+    if (!doctorId) {
+      this.errorMessage = 'Unable to identify the logged-in doctor.';
+      return;
+    }
+
     this.isSaving = true;
-    const val = this.encounterForm.value;
-    const payload: Partial<Encounter> = {
-      patientId: val.patientId!,
+
+    const payload: CreateEncounterPayload = {
+      patientId: targetPatientId,
+      doctorId,
+      type: val.type!,
       chiefComplaint: val.chiefComplaint!,
-      subjective: val.subjective || undefined,
-      objective: val.objective || undefined,
-      assessment: val.assessment || undefined,
-      plan: val.plan || undefined,
-      date: new Date(),
-      status: 'COMPLETED'
+      clinicalNotes: val.clinicalNotes || undefined,
+      treatmentPlan: val.treatmentPlan || undefined,
     };
 
     this.encService.createEncounter(payload).subscribe({
       next: () => {
         this.isSaving = false;
         this.isCreateModalOpen = false;
-        this.encounterForm.reset();
+        this.encounterForm.reset({ type: 'CONSULTATION' });
+        this.errorMessage = null;
         this.successMessage = 'Clinical encounter documented successfully.';
+        
+        this.patientId = targetPatientId;
         this.loadEncounters();
-        setTimeout(() => this.successMessage = null, 3000);
+
+        setTimeout(() => (this.successMessage = null), 3000);
       },
       error: (err) => {
         this.isSaving = false;
-        this.errorMessage = err.message || 'Failed to save encounter note.';
-        setTimeout(() => this.errorMessage = null, 3000);
+        this.errorMessage = err.error?.message || 'Failed to save encounter note.';
+        setTimeout(() => (this.errorMessage = null), 3000);
       }
     });
   }

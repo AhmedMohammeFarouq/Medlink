@@ -105,6 +105,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DoctorDashboardComponent },
       { path: 'appointments', component: DoctorAppointmentsComponent },
       { path: 'patients', component: DoctorPatientsComponent },
+      { path: 'patients/:patientId/encounters', component: DoctorEncountersComponent },
       { path: 'encounters', component: DoctorEncountersComponent },
       { path: 'prescriptions', component: DoctorPrescriptionsComponent },
       { path: 'schedule', component: DoctorScheduleComponent },

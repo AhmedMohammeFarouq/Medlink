@@ -41,6 +41,21 @@ export const getEncountersByPatient = async (req, res, next) => {
     }
 };
 
+export const getEncountersByDoctor = async (req, res, next) => {
+    try {
+        if (req.user.role !== "SYSTEM_ADMIN" && req.user.userId !== req.params.doctorId) {
+            const error = new Error("Forbidden: cannot access another doctor's encounters");
+            error.statusCode = 403;
+            throw error;
+        }
+
+        const encounters = await encounterService.getEncountersByDoctor(req.params.doctorId);
+
+        return successResponse({ res, message: "Encounters retrieved", data: encounters });
+    } catch (error) {
+        next(error);
+    }
+};
 export const updateEncounter = async (req, res, next) => {
     try {
         const encounter = await encounterService.getEncounterById(req.params.id);
