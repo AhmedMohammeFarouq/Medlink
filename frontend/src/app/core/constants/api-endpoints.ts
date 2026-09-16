@@ -95,6 +95,10 @@ export const API_ENDPOINTS = {
     byId: (id: string) => `/consent/${id}`,
   },
   chat: {
+    createRoom: '/chat/rooms/create',
+    myRooms: '/chat/rooms/myRooms',
+    roomById: (roomId: string) => `/chat/rooms/myRooms/${roomId}`,
+    closeRoom: (roomId: string) => `/chat/rooms/myRooms/${roomId}/close`,
     conversations: '/chat/conversations',
     messages: (conversationId: string) => `/chat/conversations/${conversationId}/messages`,
   },

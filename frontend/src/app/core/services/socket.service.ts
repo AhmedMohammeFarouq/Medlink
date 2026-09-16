@@ -29,7 +29,7 @@ export class SocketService {
       transports: ['websocket']
     });
 
-    this.socket.on('connect_error', (error) => {
+    this.socket.on('connect_error', (error: Error) => {
       console.error(`Socket connection failed: ${error.message}`);
     });
 

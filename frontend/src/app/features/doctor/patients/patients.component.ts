@@ -10,7 +10,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
 import { resolveId } from '../../../core/utils/id.util';
 
-import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-doctor-patients',
   standalone: true,
@@ -20,7 +20,6 @@ import { Router } from '@angular/router';
 })
 export class DoctorPatientsComponent implements OnInit {
   private patientService = inject(PatientService);
-  private router = inject(Router);
   private chatService = inject(ChatService);
   private authService = inject(AuthService);
   private router = inject(Router);
