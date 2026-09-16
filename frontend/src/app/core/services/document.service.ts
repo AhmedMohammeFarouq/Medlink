@@ -13,8 +13,11 @@ export class DocumentService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  getDocuments(): Observable<ApiResponse<MedicalDocument[]>> {
-    return this.http.get<ApiResponse<MedicalDocument[]>>(`${this.baseUrl}${API_ENDPOINTS.documents.base}`);
+  getDocuments(patientId?: string): Observable<ApiResponse<MedicalDocument[]>> {
+    const url = patientId
+      ? `${this.baseUrl}${API_ENDPOINTS.documents.patientDocuments(patientId)}`
+      : `${this.baseUrl}${API_ENDPOINTS.documents.base}`;
+    return this.http.get<ApiResponse<MedicalDocument[]>>(url);
   }
 
   getDocumentById(id: string): Observable<ApiResponse<MedicalDocument>> {

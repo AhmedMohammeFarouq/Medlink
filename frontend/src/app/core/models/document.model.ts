@@ -3,7 +3,7 @@ export interface MedicalDocument {
   patientId: string | any;
   uploadedBy: string | any;
   title: string;
-  type: 'LAB_REPORT' | 'IMAGING' | 'DISCHARGE_SUMMARY' | 'INSURANCE' | 'ID_PROOF' | 'OTHER';
+  type: 'LAB_REPORT' | 'LAB_RESULT' | 'MEDICAL_REPORT' | 'IMAGING' | 'PRESCRIPTION' | 'MEDICAL_CERTIFICATE' | 'DISCHARGE_SUMMARY' | 'INSURANCE' | 'IDENTITY' | 'ID_PROOF' | 'OTHER';
   fileUrl: string;
   fileSizeMb?: number;
   uploadedDate: string | Date;

@@ -1,5 +1,6 @@
 import { DocumentService } from './document.service.js';
 import { uploadDocument } from '../../config/cloudinary.js';
+
 export class DocumentController {
     static async createDocumentService(req, res, next) {
         try {
@@ -9,9 +10,9 @@ export class DocumentController {
 
             const cloudinaryResult = await uploadDocument(
                 req.file.buffer,
-                `medlink/documents/${req.body.patientId}`
+                `medlink/documents/${req.body.patientId}`,
+                req.file.mimetype,
             );
-
             
             const documentData = {
 
@@ -19,7 +20,7 @@ export class DocumentController {
                 title: req.body.title || 'Untitled Document',
                 name: req.body.name || req.body.title || 'Document',
                 patientId: req.body.patientId,
-                uploadedBy: req.body.uploadedBy,
+                uploadedBy: req.user.userId,
                 type: req.body.type || 'LAB_RESULT', // Enforce correct ENUM
                 fileUrl: cloudinaryResult.secure_url, // If schema expects root fileUrl
 
@@ -37,7 +38,6 @@ export class DocumentController {
                     allowedRoles: req.body.allowedRoles ? JSON.parse(req.body.allowedRoles) : ['DOCTOR', 'PATIENT']
                 }
             };
-
             const document = await DocumentService.createDocument(documentData);
             res.status(201).json({ success: true, data: document });
         } catch (err) {

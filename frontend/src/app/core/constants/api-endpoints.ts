@@ -86,13 +86,20 @@ export const API_ENDPOINTS = {
     byId: (id: string) => `/medications/${id}`,
   },
   documents: {
-    base: '/documents',
-    upload: '/documents/upload',
-    byId: (id: string) => `/documents/${id}`,
+    base: '/document',
+    upload: '/document/upload',
+    byId: (id: string) => `/document/${id}`,
+    patientDocuments: (patientId: string) => `/document/patient/${patientId}`,
   },
   consent: {
     base: '/consent',
     byId: (id: string) => `/consent/${id}`,
+    patientConsents: (patientId: string) => `/consent/patient/${patientId}`,
+    request: '/consent/request',
+    approve: (id: string) => `/consent/${id}/approve`,
+    reject: (id: string) => `/consent/${id}/reject`,
+    revoke: (id: string) => `/consent/${id}/revoke`,
+    checkAccess: '/consent/check-access',
   },
   chat: {
     createRoom: '/chat/rooms/create',

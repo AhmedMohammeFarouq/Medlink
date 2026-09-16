@@ -12,11 +12,11 @@ const consentSchema = new mongoose.Schema(
       ref: "Doctor",
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["PENDING", "GRANTED", "REVOKED"],
-      default: "PENDING",
-    },
+    // status: {
+    //   type: String,
+    //   enum: ["PENDING", "GRANTED", "REVOKED"],
+    //   default: "PENDING",
+    // },
     scope: { type: String, required: true },
 
     grantedTo: {

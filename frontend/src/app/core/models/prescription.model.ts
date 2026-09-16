@@ -11,7 +11,8 @@ export interface PrescribedMedication {
 export interface Prescription {
   _id: string;
   prescriptionCode?: string;
-  patientId: string | any;
+  patientId?: string | any;
+  patientPhone?: string;
   patientName?: string;
   patientHealthId?: string;
   doctorId: string | any;

@@ -11,10 +11,12 @@ import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
 import { resolveId } from '../../../core/utils/id.util';
 
 
+import { RequestConsentComponent } from '../request-consent.component/request-consent.component.component';
+
 @Component({
   selector: 'app-doctor-patients',
   standalone: true,
-  imports: [CommonModule, SearchBarComponent, EmptyStateComponent, DateFormatPipe],
+  imports: [CommonModule, SearchBarComponent, EmptyStateComponent, DateFormatPipe, RequestConsentComponent],
   templateUrl: './patients.component.html',
   styleUrl: './patients.component.css'
 })
@@ -31,6 +33,9 @@ export class DoctorPatientsComponent implements OnInit {
   isBackendModulePending = false;
   searchQuery = '';
   startingChatForPatientId: string | null = null;
+  selectedPatientForConsent: Patient | null = null;
+  isConsentModalOpen = false;
+  successMessage: string | null = null;
 
   ngOnInit(): void {
     this.loadPatients();
@@ -38,7 +43,7 @@ export class DoctorPatientsComponent implements OnInit {
 
   loadPatients(): void {
     this.isLoading = true;
-    this.patientService.getPatient().subscribe({
+    this.patientService.getPatients().subscribe({
       next: (res) => {
         this.isLoading = false;
         this.patients = res.data || [];
@@ -85,5 +90,15 @@ export class DoctorPatientsComponent implements OnInit {
         this.startingChatForPatientId = null;
       }
     });
+  }
+
+  openConsentModal(patient: Patient): void {
+    this.selectedPatientForConsent = patient;
+    this.isConsentModalOpen = true;
+  }
+
+  onConsentRequested(): void {
+    this.successMessage = 'Consent request sent to patient.';
+    setTimeout(() => this.successMessage = null, 3000);
   }
 }

@@ -6,6 +6,13 @@
     </div>
   </div>
 
+  @if (successMessage) {
+    <div class="alert alert-success mb-6">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
   <div class="card mb-6">
     <app-search-bar
       placeholder="Search patient by name or Universal Health ID..."
@@ -45,7 +52,7 @@
             <th>Health ID</th>
             <th>Blood Type</th>
             <th>Registered</th>
-            <th>Actions</th> 
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -60,17 +67,35 @@
               <td><span class="badge badge-primary font-mono">{{ p.healthId || 'N/A' }}</span></td>
               <td><span class="badge badge-secondary">{{ p.bloodType }}</span></td>
               <td>{{ p.createdAt | dateFormat }}</td>
-              <!-- <td>
-                <! 2. إضافة زرار التوجيه لصفحة الكشوفات الخاصة بالمريض -->
-                <!-- <button class="btn btn-sm btn-outline flex items-center gap-1" (click)="viewEncounters(p._id)">
-                  <span class="material-symbols-outlined text-sm">clinical_notes</span>
-                  <span>Encounters</span>
-                </button> -->
-              <!-- </td> --> 
+              <td>
+                <div class="flex items-center gap-2">
+                  <button class="btn btn-sm btn-outline flex items-center gap-1" (click)="viewEncounters(p._id)" title="View Encounters">
+                    <span class="material-symbols-outlined text-sm">clinical_notes</span>
+                    <span>Encounters</span>
+                  </button>
+                  <button class="btn btn-sm btn-outline flex items-center gap-1" (click)="messagePatient(p)" [disabled]="startingChatForPatientId === p._id" title="Message Patient">
+                    <span class="material-symbols-outlined text-sm">chat</span>
+                    <span>{{ startingChatForPatientId === p._id ? 'Opening...' : 'Chat' }}</span>
+                  </button>
+                  <button class="btn btn-sm btn-primary flex items-center gap-1" (click)="openConsentModal(p)" title="Request Consent">
+                    <span class="material-symbols-outlined text-sm">lock_open</span>
+                    <span>Consent</span>
+                  </button>
+                </div>
+              </td>
             </tr>
           }
         </tbody>
       </table>
     </div>
+  }
+
+  @if (selectedPatientForConsent) {
+    <app-request-consent
+      [patientId]="selectedPatientForConsent._id"
+      [isOpen]="isConsentModalOpen"
+      (closed)="isConsentModalOpen = false"
+      (requested)="onConsentRequested()">
+    </app-request-consent>
   }
 </div>

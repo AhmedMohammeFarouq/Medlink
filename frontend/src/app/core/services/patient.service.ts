@@ -13,9 +13,22 @@ export class PatientService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
+  // جلب قائمة المرضى (GET /patients)
+  getPatients(): Observable<ApiResponse<Patient[]>> {
+    return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}${API_ENDPOINTS.patients.base}`);
+  }
+
   // جلب بروفايل المريض الحالي (GET /patients/me)
   getPatient(): Observable<ApiResponse<Patient[]>> {
-  return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}${API_ENDPOINTS.patients.me}`);
+    return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}${API_ENDPOINTS.patients.me}`);
+  }
+
+  getPatientById(id: string): Observable<ApiResponse<Patient>> {
+    return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.byId(id)}`);
+  }
+
+  getPatientProfile(): Observable<ApiResponse<Patient>> {
+    return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.profile}`);
   }
 
   // تحديث بروفايل المريض الحالي (PATCH /patients/me)
@@ -33,16 +46,6 @@ export class PatientService {
     return this.http.get<ApiResponse<any>>(`${this.baseUrl}${API_ENDPOINTS.patients.timeline(id)}`);
   }
 }
-//   return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}${API_ENDPOINTS.patients.base}`);
-// }
-
-// getPatientById(id: string): Observable<ApiResponse<Patient>> {
-//   return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.byId(id)}`);
-// }
-
-// getPatientProfile(): Observable<ApiResponse<Patient>> {
-//   return this.http.get<ApiResponse<Patient>>(`${this.baseUrl}${API_ENDPOINTS.patients.profile}`);
-// }
 
 
 

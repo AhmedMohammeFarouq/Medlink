@@ -36,7 +36,7 @@ router.get(
 
 router.delete(
     "/:id",
-    roleMiddleware(ROLES.DOCTOR, ROLES.SYSTEM_ADMIN, ROLES.CLINIC_ADMIN),
+    roleMiddleware(ROLES.DOCTOR, ROLES.SYSTEM_ADMIN, ROLES.CLINIC_ADMIN, ROLES.PATIENT),
     documentIdValidation,
     DocumentController.delete
 );

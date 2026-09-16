@@ -61,3 +61,12 @@ export const getPatientTimeline = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getAllPatients = async (req, res, next) => {
+    try {
+        const patients = await patientService.getAllPatients(req.query);
+        return successResponse({ res, message: "Patients retrieved successfully", data: patients });
+    } catch (error) {
+        next(error);
+    }
+};

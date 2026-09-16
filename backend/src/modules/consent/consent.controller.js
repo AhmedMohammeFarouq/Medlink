@@ -8,6 +8,15 @@ export class ConsentController {
     } catch (err) { next(err); }
   }
 
+  static async requestConsent(req, res, next) {
+    try {
+      const { patientId, type, scope, reason } = req.body;
+      const doctorId = req.user?.userId;
+      const consent = await ConsentService.createConsentRequest({ patientId, doctorId, type, scope, reason });
+      res.status(201).json({ success: true, data: consent });
+    } catch (err) { next(err); }
+  }
+
   static async getPatientConsents(req, res, next) {
     try {
       const consents = await ConsentService.getPatientConsents(req.params.patientId);
@@ -24,19 +33,25 @@ export class ConsentController {
 
   static async approve(req, res, next) {
     try {
-      const consent = await ConsentService.approveConsent(req.params.id);
+      const consent = await ConsentService.approveConsent(req.params.id, req.user?.userId);
+      res.status(200).json({ success: true, data: consent });
+    } catch (err) { next(err); }
+  }
+
+  static async reject(req, res, next) {
+    try {
+      const consent = await ConsentService.rejectConsent(req.params.id, req.user?.userId);
       res.status(200).json({ success: true, data: consent });
     } catch (err) { next(err); }
   }
 
   static async revoke(req, res, next) {
     try {
-      const consent = await ConsentService.revokeConsent(req.params.id, req.user?.id, req.body.revocationReason);
+      const consent = await ConsentService.revokeConsent(req.params.id, req.user?.userId, req.body.revocationReason);
       res.status(200).json({ success: true, data: consent });
     } catch (err) { next(err); }
   }
 
-  // Endpoint to check permission-based access dynamically
   static async checkAccess(req, res, next) {
     try {
       const { patientId, grantedTo, permission } = req.query;

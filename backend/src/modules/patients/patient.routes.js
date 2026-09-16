@@ -9,6 +9,7 @@ import {
     getPatientById,
     getPatientMedicalRecord,
     getPatientTimeline,
+    getAllPatients,
 } from "./patient.controller.js";
 import { validatePatientUpdate } from "./patient.validation.js";
 
@@ -16,6 +17,7 @@ const router = Router();
 
 router.use(authMiddleware);
 
+router.get("/", roleMiddleware(ROLES.DOCTOR, ROLES.SYSTEM_ADMIN, ROLES.CLINIC_ADMIN), getAllPatients);
 
 router.get("/me", getMyProfile);
 

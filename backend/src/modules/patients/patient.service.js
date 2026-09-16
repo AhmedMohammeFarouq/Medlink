@@ -48,3 +48,7 @@ export const checkPatientAccess = (user, patient) => {
         throw error;
     }
 };
+
+export const getAllPatients = async (query = {}) => {
+    return await Patient.find(query).populate("userId", "firstName lastName email phone avatar").sort({ createdAt: -1 });
+};
