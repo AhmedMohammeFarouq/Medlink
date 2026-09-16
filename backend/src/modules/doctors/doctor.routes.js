@@ -1,10 +1,12 @@
 import express from "express";
-
+import authMiddleware from "../../middlewares/auth.middleware.js";
+import roleMiddleware from "../../middlewares/role.middleware.js";
 import doctorController from "./doctor.controller.js";
 
 const router = express.Router();
 
 router.get("/", authMiddleware, doctorController.getAllDoctors);
+
 router.get(
     "/me",
     authMiddleware,
@@ -17,6 +19,7 @@ router.get(
     authMiddleware,
     doctorController.getDoctorById
 );
+
 router.put(
     "/:id",
     authMiddleware,
@@ -24,15 +27,12 @@ router.put(
     doctorController.updateDoctor
 );
 
+
 router.post(
     "/",
     authMiddleware,
     roleMiddleware("DOCTOR"),
-    validationMiddleware(createDoctorValidation),
     doctorController.createDoctor
 );
-router.get("/", doctorController.getAllDoctors);
-
-router.post("/", doctorController.createDoctor);
 
 export default router;

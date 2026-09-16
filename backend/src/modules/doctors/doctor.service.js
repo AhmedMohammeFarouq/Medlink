@@ -45,4 +45,7 @@ const getMyDoctorProfile = async (userId) => {
 export default {
     getAllDoctors,
     createDoctor,
+    getDoctorById,
+    updateDoctor,
+    getMyDoctorProfile,
 };
