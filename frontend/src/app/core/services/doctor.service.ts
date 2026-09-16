@@ -14,14 +14,27 @@ export class DoctorService {
   private baseUrl = environment.apiUrl;
 
   getDoctors(): Observable<ApiResponse<Doctor[]>> {
-    return this.http.get<ApiResponse<Doctor[]>>(`${this.baseUrl}${API_ENDPOINTS.doctors.base}`);
+    return this.http.get<ApiResponse<Doctor[]>>(
+      `${this.baseUrl}${API_ENDPOINTS.doctors.base}`
+    );
   }
 
   getDoctorById(id: string): Observable<ApiResponse<Doctor>> {
-    return this.http.get<ApiResponse<Doctor>>(`${this.baseUrl}${API_ENDPOINTS.doctors.byId(id)}`);
+    return this.http.get<ApiResponse<Doctor>>(
+      `${this.baseUrl}${API_ENDPOINTS.doctors.byId(id)}`
+    );
   }
 
   getDoctorProfile(): Observable<ApiResponse<Doctor>> {
-    return this.http.get<ApiResponse<Doctor>>(`${this.baseUrl}${API_ENDPOINTS.doctors.profile}`);
+    return this.http.get<ApiResponse<Doctor>>(
+      `${this.baseUrl}/doctors/me`
+    );
+  }
+
+  updateDoctor(id: string, data: any): Observable<ApiResponse<Doctor>> {
+    return this.http.put<ApiResponse<Doctor>>(
+      `${this.baseUrl}${API_ENDPOINTS.doctors.byId(id)}`,
+      data
+    );
   }
 }

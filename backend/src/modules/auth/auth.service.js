@@ -122,9 +122,16 @@ export const login = async (data, deviceData = {}) => {
     }
 
     const isPasswordCorrect = await comparePassword(
-        password,
-        user.passwordHash
-    );
+    password,
+    user.passwordHash
+);
+
+console.log("LOGIN DEBUG:", {
+    email: user.email,
+    role: user.role,
+    status: user.status,
+    passwordCorrect: isPasswordCorrect
+});
 
     if (!isPasswordCorrect) {
         user.failedLoginAttempts += 1;

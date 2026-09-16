@@ -34,6 +34,94 @@
     <div class="card text-center py-12">
       <p class="text-muted">Loading doctor profile from server...</p>
     </div>
+        @if (doctor) {
+      <div class="card details-card mt-6">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h4 class="text-lg font-bold">Professional Credentials</h4>
+            <p class="text-muted text-sm">
+              Submit your medical credentials for admin verification
+            </p>
+          </div>
+
+          <span
+            class="badge"
+            [class.badge-success]="doctor.verification?.status === 'APPROVED'"
+            [class.badge-warning]="doctor.verification?.status !== 'APPROVED'">
+            {{ doctor.verification?.status || 'PENDING' }}
+          </span>
+        </div>
+
+        <form [formGroup]="doctorForm" (ngSubmit)="submitVerification()">
+
+          <div class="details-grid">
+
+            <div class="form-group">
+              <label class="form-label">Specialty</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="specialty"
+                placeholder="e.g. Cardiology"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Medical Degree</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="medicalDegree"
+                placeholder="e.g. M.B.B.Ch"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Years of Experience</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="yearsOfExperience"
+                min="0"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Medical License Number</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="licenseNumber"
+                placeholder="Enter your medical license number"
+              />
+            </div>
+
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label class="form-label">Professional Bio</label>
+              <textarea
+                class="form-control"
+                formControlName="bio"
+                rows="3"
+                placeholder="Brief professional bio">
+              </textarea>
+            </div>
+
+          </div>
+
+          <div class="flex justify-end mt-6">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="isDoctorSaving || doctorForm.invalid">
+
+              {{ isDoctorSaving ? 'Submitting...' : 'Submit for Verification' }}
+
+            </button>
+          </div>
+
+        </form>
+      </div>
+    }
   } @else if (user) {
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="card avatar-card text-center">
@@ -94,6 +182,95 @@
           </div>
         </div>
       </div>
+    @if (doctor) {
+  <div class="card details-card" style="grid-column: 1 / -1;">
+    
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <h4 class="text-lg font-bold">Professional Credentials</h4>
+        <p class="text-muted text-sm">
+          Submit your medical credentials for admin verification
+        </p>
+      </div>
+
+      <span
+        class="badge"
+        [class.badge-success]="doctor.verification?.status === 'APPROVED'"
+        [class.badge-warning]="doctor.verification?.status !== 'APPROVED'">
+        {{ doctor.verification?.status || 'PENDING' }}
+      </span>
+    </div>
+
+    <form [formGroup]="doctorForm" (ngSubmit)="submitVerification()">
+
+      <div class="details-grid">
+
+        <div class="form-group">
+          <label class="form-label">Specialty</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="specialty"
+            placeholder="e.g. Cardiology"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Medical Degree</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="medicalDegree"
+            placeholder="e.g. M.B.B.Ch"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Years of Experience</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="yearsOfExperience"
+            min="0"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Medical License Number</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="licenseNumber"
+            placeholder="Enter your medical license number"
+          />
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label">Professional Bio</label>
+          <textarea
+            class="form-control"
+            formControlName="bio"
+            rows="3"
+            placeholder="Brief professional bio">
+          </textarea>
+        </div>
+
+      </div>
+
+      <div class="flex justify-end mt-6">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isDoctorSaving || doctorForm.invalid">
+
+          {{ isDoctorSaving ? 'Submitting...' : 'Submit for Verification' }}
+
+        </button>
+      </div>
+
+    </form>
+  </div>
+}
     </div>
   }
 
