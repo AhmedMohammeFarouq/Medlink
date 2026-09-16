@@ -2,7 +2,7 @@ import * as medicalRecordService from "./medicalRecord.service.js";
 import * as patientService from "../patients/patient.service.js";
 import { successResponse } from "../../utils/apiResponse.js";
 
-export const getOrCreateMedicalRecord = async (req, res, next) => {
+export const myMedicalRecord = async (req, res, next) => {
     try {
         const patient = await patientService.getPatientById(req.params.patientId);
         patientService.checkPatientAccess(req.user, patient);
