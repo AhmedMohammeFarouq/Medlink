@@ -1,26 +1,45 @@
 import mongoose from "mongoose";
 
-const medicationSchema = new mongoose.Schema(
+const prescriptionSchema  = new mongoose.Schema(
   {
     patientId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Patient", 
-      required: true,
-    },
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  required: true,
+},
     doctorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Doctor",
       required: true,
     },
-    name: { type: String, required: true },
-    dosage: { type: String, required: true },
-    frequency: { type: String, required: true },
-    status: { type: String, default: "ACTIVE" },
-    name: {
-      type: String,
+     patientName: { type: String, trim: true },
+
+    diagnosis: { type: String, trim: true }, 
+
+    issueDate: { type: Date, default: Date.now },
+    medications: {
+      type: [
+        {
+          medicationName: { type: String, required: true, trim: true },
+          dosage: { type: String, required: true, trim: true },
+          frequency: { type: String, required: true, trim: true },
+          route: { type: String, trim: true },
+          duration: { type: String, trim: true },
+          instructions: { type: String, trim: true },
+        },
+      ],
       required: true,
-      trim: true,
+      validate: {
+        validator: (arr) => Array.isArray(arr) && arr.length > 0,
+        message: "At least one medication is required",
+      },
     },
+
+    issueDate: { type: Date, default: Date.now },
+
+    
+    status: { type: String, default: "ACTIVE" },
+    
 
     genericName: {
       type: String,
@@ -142,6 +161,6 @@ const medicationSchema = new mongoose.Schema(
   },
 );
 
-const Medication = mongoose.model("Medication", medicationSchema);
+const Prescription = mongoose.model("Prescription", prescriptionSchema);
 
-export default Medication;
+export default Prescription;

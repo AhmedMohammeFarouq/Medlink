@@ -26,12 +26,13 @@ export const uploadImage = (fileBuffer, folder) => {
         uploadStream.end(fileBuffer);
     });
 };
-export const uploadDocument = (fileBuffer, folder) => {
+export const uploadDocument = (fileBuffer, folder,mimeType) => {
     return new Promise((resolve, reject) => {
+        const isImage = mimeType && mimeType.startsWith('image/');
         const uploadStream = cloudinary.uploader.upload_stream(
             {
                 folder,
-                resource_type: "raw",
+                resource_type: isImage ? "image" : "raw", 
             },
             (error, result) => {
                 if (error) {

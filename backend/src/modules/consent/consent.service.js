@@ -1,12 +1,29 @@
 import Consent from './consent.model.js';
 
+const httpError = (status, message) => {
+  const err = new Error(message);
+  err.status = status;
+  return err;
+};
+
 export class ConsentService {
-  // 1. Create Consent
   static async createConsent(data) {
     return await Consent.create(data);
   }
 
-  // 2. Retrieve Consents
+  static async createConsentRequest({ patientId, doctorId, type, scope, reason }) {
+    return await Consent.create({
+      patientId,
+      doctorId,
+      grantedTo: doctorId,   
+      grantedBy: patientId,  
+      type,
+      scope,
+      reason: reason || null,
+      status: 'PENDING',
+    });
+  }
+
   static async getPatientConsents(patientId) {
     return await Consent.find({ patientId }).sort({ createdAt: -1 });
   }
@@ -15,51 +32,46 @@ export class ConsentService {
     return await Consent.findById(id);
   }
 
-  // 3. Approve Consent
-  static async approveConsent(consentId) {
-    return await Consent.findByIdAndUpdate(
-      consentId,
-      { status: 'GRANTED', grantedAt: new Date() },
-      { new: true }
-    );
+  static async approveConsent(consentId, requestingUserId) {
+    const consent = await Consent.findById(consentId);
+    if (!consent) throw httpError(404, 'Consent not found');
+    if (consent.patientId.toString() !== requestingUserId) throw httpError(403, 'Access denied');
+    if (consent.status !== 'PENDING') throw httpError(400, `Cannot approve a consent with status ${consent.status}`);
+    consent.status = 'GRANTED';
+    consent.grantedAt = new Date();
+    return await consent.save();
   }
 
-  // 4. Revoke Consent
+  static async rejectConsent(consentId, requestingUserId) {
+    const consent = await Consent.findById(consentId);
+    if (!consent) throw httpError(404, 'Consent not found');
+    if (consent.patientId.toString() !== requestingUserId) throw httpError(403, 'Access denied');
+    if (consent.status !== 'PENDING') throw httpError(400, `Cannot reject a consent with status ${consent.status}`);
+    consent.status = 'REJECTED';
+    return await consent.save();
+  }
+
   static async revokeConsent(consentId, userId, revocationReason) {
     return await Consent.findByIdAndUpdate(
       consentId,
-      {
-        status: 'REVOKED',
-        revokedAt: new Date(),
-        revokedBy: userId,
-        revocationReason
-      },
+      { status: 'REVOKED', revokedAt: new Date(), revokedBy: userId, revocationReason },
       { new: true }
     );
   }
 
-  // 5. Permission-based access check + Expiration check + Status check
   static async checkPermission(patientId, grantedToId, requiredPermission) {
     const consent = await Consent.findOne({
       patientId,
       grantedTo: grantedToId,
       status: 'GRANTED',
-      $or: [
-        { scope: requiredPermission },
-        { type: 'FULL_ACCESS' }
-      ]
+      $or: [{ scope: requiredPermission }, { type: 'FULL_ACCESS' }],
     });
-
     if (!consent) return false;
-
-    // Expiration check
     if (consent.expiresAt && new Date() > new Date(consent.expiresAt)) {
-      // Auto-update status to EXPIRED
       consent.status = 'EXPIRED';
       await consent.save();
       return false;
     }
-
     return true;
   }
 }

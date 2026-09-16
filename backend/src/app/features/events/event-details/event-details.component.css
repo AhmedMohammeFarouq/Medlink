@@ -1,0 +1,57 @@
+.details-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #3f51b5;
+  text-decoration: none;
+}
+
+.details-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.description {
+  color: #555;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  row-gap: 0.5rem;
+}
+
+dt {
+  font-weight: 600;
+  color: #333;
+}
+
+dd {
+  margin: 0;
+}
+
+.edit-btn {
+  display: inline-block;
+  margin-top: 1.5rem;
+  background: #3f51b5;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+.loading {
+  color: #777;
+}

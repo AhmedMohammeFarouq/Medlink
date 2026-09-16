@@ -1,0 +1,71 @@
+<div class="form-page">
+  <a class="back" routerLink="/events">← Back to Events</a>
+  <h1>Add Event</h1>
+
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+    <div class="field">
+      <label for="title">Title</label>
+      <input id="title" type="text" formControlName="title" />
+      <small class="error" *ngIf="f['title'].invalid && f['title'].touched">
+        <span *ngIf="f['title'].errors?.['required']">Title is required.</span>
+        <span *ngIf="f['title'].errors?.['minlength']">Title must be at least 3 characters.</span>
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" rows="3"></textarea>
+      <small class="error" *ngIf="f['description'].invalid && f['description'].touched">
+        Description is required.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="date">Date</label>
+      <input id="date" type="date" formControlName="date" />
+      <small class="error" *ngIf="f['date'].invalid && f['date'].touched">
+        A valid date is required.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="location">Location</label>
+      <input id="location" type="text" formControlName="location" />
+      <small class="error" *ngIf="f['location'].invalid && f['location'].touched">
+        Location is required.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="category">Category</label>
+      <input id="category" type="text" formControlName="category" />
+      <small class="error" *ngIf="f['category'].invalid && f['category'].touched">
+        Category is required.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="capacity">Capacity</label>
+      <input id="capacity" type="number" formControlName="capacity" />
+      <small class="error" *ngIf="f['capacity'].invalid && f['capacity'].touched">
+        <span *ngIf="f['capacity'].errors?.['required']">Capacity is required.</span>
+        <span *ngIf="f['capacity'].errors?.['min']">Capacity must be at least 1.</span>
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="price">Price</label>
+      <input id="price" type="number" formControlName="price" />
+      <small class="error" *ngIf="f['price'].invalid && f['price'].touched">
+        <span *ngIf="f['price'].errors?.['required']">Price is required.</span>
+        <span *ngIf="f['price'].errors?.['min']">Price cannot be negative.</span>
+      </small>
+    </div>
+
+    <small class="error" *ngIf="errorMessage">{{ errorMessage }}</small>
+
+    <button type="submit" [disabled]="eventForm.invalid || submitting">
+      {{ submitting ? 'Saving...' : 'Add Event' }}
+    </button>
+  </form>
+</div>
