@@ -1,0 +1,109 @@
+@if (variant === 'card') {
+  <button type="button" class="card action-card write-review-card" (click)="openWriteReview()">
+    <div class="action-icon-wrap warning">
+      <app-icon name="star" [size]="22"></app-icon>
+    </div>
+    <h4 class="action-title">Write a Review</h4>
+    <p class="action-desc">Rate a completed consultation</p>
+  </button>
+} @else {
+  <button type="button" class="btn btn-outline" (click)="openWriteReview()">
+    <app-icon name="star" [size]="16"></app-icon>
+    <span>Write a Review</span>
+  </button>
+}
+
+<!-- Write a Review Modal -->
+<app-modal [isOpen]="isReviewModalOpen" title="Write a Review" (close)="closeReviewModal()">
+  @if (reviewSuccessMessage) {
+    <div class="alert alert-success mb-4">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ reviewSuccessMessage }}</span>
+    </div>
+  } @else {
+    @if (reviewErrorMessage) {
+      <div class="alert alert-danger mb-4">
+        <span class="material-symbols-outlined">error</span>
+        <span>{{ reviewErrorMessage }}</span>
+      </div>
+    }
+
+    @if (isLoadingAppointments) {
+      <p class="text-sm text-muted">Loading your consultations...</p>
+    } @else if (completedAppointments.length === 0) {
+      <!-- No consultation case -->
+      <p class="text-sm text-muted">
+        You don't have a previous consultation yet. Reviews are linked to a completed consultation,
+        so you'll be able to write one once your first appointment is marked as completed.
+      </p>
+      <div class="flex justify-end mt-6">
+        <button type="button" class="btn btn-outline" (click)="closeReviewModal()">Close</button>
+      </div>
+    } @else {
+      <!-- Doctor to review -->
+      @if (!isChoosingAlternateDoctor) {
+        <div class="review-target-doctor form-group">
+          <label class="form-label">Doctor to review</label>
+          @if (isResolvingDoctorInfo && !reviewTargetDoctorInfo) {
+            <p class="text-sm text-muted">Loading doctor details...</p>
+          } @else if (reviewTargetDoctorInfo) {
+            <p class="text-base font-bold">{{ reviewTargetDoctorInfo.name }}</p>
+            @if (reviewTargetDoctorInfo.phone) {
+              <p class="text-sm text-muted">Phone: {{ reviewTargetDoctorInfo.phone }}</p>
+            }
+          }
+          <p class="text-xs text-muted mt-1">Based on your latest consultation</p>
+
+          @if (alternateCompletedAppointments.length > 0) {
+            <button type="button" class="btn-link text-sm mt-2" (click)="chooseAlternateDoctor()">
+              Don't want to review your latest doctor? Choose another consultation below.
+            </button>
+          }
+        </div>
+      } @else {
+        <div class="form-group">
+          <label class="form-label">Choose another consultation to review</label>
+          <div class="alternate-doctor-list">
+            @for (appt of alternateCompletedAppointments; track appt._id) {
+              <button type="button" class="alternate-doctor-item" (click)="selectAlternateAppointment(appt)">
+                <span class="material-symbols-outlined icon">medical_services</span>
+                <span>Consultation on {{ appt.scheduledAt | date:'mediumDate' }}</span>
+              </button>
+            }
+          </div>
+          <button type="button" class="btn-link text-sm mt-2" (click)="isChoosingAlternateDoctor = false">
+            Back to latest doctor
+          </button>
+        </div>
+      }
+
+      @if (!isChoosingAlternateDoctor) {
+        <div class="form-group mt-4">
+          <label class="form-label">Rating <span class="text-danger">*</span></label>
+          <app-rating-stars
+            [rating]="reviewRating"
+            [interactive]="true"
+            (ratingChange)="reviewRating = $event">
+          </app-rating-stars>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Write your review</label>
+          <textarea
+            class="form-control"
+            rows="4"
+            placeholder="Share details of your experience with this doctor..."
+            [(ngModel)]="reviewComment">
+          </textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-6">
+          <button type="button" class="btn btn-outline" (click)="closeReviewModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" [disabled]="isSubmittingReview || !reviewRating" (click)="submitReview()">
+            {{ isSubmittingReview ? 'Submitting...' : 'Submit Review' }}
+          </button>
+        </div>
+      }
+    }
+  }
+</app-modal>
