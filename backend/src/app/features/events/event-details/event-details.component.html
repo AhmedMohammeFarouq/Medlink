@@ -1,0 +1,35 @@
+<div class="details-page">
+  <a class="back" routerLink="/events">← Back to Events</a>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <ng-container *ngIf="event$ | async as event; else loading">
+    <div class="details-card" *ngIf="event">
+      <h1>{{ event.title }}</h1>
+      <p class="description">{{ event.description }}</p>
+
+      <dl>
+        <dt>Date</dt>
+        <dd>{{ event.date | date: 'fullDate' }}</dd>
+
+        <dt>Location</dt>
+        <dd>{{ event.location }}</dd>
+
+        <dt>Category</dt>
+        <dd>{{ event.category }}</dd>
+
+        <dt>Capacity</dt>
+        <dd>{{ event.capacity }}</dd>
+
+        <dt>Price</dt>
+        <dd>{{ event.price | currency }}</dd>
+      </dl>
+
+      <a class="edit-btn" [routerLink]="['/edit-event', event.id]">Edit Event</a>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <p class="loading">Loading event...</p>
+  </ng-template>
+</div>

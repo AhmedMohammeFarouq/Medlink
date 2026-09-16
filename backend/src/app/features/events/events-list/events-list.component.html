@@ -1,0 +1,36 @@
+<div class="events-page">
+  <div class="page-header">
+    <h1>Events</h1>
+    <a class="add-btn" routerLink="/add-event">+ Add Event</a>
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="events-grid" *ngIf="events$ | async as events; else loading">
+    <p *ngIf="events.length === 0" class="empty">No events found.</p>
+
+    <div class="event-card" *ngFor="let event of events">
+      <h3>{{ event.title }}</h3>
+      <p class="description">{{ event.description }}</p>
+      <ul class="meta">
+        <li><strong>Date:</strong> {{ event.date | date: 'mediumDate' }}</li>
+        <li><strong>Location:</strong> {{ event.location }}</li>
+        <li><strong>Category:</strong> {{ event.category }}</li>
+        <li><strong>Capacity:</strong> {{ event.capacity }}</li>
+        <li><strong>Price:</strong> {{ event.price | currency }}</li>
+      </ul>
+
+      <div class="actions">
+        <a [routerLink]="['/events', event.id]">View Details</a>
+        <a [routerLink]="['/edit-event', event.id]">Edit</a>
+        <button (click)="deleteEvent(event)" [disabled]="deletingId === event.id">
+          {{ deletingId === event.id ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <p class="loading">Loading events...</p>
+  </ng-template>
+</div>
