@@ -22,6 +22,11 @@ router.post(
     DocumentController.createDocumentService
 );
 router.get(
+    "/",
+    roleMiddleware(ROLES.DOCTOR, ROLES.SYSTEM_ADMIN, ROLES.CLINIC_ADMIN, ROLES.PATIENT, ROLES.RECEPTIONIST),
+    DocumentController.getAll
+);
+router.get(
     "/patient/:patientId",
     roleMiddleware(ROLES.DOCTOR, ROLES.SYSTEM_ADMIN, ROLES.CLINIC_ADMIN, ROLES.PATIENT, ROLES.RECEPTIONIST),
     DocumentController.getByPatient

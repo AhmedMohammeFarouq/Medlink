@@ -33,6 +33,7 @@ export const API_ENDPOINTS = {
     myAppointments: '/appointments/my',
     cancel: (id: string) => `/appointments/${id}/cancel`,
     confirm: (id: string) => `/appointments/${id}/confirm`,
+    complete: (id: string) => `/appointments/${id}/complete`,
     reschedule: (id: string) => `/appointments/${id}/reschedule`,
   },
   patients: {
@@ -73,8 +74,13 @@ export const API_ENDPOINTS = {
     byId: (id: string) => `/consent/${id}`,
   },
   chat: {
+    createRoom: '/chat/rooms/create',
+    myRooms: '/chat/rooms/myRooms',
+    roomById: (roomId: string) => `/chat/rooms/myRooms/${roomId}`,
+    closeRoom: (roomId: string) => `/chat/rooms/myRooms/${roomId}/close`,
+    messages: (roomId: string) => `/chat/rooms/myRooms/${roomId}/messages`,
+    markRead: (roomId: string) => `/chat/rooms/myRooms/${roomId}/read`,
     conversations: '/chat/conversations',
-    messages: (conversationId: string) => `/chat/conversations/${conversationId}/messages`,
   },
   notifications: {
     base: '/notifications',
@@ -92,6 +98,7 @@ export const API_ENDPOINTS = {
   },
   admin: {
     base: '/admin',
+    stats: '/admin/statistics',
     statistics: '/admin/statistics',
     doctors: {
       pending: '/admin/doctors/pending',

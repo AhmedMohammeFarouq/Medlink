@@ -1,6 +1,26 @@
 import { ConsentService } from './consent.service.js';
+import Consent from './consent.model.js';
+import * as patientService from '../patients/patient.service.js';
 
 export class ConsentController {
+  static async getMyConsents(req, res, next) {
+    try {
+      if (req.user && req.user.role === 'PATIENT') {
+        const patient = await patientService.getOrCreatePatientProfile(req.user.userId);
+        const patientId = patient ? patient._id : req.user.userId;
+        const consents = await ConsentService.getPatientConsents(patientId);
+        return res.status(200).json({ success: true, data: consents || [] });
+      }
+
+      let consents = [];
+      if (req.user && req.user.role === 'DOCTOR') {
+        consents = await Consent.find({ grantedTo: req.user.userId }).sort({ createdAt: -1 });
+      } else {
+        consents = await Consent.find().sort({ createdAt: -1 }).limit(50);
+      }
+      return res.status(200).json({ success: true, data: consents || [] });
+    } catch (err) { next(err); }
+  }
   static async create(req, res, next) {
     try {
       const consent = await ConsentService.createConsent(req.body);

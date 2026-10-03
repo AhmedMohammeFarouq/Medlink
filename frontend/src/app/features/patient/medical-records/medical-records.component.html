@@ -31,8 +31,42 @@
   } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (rec of records; track rec._id) {
-        <app-medical-record-card [record]="rec"></app-medical-record-card>
+        <app-medical-record-card [record]="rec" (view)="selectedRecord = rec"></app-medical-record-card>
       }
     </div>
   }
+
+  <!-- View Record Details Modal -->
+  <app-modal [isOpen]="!!selectedRecord" title="Electronic Health Record Details" (close)="selectedRecord = null">
+    @if (selectedRecord) {
+      <div class="space-y-4">
+        <div>
+          <h4 class="text-lg font-bold text-gray-800">{{ selectedRecord.title }}</h4>
+          <p class="text-sm text-muted mt-1">{{ selectedRecord.summary }}</p>
+        </div>
+
+        @if (selectedRecord.diagnosis) {
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <span class="font-semibold text-sm">Diagnosis:</span>
+            <span class="text-sm ml-2">{{ selectedRecord.diagnosis }}</span>
+          </div>
+        }
+
+        <div class="grid grid-cols-2 gap-4 mt-4">
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <span class="text-xs text-muted block">Category</span>
+            <span class="font-medium text-sm">{{ selectedRecord.category | statusLabel }}</span>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <span class="text-xs text-muted block">Record Date</span>
+            <span class="font-medium text-sm">{{ selectedRecord.recordDate | dateFormat }}</span>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button class="btn btn-outline" (click)="selectedRecord = null">Close</button>
+        </div>
+      </div>
+    }
+  </app-modal>
 </div>

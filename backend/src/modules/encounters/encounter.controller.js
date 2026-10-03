@@ -1,6 +1,25 @@
 import * as encounterService from "./encounter.service.js";
 import * as patientService from "../patients/patient.service.js";
 import { successResponse } from "../../utils/apiResponse.js";
+import { ROLES } from "../../constants/roles.js";
+
+export const getAllEncounters = async (req, res, next) => {
+    try {
+        let filter = {};
+        if (req.user) {
+            if (req.user.role === ROLES.DOCTOR) {
+                filter = { doctorId: req.user.userId };
+            } else if (req.user.role === ROLES.PATIENT) {
+                const patient = await patientService.getOrCreatePatientProfile(req.user.userId);
+                filter = { patientId: patient ? patient._id : req.user.userId };
+            }
+        }
+        const encounters = await encounterService.getAllEncounters(filter);
+        return successResponse({ res, message: "Encounters retrieved", data: encounters });
+    } catch (error) {
+        next(error);
+    }
+};
 
 export const createEncounter = async (req, res, next) => {
     try {

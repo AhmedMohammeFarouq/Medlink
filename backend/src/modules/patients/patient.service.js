@@ -1,6 +1,10 @@
 import Patient from "./patient.model.js";
 import { ROLES } from "../../constants/roles.js";
 
+export const getAllPatients = async (filter = {}) => {
+    return await Patient.find(filter).populate("userId", "firstName lastName email phoneNumber avatarUrl");
+};
+
 export const getOrCreatePatientProfile = async (userId) => {
     let patient = await Patient.findOne({ userId });
 

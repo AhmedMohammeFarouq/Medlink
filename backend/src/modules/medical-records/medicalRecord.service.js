@@ -29,3 +29,8 @@ export const addAllergy = async (patientId, allergy) => {
 
     return record;
 };
+
+export const getAllMedicalRecords = async () => {
+    return await MedicalRecord.find().sort({ createdAt: -1 });
+};
+

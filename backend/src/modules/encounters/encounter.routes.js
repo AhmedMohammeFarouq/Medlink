@@ -4,6 +4,7 @@ import roleMiddleware from "../../middlewares/role.middleware.js";
 import validationMiddleware from "../../middlewares/validation.middleware.js";
 import { ROLES } from "../../constants/roles.js";
 import {
+    getAllEncounters,
     createEncounter,
     getEncounterById,
     getEncountersByPatient,
@@ -16,6 +17,7 @@ const router = Router();
 
 router.use(authMiddleware);
 
+router.get("/", roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN), getAllEncounters);
 router.post("/", roleMiddleware(ROLES.DOCTOR, ROLES.SYSTEM_ADMIN), validationMiddleware(validateCreateEncounter), createEncounter);
 router.get("/patient/:patientId", roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN), getEncountersByPatient);
 router.get("/:id", roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN), getEncounterById);

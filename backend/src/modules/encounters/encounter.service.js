@@ -1,6 +1,10 @@
 import Encounter from "./encounter.model.js";
 import * as medicalRecordService from "../medical-records/medicalRecord.service.js";
 
+export const getAllEncounters = async (filter = {}) => {
+    return Encounter.find(filter).sort({ createdAt: -1 });
+};
+
 export const createEncounter = async (payload, createdBy) => {
     const medicalRecord = await medicalRecordService.getOrCreateMedicalRecord(payload.patientId);
 

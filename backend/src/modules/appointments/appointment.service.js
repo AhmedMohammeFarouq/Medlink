@@ -3,6 +3,9 @@ import Appointment from "./appointment.model.js";
 const getAllAppointments = async () => {
     return await Appointment.find();
 };
+const getAppointmentsByFilter = async (filter = {}) => {
+    return await Appointment.find(filter).sort({ scheduledAt: -1 });
+};
 const getAppointmentById = async (appointmentId) => {
     return await Appointment.findById(appointmentId);
 };
@@ -21,6 +24,7 @@ const deleteAppointment = async (appointmentId) => {
 };
 export default {
     getAllAppointments,
+    getAppointmentsByFilter,
     getAppointmentById,
     createAppointment,
     updateAppointment,

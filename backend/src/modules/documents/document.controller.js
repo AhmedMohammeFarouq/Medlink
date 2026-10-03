@@ -1,6 +1,25 @@
 import { DocumentService } from './document.service.js';
+import DocumentModel from './document.model.js';
+import * as patientService from '../patients/patient.service.js';
 import { uploadDocument } from '../../config/cloudinary.js';
 export class DocumentController {
+    static async getAll(req, res, next) {
+        try {
+            if (req.user && req.user.role === 'PATIENT') {
+                const patient = await patientService.getOrCreatePatientProfile(req.user.userId);
+                const patientId = patient ? patient._id : req.user.userId;
+                const documents = await DocumentModel.find({
+                    $or: [{ patientId }, { uploadedBy: req.user.userId }]
+                }).sort({ createdAt: -1 });
+                return res.status(200).json({ success: true, count: documents.length, data: documents });
+            }
+
+            const documents = await DocumentModel.find().sort({ createdAt: -1 });
+            return res.status(200).json({ success: true, count: documents.length, data: documents });
+        } catch (err) {
+            next(err);
+        }
+    }
     static async createDocumentService(req, res, next) {
         try {
             if (!req.file) {

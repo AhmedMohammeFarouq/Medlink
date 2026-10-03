@@ -3,6 +3,15 @@ import * as medicalRecordService from "../medical-records/medicalRecord.service.
 import * as encounterService from "../encounters/encounter.service.js";
 import { successResponse } from "../../utils/apiResponse.js";
 
+export const getAllPatients = async (req, res, next) => {
+    try {
+        const patients = await patientService.getAllPatients();
+        return successResponse({ res, message: "Patients retrieved", data: patients });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const getMyProfile = async (req, res, next) => {
     try {
         const patient = await patientService.getOrCreatePatientProfile(req.user.userId);

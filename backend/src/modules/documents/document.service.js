@@ -2,25 +2,20 @@ import cloudinary, { uploadDocument } from '../../config/cloudinary.js';
 import DocumentModel from './document.model.js';
 
 export class DocumentService {
-
-
     static createDocumentService = async ({ file, body, userId }) => {
-        // التأكد من وجود الملف القادم من Multer
         if (!file) {
             throw new Error('No document file provided.');
         }
 
-        // 1. رفع الـ Buffer إلى Cloudinary
         const uploadResult = await uploadDocument(
             file.buffer,
             `medlink/documents/${body.patientId}`
         );
 
-        // 2. حفظ الـ Metadata فقط في MongoDB
-        const document = await Document.create({
+        const document = await DocumentModel.create({
             patientId: body.patientId,
             uploadedBy: userId,
-            documentType: body.documentType, // مثل: 'LAB_RESULT', 'X_RAY'
+            documentType: body.documentType,
             fileName: file.originalname,
             mimeType: file.mimetype,
             storageKey: uploadResult.public_id || uploadResult.storageKey,
@@ -69,3 +64,5 @@ export class DocumentService {
         return await DocumentModel.findByIdAndDelete(id);
     }
 }
+
+export default DocumentService;

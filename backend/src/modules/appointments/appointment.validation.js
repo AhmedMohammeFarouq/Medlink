@@ -2,12 +2,13 @@ const isValidObjectId = (id) => {
     return /^[0-9a-fA-F]{24}$/.test(id);
 };
 
-export const createAppointmentValidation = (body) => {
+export const createAppointmentValidation = (body, file, params, req) => {
     const errors = [];
 
-    if (!body.patientId) {
+    const patientId = body.patientId || req?.user?.userId;
+    if (!patientId) {
         errors.push("Patient ID is required");
-    } else if (!isValidObjectId(body.patientId)) {
+    } else if (!isValidObjectId(patientId)) {
         errors.push("Invalid patient ID");
     }
 
@@ -17,9 +18,7 @@ export const createAppointmentValidation = (body) => {
         errors.push("Invalid doctor ID");
     }
 
-    if (!body.clinicId) {
-        errors.push("Clinic ID is required");
-    } else if (!isValidObjectId(body.clinicId)) {
+    if (body.clinicId && !isValidObjectId(body.clinicId)) {
         errors.push("Invalid clinic ID");
     }
 

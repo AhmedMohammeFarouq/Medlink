@@ -4,6 +4,7 @@ import roleMiddleware from "../../middlewares/role.middleware.js";
 import validationMiddleware from "../../middlewares/validation.middleware.js";
 import { ROLES } from "../../constants/roles.js";
 import {
+    getAllPatients,
     getMyProfile,
     updateMyProfile,
     getPatientById,
@@ -17,7 +18,10 @@ const router = Router();
 router.use(authMiddleware);
 
 router.get("/me", getMyProfile);
+router.get("/profile", getMyProfile);
+router.get("/", roleMiddleware(ROLES.DOCTOR, ROLES.SYSTEM_ADMIN), getAllPatients);
 router.patch("/me", validationMiddleware(validatePatientUpdate), updateMyProfile);
+router.patch("/profile", validationMiddleware(validatePatientUpdate), updateMyProfile);
 
 router.get("/:id", roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN), getPatientById);
 router.get(

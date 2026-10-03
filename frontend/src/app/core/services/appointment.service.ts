@@ -36,4 +36,8 @@ export class AppointmentService {
   confirmAppointment(id: string): Observable<ApiResponse<Appointment>> {
     return this.http.patch<ApiResponse<Appointment>>(`${this.baseUrl}${API_ENDPOINTS.appointments.confirm(id)}`, {});
   }
+
+  completeAppointment(id: string): Observable<ApiResponse<Appointment>> {
+    return this.http.patch<ApiResponse<Appointment>>(`${this.baseUrl}${API_ENDPOINTS.appointments.complete(id)}`, {});
+  }
 }

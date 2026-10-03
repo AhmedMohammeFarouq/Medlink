@@ -3,13 +3,14 @@ const validationMiddleware = (validationFunction) => {
         const errors = validationFunction(
             req.body,
             req.file,
-            req.params
+            req.params,
+            req
         );
 
         if (errors.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: "Validation failed",
+                message: errors.join(", ") || "Validation failed",
                 errors,
             });
         }

@@ -16,6 +16,7 @@ import reviewRoutes from "../modules/reviews/review.routes.js";
 import auditRoutes from "../modules/audit/audit.routes.js";
 import notificationRoutes from "../modules/notifications/notification.routes.js";
 import chatRoutes from "../modules/chat/chat.routes.js";
+import clinicRoutes from "../modules/clinics/clinic.routes.js";
 
 const router = Router();
 
@@ -25,8 +26,11 @@ router.use("/v1/chat", chatRoutes);
 router.use("/v1/auth", authRouter);
 router.use("/v1/users", userRoutes);
 router.use("/v1/consent", consentRoutes);
+router.use("/v1/consents", consentRoutes);
 router.use("/v1/document", documentRoutes);
+router.use("/v1/documents", documentRoutes);
 router.use("/v1/medication", medicationRoutes);
+router.use("/v1/medications", medicationRoutes);
 router.use("/v1/prescriptions", prescriptionRoutes);
 router.use("/v1/doctors", doctorRoutes);
 router.use("/v1/appointments", appointmentRoutes);
@@ -36,5 +40,6 @@ router.use("/v1/encounters", encounterRouter);
 router.use("/v1/admin", adminRoutes);
 router.use("/v1/reviews", reviewRoutes);
 router.use("/v1/audit", auditRoutes);
+router.use("/v1/clinics", clinicRoutes);
 
 export default router;

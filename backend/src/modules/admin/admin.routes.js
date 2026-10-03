@@ -29,5 +29,6 @@ router.patch("/users/:userId/status", adminController.updateUserStatus);
 
 // Statistics
 router.get("/statistics", adminController.getBasicStatistics);
+router.get("/stats", adminController.getBasicStatistics);
 
 export default router;

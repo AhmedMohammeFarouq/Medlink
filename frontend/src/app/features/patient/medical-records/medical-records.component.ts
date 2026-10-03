@@ -5,10 +5,14 @@ import { MedicalRecord } from '../../../core/models/medical-record.model';
 import { MedicalRecordCardComponent } from '../../../shared/components/medical-record-card/medical-record-card.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { DateFormatPipe } from '../../../shared/pipes/date-format.pipe';
+import { StatusLabelPipe } from '../../../shared/pipes/status-label.pipe';
+
 @Component({
   selector: 'app-medical-records',
   standalone: true,
-  imports: [CommonModule, MedicalRecordCardComponent, EmptyStateComponent],
+  imports: [CommonModule, MedicalRecordCardComponent, EmptyStateComponent, ModalComponent, DateFormatPipe, StatusLabelPipe],
   templateUrl: './medical-records.component.html',
   styleUrl: './medical-records.component.css'
 })
@@ -16,6 +20,7 @@ export class MedicalRecordsComponent implements OnInit {
   private recordService = inject(MedicalRecordService);
 
   records: MedicalRecord[] = [];
+  selectedRecord: MedicalRecord | null = null;
   isLoading = true;
   isBackendModulePending = false;
 

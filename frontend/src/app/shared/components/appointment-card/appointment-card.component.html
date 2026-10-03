@@ -29,7 +29,19 @@
         <span>Details</span>
       </button>
 
-      @if (appointment.status === 'PENDING' || appointment.status === 'CONFIRMED') {
+      @if (canConfirm && appointment.status === 'PENDING') {
+        <button class="btn btn-primary btn-sm" (click)="confirm.emit(appointment)">
+          <span>Confirm</span>
+        </button>
+      }
+
+      @if (canComplete && appointment.status !== 'COMPLETED' && appointment.status !== 'CANCELLED') {
+        <button class="btn btn-outline btn-sm text-success" (click)="complete.emit(appointment)">
+          <span>Complete</span>
+        </button>
+      }
+
+      @if (appointment.status === 'PENDING' || appointment.status === 'CONFIRMED' || appointment.status === 'RESCHEDULED') {
         <button class="btn btn-outline btn-sm text-danger" (click)="cancel.emit(appointment)">
           <span>Cancel</span>
         </button>

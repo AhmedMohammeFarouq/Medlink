@@ -47,6 +47,8 @@
       @for (appt of appointments; track appt._id) {
         <app-appointment-card
           [appointment]="appt"
+          (confirm)="confirmAppointment($event)"
+          (complete)="completeAppointment($event)"
           (cancel)="cancelAppointment($event)">
         </app-appointment-card>
       }

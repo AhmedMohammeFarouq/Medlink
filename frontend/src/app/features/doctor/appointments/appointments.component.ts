@@ -50,6 +50,17 @@ export class DoctorAppointmentsComponent implements OnInit {
     });
   }
 
+  completeAppointment(appt: Appointment): void {
+    this.apptService.completeAppointment(appt._id).subscribe({
+      next: () => {
+        this.successMessage = 'Appointment marked as completed.';
+        this.loadAppointments();
+        setTimeout(() => this.successMessage = null, 3000);
+      },
+      error: (err) => this.errorMessage = err.message || 'Could not complete appointment.'
+    });
+  }
+
   cancelAppointment(appt: Appointment): void {
     this.apptService.cancelAppointment(appt._id).subscribe({
       next: () => {

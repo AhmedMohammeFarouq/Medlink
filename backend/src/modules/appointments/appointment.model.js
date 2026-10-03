@@ -17,7 +17,7 @@ const appointmentSchema = new mongoose.Schema(
         clinicId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Clinic",
-            required: true,
+            default: null,
         },
 
         scheduledAt: {

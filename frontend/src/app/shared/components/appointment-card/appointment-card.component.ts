@@ -15,7 +15,17 @@ export class AppointmentCardComponent {
   @Input({ required: true }) appointment!: Appointment;
   @Input() showActions: boolean = true;
   @Output() cancel = new EventEmitter<Appointment>();
+  @Output() confirm = new EventEmitter<Appointment>();
+  @Output() complete = new EventEmitter<Appointment>();
   @Output() viewDetails = new EventEmitter<Appointment>();
+
+  get canConfirm(): boolean {
+    return this.confirm.observed;
+  }
+
+  get canComplete(): boolean {
+    return this.complete.observed;
+  }
 
   getStatusClass(status: string): string {
     switch (status) {

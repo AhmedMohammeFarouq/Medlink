@@ -13,6 +13,12 @@ const router = Router();
 
 router.use(authMiddleware);
 
+router.get(
+  "/",
+  roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN, ROLES.CLINIC_ADMIN),
+  ConsentController.getMyConsents,
+);
+
 router.post(
   "/",
   roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN),
@@ -49,6 +55,20 @@ router.patch(
   roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN),
   consentIdValidation,
   ConsentController.revoke,
+);
+
+router.patch(
+  "/:id/grant",
+  roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN),
+  consentIdValidation,
+  ConsentController.approve,
+);
+
+router.patch(
+  "/:id/approve",
+  roleMiddleware(ROLES.PATIENT, ROLES.DOCTOR, ROLES.SYSTEM_ADMIN),
+  consentIdValidation,
+  ConsentController.approve,
 );
 
 export default router;
